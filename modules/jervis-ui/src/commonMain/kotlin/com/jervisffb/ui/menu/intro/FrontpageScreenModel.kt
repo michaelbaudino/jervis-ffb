@@ -72,7 +72,7 @@ data class NewsEntryData(
 /**
  * ViewModel class for the Main starting screen.
  */
-class IntroScreenModel(private val menuViewModel: MenuViewModel) : JervisScreenModel {
+class FrontpageScreenModel(private val menuViewModel: MenuViewModel) : JervisScreenModel {
 
     val news: List<NewsEntryData>
     private val _showCreditDialog = MutableStateFlow(false)

@@ -2,19 +2,24 @@ package com.jervisffb.ui.menu.intro
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,18 +40,21 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.FontLoadResult
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.jervisffb.jervis_ui.generated.resources.Res
 import com.jervisffb.jervis_ui.generated.resources.frontpage_orc
 import com.jervisffb.jervis_ui.generated.resources.icon_menu_settings
 import com.jervisffb.ui.game.view.JervisTheme
-import com.jervisffb.ui.game.view.MenuBox
 import com.jervisffb.ui.game.view.utils.OrangeTitleBorder
 import com.jervisffb.ui.game.viewmodel.MenuViewModel
 import com.jervisffb.ui.menu.JervisScreen
@@ -66,14 +74,14 @@ import org.jetbrains.skia.Font as SkiaFont
 /**
  * Layout class for the Main starting screen.
  */
-class IntroScreen(private val menuViewModel: MenuViewModel) : Screen {
+class FrontpageScreen(private val menuViewModel: MenuViewModel) : Screen {
 
     override val key: ScreenKey = "IntroScreen"
 
     @Composable
     override fun Content() {
         JervisScreen(menuViewModel) {
-            IntroPage(menuViewModel)
+            PageContent(menuViewModel)
         }
     }
 }
@@ -90,32 +98,35 @@ fun loadJervisFont(): SkiaFont {
 }
 
 @Composable
-private fun IntroScreen.IntroPage(menuViewModel: MenuViewModel) {
+private fun FrontpageScreen.PageContent(menuViewModel: MenuViewModel) {
     val navigator = LocalNavigator.currentOrThrow
-    val viewModel = rememberScreenModel { IntroScreenModel(menuViewModel) }
+    val viewModel = rememberScreenModel { FrontpageScreenModel(menuViewModel) }
     MenuScreen {
         Row {
-            Column(modifier = Modifier.fillMaxWidth(0.67f)) {
-                TitleHeader()
-                Row(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Spacer(modifier = Modifier.weight(4f / 36f))
-                    MenuBox(
-                        label = "FUMBBL",
-                        onClick = { viewModel.gotoFumbblScreen(navigator) },
-                        frontPage = true
-                    )
-                    Spacer(modifier = Modifier.weight(2f / 36f))
-                    MenuBox(
-                        label = "Standalone",
-                        onClick = { viewModel.gotoStandAloneScreen(navigator) },
-                        frontPage = true
-                    )
+            Column(modifier = Modifier.fillMaxWidth(0.67f).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
+                Box(modifier = Modifier.weight(34f/36f), contentAlignment = Alignment.TopStart) {
+                    TitleHeader("JERVIS", "Fantasy Football")
+                    // It is a bit unclear exactly how the menu boxes should change and scale depending on
+                    // screen size, for now they are wrapped in a box because it makes it easier to modify
+                    // left/right position. This probably needs to the be redone at some point.
+
+                    // `contentAlignment` here doesn't do much except in extrem cases where it prevents
+                    // the menu from going into the top banner.
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Row(modifier = Modifier) {
+                            Spacer(modifier = Modifier.weight(4f/36f))
+                            Column(
+                                modifier = Modifier.aspectRatio(1f).weight(30f/36f).fillMaxSize(0.9f).aspectRatio(1f),
+                            ) {
+                                FrontpageMenu(viewModel, navigator)
+                            }
+                            Spacer(modifier = Modifier.weight(2f/36f))
+                        }
+                    }
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth(0.5f)
+                    modifier = Modifier.weight(2f/36f).fillMaxWidth(0.5f),
+                    verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
                         modifier = Modifier.clickable { viewModel.showCreditDialog(visible = true) }.padding(8.dp),
@@ -162,7 +173,7 @@ private fun IntroScreen.IntroPage(menuViewModel: MenuViewModel) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Column(
                             modifier = Modifier
-                                .fillMaxHeight(0.35f)
+                                .fillMaxHeight(0.30f)
                                 .verticalScroll(rememberScrollState())
                         ) {
                             viewModel.news.forEach { (timestamp: String, body: String) ->
@@ -172,16 +183,91 @@ private fun IntroScreen.IntroPage(menuViewModel: MenuViewModel) {
                     }
 
                 }
-                Image(
-                    modifier = Modifier.fillMaxWidth(1f).offset(x = 24.dp),
-                    bitmap = imageResource(Res.drawable.frontpage_orc),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                )
             }
+        }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            Image(
+                modifier = Modifier.fillMaxWidth(0.28f).offset(x = -40.dp, y = 40.dp),
+                bitmap = imageResource(Res.drawable.frontpage_orc),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+            )
         }
     }
     CreditDialog(viewModel, viewModel.creditData)
+}
+
+@Composable
+private fun ColumnScope.FrontpageMenu(viewModel: FrontpageScreenModel, navigator: Navigator) {
+    Column(modifier = Modifier.fillMaxSize().aspectRatio(1f)) {
+        Row(modifier = Modifier.weight(17/36f).fillMaxSize()) {
+            // Top Left Corner
+            Column(modifier = Modifier.aspectRatio(1f).weight(17f/36f).fillMaxSize()) {
+                // Always empty (for now)
+            }
+            Spacer(modifier = Modifier.weight(2f/36f))
+            // Top Right Corner
+            Column(modifier = Modifier.aspectRatio(1f).weight(17f/36f).fillMaxSize()) {
+                Column(Modifier.weight(8f/17f)) {
+                    // Always empty
+                }
+                Spacer(modifier = Modifier.weight(1f/17f))
+                Column(Modifier.weight(8f/17f)) {
+                    FrontpageMenuEntry("Challenges", { /* Not supported yet */ }, enabled = false)
+                }
+            }
+        }
+        Spacer(modifier = Modifier.weight(2f/36f))
+        Row(modifier = Modifier.weight(17/36f).fillMaxSize()) {
+            // Bottom Left Corner
+            Column(modifier = Modifier.aspectRatio(1f).weight(17f/36f).fillMaxSize()) {
+                Column(Modifier.weight(15f/36f)) {
+                    FrontpageMenuEntry("Editor", { /* Not supported yet */  }, enabled = false)
+                }
+                Spacer(modifier = Modifier.weight(4f/36f))
+                Column(Modifier.weight(15f/36f)) {
+                    FrontpageMenuEntry("FUMBBL", { viewModel.gotoFumbblScreen(navigator) })
+                }
+            }
+            Spacer(modifier = Modifier.weight(2f/36f))
+            // Bottom Right Corner
+            Column(modifier = Modifier.aspectRatio(1f).weight(17f/36f).fillMaxSize()) {
+                FrontpageMenuEntry("Standalone", { viewModel.gotoStandAloneScreen(navigator) })
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.FrontpageMenuEntry(title: String, onClick: () -> Unit, enabled: Boolean = true) {
+    Box(
+        modifier = Modifier
+            .background(color = if (enabled) JervisTheme.rulebookBlue else JervisTheme.rulebookDisabled)
+            .fillMaxSize()
+            .let { if (enabled) it.clickable { onClick() } else it }
+        ,
+        contentAlignment = Alignment.BottomEnd,
+    ) {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = title.uppercase(),
+            textAlign = TextAlign.End,
+            maxLines = 2,
+            color = JervisTheme.buttonTextColor,
+            fontWeight = FontWeight.Bold,
+            fontSize = 32.sp,
+            style = LocalTextStyle.current.copy(
+                lineHeight = 1.0.em,
+                lineHeightStyle = LineHeightStyle(
+                    alignment = LineHeightStyle.Alignment.Bottom,
+                    trim = LineHeightStyle.Trim.LastLineBottom
+                ),
+            ),
+        )
+    }
 }
 
 @Composable
@@ -199,7 +285,7 @@ fun NewsEntry(header: String, body: String) {
 }
 
 @Composable
-fun TitleHeader() {
+fun TitleHeader(mainTitle: String, subTitle: String) {
     val textMeasure = rememberTextMeasurer()
     val skiaFont = loadJervisFont()
     Canvas(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.33f)) {
@@ -236,8 +322,8 @@ fun TitleHeader() {
         //  looks "nice" in more situations
         val scale = 1.3f
         skiaFont.size = (70 * scale).sp.toPx()
-        val line1 = "JERVIS"
-        val line2 = "Fantasy Football"
+        val line1 = mainTitle
+        val line2 = subTitle
         val angleRadians = atan(size.height / size.width)
         val angleDegrees = (angleRadians * 180 / PI).toFloat()
         val skewX = tan(-angleRadians)
