@@ -20,6 +20,7 @@ import com.jervisffb.resources.bb2020.ELVEN_UNION_TEAM_BB2020
 import com.jervisffb.resources.bb2020.HUMAN_TEAM_BB2020
 import com.jervisffb.resources.bb2020.KHORNE_TEAM_BB2020
 import com.jervisffb.resources.bb2020.SKAVEN_TEAM_BB2020
+import com.jervisffb.resources.bb2020.WOOD_ELF_TEAM_BB2020
 
 typealias FumbblGame = com.jervisffb.fumbbl.net.model.Game
 typealias FumbblTeam = com.jervisffb.fumbbl.net.model.Team
@@ -114,6 +115,7 @@ private fun extractRoster(roster: FumbblRoster): Roster {
         "Khorne" -> KHORNE_TEAM_BB2020
         "Elven Union" -> ELVEN_UNION_TEAM_BB2020
         "Skaven" -> SKAVEN_TEAM_BB2020
+        "Wood Elf" -> WOOD_ELF_TEAM_BB2020
         else -> TODO("Missing team: ${roster.rosterName}")
     }
 }

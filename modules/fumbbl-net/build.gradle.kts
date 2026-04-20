@@ -19,6 +19,8 @@ kotlin {
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
+            systemProperty("FUMBBL_REPLAY", System.getenv("FUMBBL_REPLAY") ?: "")
+            systemProperty("PUZZLE_OUT_DIR", System.getenv("PUZZLE_OUT_DIR") ?: "")
         }
     }
     iosArm64()
