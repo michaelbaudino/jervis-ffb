@@ -17,6 +17,7 @@ import com.jervisffb.engine.teamBuilder
 import com.jervisffb.fumbbl.net.model.SpecialRule
 import com.jervisffb.resources.bb2020.AMAZON_TEAM_BB2020
 import com.jervisffb.resources.bb2020.CHAOS_DWARF_TEAM_BB2020
+import com.jervisffb.resources.bb2020.CHAOS_RENEGADE_TEAM_BB2020
 import com.jervisffb.resources.bb2020.DWARF_TEAM_BB2020
 import com.jervisffb.resources.bb2020.ELVEN_UNION_TEAM_BB2020
 import com.jervisffb.resources.bb2020.HUMAN_TEAM_BB2020
@@ -115,6 +116,7 @@ private fun extractRoster(roster: FumbblRoster): Roster {
     return when (roster.rosterName) {
         "Amazon" -> AMAZON_TEAM_BB2020
         "Chaos Dwarf" -> CHAOS_DWARF_TEAM_BB2020
+        "Chaos Renegade" -> CHAOS_RENEGADE_TEAM_BB2020
         "Dwarf" -> DWARF_TEAM_BB2020
         "Human" -> HUMAN_TEAM_BB2020
         "Imperial Nobility" -> IMPERIAL_NOBILITY_TEAM_BB2020
