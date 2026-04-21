@@ -9,6 +9,10 @@ import com.jervisffb.engine.rules.common.roster.RosterPosition
 import com.jervisffb.engine.rules.common.roster.TeamSpecialRule
 import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType.BLOCK
+import com.jervisffb.engine.rules.common.skills.SkillType.BRAWLER
+import com.jervisffb.engine.rules.common.skills.SkillType.BREATHE_FIRE
+import com.jervisffb.engine.rules.common.skills.SkillType.DISTURBING_PRESENCE
+import com.jervisffb.engine.rules.common.skills.SkillType.IRON_HARD_SKIN
 import com.jervisffb.engine.rules.common.skills.SkillType.SPRINT
 import com.jervisffb.engine.rules.common.skills.SkillType.SURE_FEET
 import com.jervisffb.engine.rules.common.skills.SkillType.TACKLE
@@ -78,6 +82,25 @@ val BULL_CENTAUR_BLITZERS =
         SpriteSheet.ini("${iconRootPath}/chaosdwarf_bullcentaurblitzer.png", 2),
         SingleSprite.ini("${portraitRootPath}/chaosdwarf_bullcentaurblitzer.png")
     )
+val CHAOS_DWARF_FLAMESMITH =
+    RosterPosition(
+        PositionId("chaos-dwarf-flamesmith"),
+        2,
+        "Chaos Dwarf Flamesmiths",
+        "Chaos Dwarf Flamesmith",
+        "Fs",
+        80_000,
+        5, 3, 4, 0, 10,
+        listOf(BRAWLER.id(), BREATHE_FIRE.id(), DISTURBING_PRESENCE.id(), THICK_SKULL.id()),
+        listOf(SkillCategory.GENERAL, SkillCategory.STRENGTH),
+        listOf(SkillCategory.AGILITY, SkillCategory.MUTATIONS),
+        emptyList(),
+        emptyList(),
+        PlayerSize.STANDARD,
+        SpriteSheet.ini("${iconRootPath}/chaosdwarf_flamesmith.png", 2),
+        SingleSprite.ini("${portraitRootPath}/chaosdwarf_flamesmith.png")
+    )
+
 val ENSLAVED_MINOTAUR =
     RosterPosition(
         PositionId("chaos-dwarf-enslaved-minotaur"),
@@ -120,6 +143,7 @@ val CHAOS_DWARF_TEAM_BB2020 = Roster(
     positions = listOf(
         HOBGOBLIN_LINEMEN,
         CHAOS_DWARF_BLOCKERS,
+        CHAOS_DWARF_FLAMESMITH,
         BULL_CENTAUR_BLITZERS,
         ENSLAVED_MINOTAUR,
     ),
