@@ -4,9 +4,9 @@
 </h1>
 
 <p align="center">
-  <img src="screenshots/screenshot1.png" width="30%" />
-  <img src="screenshots/screenshot2.png" width="30%" />
-  <img src="screenshots/screenshot5.png" width="30%" />
+     <a href="https://www.ilios.dk/jervis/screenshot1.png"><img src="https://www.ilios.dk/jervis/screenshot1_preview.png" width="30%" /></a>
+     <a href="https://www.ilios.dk/jervis/screenshot2.png"><img src="https://www.ilios.dk/jervis/screenshot2_preview.png" width="30%" /></a>
+     <a href="https://www.ilios.dk/jervis/screenshot3.png"><img src="https://www.ilios.dk/jervis/screenshot3_preview.png" width="30%" /></a>
 </p>
 
 This repository contains the source code for the Jervis project.
@@ -122,7 +122,6 @@ This repository is structured in the following way:
   Kotlin Notebooks.
 - `mavenRepo/`: contains some packages that are not available on Maven Central.
   Artifacts here are used to build parts of the project.
-- `screenshots/`: Contains screenshots from the game UI.
 - `logo/`: Contains project logos used by various platforms.
 - `Debug-FantasyFootballClient/`: It is empty as a default, but when using
   [`fumbble-cli`](./fumbbl-cli) it can contain a modified version of the FUMBBL
@@ -131,6 +130,8 @@ This repository is structured in the following way:
   has not been tested for a while and since the FFB Client is now open source,
   it is also less relevant, as you can just run the real client instead. See
   [How to run FFB locally](./docs/working-with-ffb.md).
+- `website`: Contains the source code for the public non-coder website. It is built
+  using [Zensical](https://zensical.org/).
 
 
 ### Modules Structure
@@ -173,10 +174,7 @@ of the following modules:
 - `replay-analyzer`: A helper for processing and converting the JSON content of 
    a FUMBBL replay file into something that Jervis can process.
 
-- `website`: Contains the source code for the public non-coder website. It is built
-   using [Zensical](https://zensical.org/).
-
-
+  
 ### UI Resources
 
 The Jervis Client is heavily inspired by [FUMBBL](https://github.com/christerk/ffb)
