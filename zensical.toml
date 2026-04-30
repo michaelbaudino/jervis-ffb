@@ -10,7 +10,8 @@ extra_css = ["assets/stylesheets/extra.css"]
 nav = [
   { "Home" = [
       { "Home" = "index.md" },
-      { "Download page" = "https://cmelchior.github.io/jervis-ffb/download.html" }
+      { "Download page" = "https://cmelchior.github.io/jervis-ffb/download.html" },
+      { "Screenshots" = "screenshots.md" }
   ]},
   { "2025 Rules (3rd Season)" = [
     { "2025 Rules" = "bb2025/index.md" },
