@@ -61,6 +61,9 @@ fun main() = runBlocking {
         val scale = 1.22f
         val width = 145f + 782f + 145f
         val height = 690f
+        // Aspect ratio for Chrome content window on Windows 4K screen
+        // val width = 145f + 782f + 145f
+        // val height = 547f
         val defaultWindowSize =
             (DpSize(pixelsToDp(width), pixelsToDp(height)) * scale) +
                 DpSize(0.dp, pixelsToDp(28f))
