@@ -1,3 +1,9 @@
+/* Make screenshot captions look better */
+.md-typeset figcaption {
+    padding-top: 0;
+    margin-top: -20px;
+}
+
 /* Logos as masks */
 .admonition.naf .admonition-title::before {
     -webkit-mask-image: url("/jervis-ffb/assets/naf.svg");
