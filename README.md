@@ -17,25 +17,26 @@ Workshop.
 
 This includes:
  
-- A standalone rules engine for the 2020 version of Blood Bowl. The engine 
-  is UI agnostic and can be used with any UI framework.
+- A standalone rules engine for the 2025 version of Blood Bowl. The engine 
+  is UI-agnostic and can be used with any UI framework.
 
-- A Game Client UI that can run either as a website, iPad or Desktop app.
+- A Game Client UI that can run either as a website, iPad, or Desktop app.
 
-- An API that is AI friendly, making it possible to replace a player with a 
+- An API that is AI-friendly, making it possible to replace a player with a 
   custom AI agent or use in AI training.
 
 - A replay adapter that can convert any FUMBBL replay into an equivalent Jervis
   game. This makes it possible to use already existing replays to train AI 
-  agents.
+  agents (WIP).
 
-The project is written in Kotlin Multiplatform primarily focusing on Web (using WASM)
-and Desktop (using a packaged JVM). The target is to have a faithful adaption of 
-the core Blood Bowl rules as well as any expansions.
+The project is written in Kotlin Multiplatform primarily focusing on Web (using 
+WASM) and Desktop (using a packaged JVM). The target is to have a faithful 
+adaption of  the core Blood Bowl rules as well as any expansions.
 
 Public documentation can be found here: https://cmelchior.github.io/jervis-ffb/
 
-**The project is work-in-progress, so things might differ from what is described here.**
+**The project is a work-in-progress, so things might differ from what is 
+described here.**
 
 
 ## Disclaimer
@@ -54,7 +55,7 @@ Test builds are created on every successful push to the `main` branch.
   works on the latest versions of Safari. Read here for more info: 
   https://kotlinlang.org/docs/wasm-troubleshooting.html#browser-versions
 
-* Desktop client installers for Windows, macOS and Linux can be found here:
+* Desktop client installers for Windows, macOS, and Linux can be found here:
   https://cmelchior.github.io/jervis-ffb/download.html. They only need to be 
   installed once and can then update themselves whenever there is a new release.
   This is done using [Conveyor](https://www.hydraulic.dev/).
@@ -78,10 +79,11 @@ Development requirements are:
 Note, this has only been tested on Mac and Windows, so things on Linux might be 
 broken.
 
-Some code for handling game settings are generated as part of the build process, 
+Some code for handling game settings is generated as part of the build process, 
 so unresolved references might be present when opening this project for the 
 first time. This should be fixed after the first build.
 
+### Building Game Clients
 A local desktop game client can be started using:
 
 ```shell
@@ -98,6 +100,7 @@ The iPad version can be built and installed using Xcode. Use the project file
 found here [`modules/iosApp/iosApp.xcodeproj`](modules/iosApp/iosApp.xcodeproj). 
 You will need to supply your own signature under "Signing & Capabilities".
 
+### Building Documentation Website
 The documentation website is built by installing Zensical:
 
 ```shell
@@ -127,11 +130,11 @@ This repository is structured in the following way:
   [`fumbble-cli`](./fumbbl-cli) it can contain a modified version of the FUMBBL
   Client that can be used to inspect the FUMMBL network traffic. See
   [the documentation](modules/fumbbl-cli/README.md) for more details. Note, this
-  has not been tested for a while and since the FFB Client is now open source,
+  has not been tested for a while, and since the FFB Client is now open source,
   it is also less relevant, as you can just run the real client instead. See
   [How to run FFB locally](./docs/working-with-ffb.md).
-- `website`: Contains the source code for the public non-coder website. It is built
-  using [Zensical](https://zensical.org/).
+- `website`: Contains the source code for the public non-coder website. It is 
+  built using [Zensical](https://zensical.org/).
 
 
 ### Modules Structure
@@ -141,8 +144,8 @@ of the following modules:
 
 - `fumbbl-cli`: Small commandline tool for downloading the FUMBBL Client 
   and modifying it, so all websocket traffic is sent to the console or 
-  download a replay for further analysis. Note, the last functionality should only 
-  be used sparingly as it taxes the FUMBBL server too much if used in bulk. 
+  download a replay for further analysis. Note, the last functionality should 
+  only be used sparingly as it taxes the FUMBBL server too much if used in bulk. 
 
 - `fumbbl-net`: Network code and classes for communicating with the FUMBBL 
    server as well as adapters for converting a FUMBBL game into a Jervis
@@ -169,7 +172,7 @@ of the following modules:
 
 - `platform-utils`: All helper methods that require platform-specific
   APIs are placed here. This includes things like filesystem access, setting up 
-  networking and reflection.
+  networking, and reflection.
 
 - `replay-analyzer`: A helper for processing and converting the JSON content of 
    a FUMBBL replay file into something that Jervis can process.
@@ -178,13 +181,13 @@ of the following modules:
 ### UI Resources
 
 The Jervis Client is heavily inspired by [FUMBBL](https://github.com/christerk/ffb)
-and borrows many of its assets from there. They are used with permission. All rights 
-and credits go to [their respective authors](https://fumbbl.com/p/attribution), and 
+and borrows many of its assets from there. They are used with permission. All 
+rights and credits go to [their respective authors](https://fumbbl.com/p/attribution), and 
 they cannot be re-distributed without permission. 
 
-If you are the author of any icons or other resources and don't want them used in this
-project, please contact christianmelchior at gmail dot com, and they will be removed
-immediately.
+If you are the author of any icons or other resources and don't want them used 
+in this project, please contact christianmelchior at gmail dot com, and they 
+will be removed immediately.
 
 
 ## Why Jervis?
