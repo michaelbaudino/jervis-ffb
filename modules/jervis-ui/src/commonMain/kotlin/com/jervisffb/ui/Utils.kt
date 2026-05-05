@@ -21,6 +21,7 @@ import com.jervisffb.engine.model.CoachId
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerNo
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.inducements.Bribe
 import com.jervisffb.engine.model.inducements.TeamMascot
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.builder.GameType
@@ -192,7 +193,7 @@ fun createDefaultBB2025HomeTeam(rules: Rules): Team {
         specialRules.add(TeamSpecialRule.TEAM_CAPTAIN)
     }
 
-    // Until we get proper inducement support, manually add a Mascot
+    // Until we get proper inducement support, manually add a Mascot and Bribes
     val mascot = TeamMascot(team.id)
     team.mascots.add(mascot)
     team.rerolls.add(mascot.reroll)
@@ -222,7 +223,7 @@ fun createDefaultBB2020AwayTeam(rules: Rules): Team {
 }
 
 fun createDefaultBB2025AwayTeam(rules: Rules): Team {
-    return teamBuilder(rules, LIZARDMEN_TEAM_BB2025) {
+    val team = teamBuilder(rules, LIZARDMEN_TEAM_BB2025) {
         coach = Coach(CoachId("away-coach"), "AwayCoach")
         name = "AwayTeam"
         addPlayer(PlayerId("A1"), "Kroxigor-1-A", PlayerNo(1), com.jervisffb.resources.bb2025.KROXIGOR)
@@ -240,6 +241,11 @@ fun createDefaultBB2025AwayTeam(rules: Rules): Team {
         apothecaries = 1
         teamValue = 1_000_000
     }
+
+    // Until we get proper inducement support, manually add Bribes
+    team.bribes.add(Bribe())
+    team.bribes.add(Bribe())
+    return team
 }
 
 fun createDefaultBB7HomeTeam(rules: Rules): Team {

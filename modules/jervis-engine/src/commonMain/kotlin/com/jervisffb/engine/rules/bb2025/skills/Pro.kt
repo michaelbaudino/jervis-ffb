@@ -48,7 +48,7 @@ class Pro(
         if (state.activePlayer != player) return false
         // It is a bit unclear if Pro can re-roll a different set of dice than a Team re-roll.
         // For now, we assume the answer is mostly no. The activePlayer check will filter out
-        // most candidates anyway (like Landing). Team Captain/Mascot is the exception so far.
+        // most candidates anyway (like Landing). Team Captain/Mascot is the exceptions so far.
         if (type == DiceRollType.TEAM_CAPTAIN) return false
         if (type == DiceRollType.TEAM_MASCOT) return false
         if (!state.rules.canBeRerolledByTeamReroll(type)) return false

@@ -356,20 +356,35 @@ private fun TeamFeaturesRow(
             ) {
                 when (feature.type) {
                     UiTeamFeatureType.APOTHECARY -> {
-                        TeamFeature(value = feature.value, icon = IconFactory.getApothecaryIcon(height), available = !feature.used)
+                        TeamFeature(
+                            value = feature.value,
+                            icon = IconFactory.getApothecaryIcon(height),
+                            available = !feature.used,
+                            leftSide = leftSide
+                        )
                     }
                     UiTeamFeatureType.BLOODWEISER_KEG -> TODO()
                     UiTeamFeatureType.UNKNOWN -> TODO()
                     UiTeamFeatureType.TEAM_CAPTAIN -> {
                         TeamFeature(
                             value = feature.value,
-                            content = defaultTeamFeatureStatus("TC")
+                            content = defaultTeamFeatureStatus("TC"),
+                            leftSide = leftSide
                         )
                     }
                     UiTeamFeatureType.CHEERING_FANS_OFFENSIVE_ASSIST -> {
                         TeamFeature(
                             value = feature.value,
-                            content = defaultTeamFeatureStatus("CF")
+                            content = defaultTeamFeatureStatus("CF"),
+                            leftSide = leftSide
+                        )
+                    }
+
+                    UiTeamFeatureType.BRIBE -> {
+                        TeamFeature(
+                            value = feature.value,
+                            content = defaultTeamFeatureStatus("B"),
+                            leftSide = leftSide
                         )
                     }
                 }

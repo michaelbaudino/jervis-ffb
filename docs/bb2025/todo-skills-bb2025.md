@@ -378,7 +378,6 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Nerves of Steel
   - [x] Ignore Marked modifiers on Catch
   - [x] Ignore Marked modifiers on Pass
-- [ ] On the Ball
 - [ ] Pass
   - [ ] Works for Bombs
   - [x] Works for normal passes
@@ -537,6 +536,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Can be thrown using Throw Team-mate
   - [x] Can be thrown prone when using Throw Team-mate
 - [ ] Secret Weapon*
+  - [ ] Roll at end of drive
+  - [ ] Follow normal Argue the call procedures (e.g. bribe)
 - [x] Stab
   - [x] Replace Block
   - [x] Mighty Blow does not work on Stab

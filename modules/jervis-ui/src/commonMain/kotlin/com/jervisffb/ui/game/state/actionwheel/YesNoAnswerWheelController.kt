@@ -47,6 +47,7 @@ import com.jervisffb.engine.rules.common.procedures.Catch
 import com.jervisffb.engine.rules.common.procedures.Pickup
 import com.jervisffb.engine.rules.common.procedures.TheKickOff
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
+import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
 import com.jervisffb.engine.rules.common.procedures.actions.pass.PassContext
@@ -574,10 +575,24 @@ object UseApothecaryWheelController: YesNoAnswerWheelController() {
 
 object ArgueTheCallWheelController: YesNoAnswerWheelController() {
     override val nodes: Set<Node> = setOf(
-        FoulStep.DecideToArgueTheCall,
+        BeingSentOff.DecideToArgueTheCall,
     )
     override val yesLabel: String = "Argue The Call"
     override val noLabel: String = "Stay Silent"
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val context = state.getContext<FoulContext>()
+        val player = context.fouler
+        return player.coordinates
+    }
+}
+
+object UseBribeWheelController: YesNoAnswerWheelController() {
+    override val nodes: Set<Node> = setOf(
+        BeingSentOff.ChooseToUseBribe,
+    )
+    override val yesLabel: String = "Use Bribe"
+    override val noLabel: String = "Do not use Bribe"
 
     override fun getActionWheelCenter(state: Game): PitchCoordinate {
         val context = state.getContext<FoulContext>()

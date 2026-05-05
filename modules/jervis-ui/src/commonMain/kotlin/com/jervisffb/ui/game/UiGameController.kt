@@ -40,11 +40,13 @@ import com.jervisffb.ui.game.state.UiActionProviderGroup
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2020WheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025PassWheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025ThrowTeamMateWheelController
+import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallWheelController
 import com.jervisffb.ui.game.state.actionwheel.AwayTeamFanFactorRoll
 import com.jervisffb.ui.game.state.actionwheel.BoneHeadWheelController
 import com.jervisffb.ui.game.state.actionwheel.BounceRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BreatheFireWheelController
+import com.jervisffb.ui.game.state.actionwheel.BribeRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BrilliantCoachingKickingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BrilliantCoachingReceivingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CatchWheelController
@@ -101,6 +103,7 @@ import com.jervisffb.ui.game.state.actionwheel.UnchannelledFuryWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseApothecaryWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBigHandWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBlockWheelController
+import com.jervisffb.ui.game.state.actionwheel.UseBribeWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBullseyeWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDirtyPlayerWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDivingCatchWheelController
@@ -293,7 +296,10 @@ class UiGameController(
 
         UseApothecaryWheelController,
         ArgueTheCallWheelController,
+        UseBribeWheelController,
         ChooseAlternativeToMascotWheelController,
+        ArgueTheCallRollWheelController,
+        BribeRollWheelController,
 
         // Pre-game / Kick-off Rolls
         HomeTeamFanFactorRoll,

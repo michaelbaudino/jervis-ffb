@@ -15,6 +15,9 @@ import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.DodgySnack
 import com.jervisffb.engine.rules.builder.DiceRollOwner
+import com.jervisffb.engine.rules.common.procedures.actions.foul.ArgueTheCallRoll
+import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOffContext
+import com.jervisffb.engine.rules.common.procedures.actions.foul.BribeRoll
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BB2020CheeringFans
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BB2025CheeringFans
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BrilliantCoaching
@@ -257,6 +260,44 @@ object PitchInvasionReceivingTeamRollWheelController: D6RollWheelController() {
         return when (isHomeTeam) {
             true -> getHomeCenterCoordinates(state)
             false -> getAwayCenterCoordinates(state)
+        }
+    }
+}
+
+object ArgueTheCallRollWheelController: D6RollWheelController() {
+    override val buttonIdPrefix: String = "argue-the-call"
+    override val rollDiceNode: Node = ArgueTheCallRoll.RollDie
+    override val diceRollType: DiceRollType = DiceRollType.ARGUE_THE_CALL
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val player = state.getContext<BeingSentOffContext>().player
+        return if (player.location.isOnPitch(state.rules)) {
+            player.coordinates
+        } else {
+            val isHomeTeam = player.team.isHomeTeam()
+            when (isHomeTeam) {
+                true -> getHomeCenterCoordinates(state)
+                false -> getAwayCenterCoordinates(state)
+            }
+        }
+    }
+}
+
+object BribeRollWheelController: D6RollWheelController() {
+    override val buttonIdPrefix: String = "bribe"
+    override val rollDiceNode: Node = BribeRoll.RollDie
+    override val diceRollType: DiceRollType = DiceRollType.BRIBE
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val player = state.getContext<BeingSentOffContext>().player
+        return if (player.location.isOnPitch(state.rules)) {
+            player.coordinates
+        } else {
+            val isHomeTeam = player.team.isHomeTeam()
+            when (isHomeTeam) {
+                true -> getHomeCenterCoordinates(state)
+                false -> getAwayCenterCoordinates(state)
+            }
         }
     }
 }

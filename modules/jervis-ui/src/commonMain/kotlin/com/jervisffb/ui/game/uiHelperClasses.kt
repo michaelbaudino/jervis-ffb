@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 enum class UiTeamFeatureType {
     APOTHECARY,
     BLOODWEISER_KEG,
+    BRIBE,
     CHEERING_FANS_OFFENSIVE_ASSIST,
     TEAM_CAPTAIN,
     UNKNOWN,

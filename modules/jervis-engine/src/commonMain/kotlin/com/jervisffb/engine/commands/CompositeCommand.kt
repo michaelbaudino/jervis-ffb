@@ -18,7 +18,7 @@ class CompositeCommand(val commands: List<Command>) : Command {
     }
 
     override fun undo(state: Game) {
-        for (i in commands.size - 1 downTo 0) {
+        for (i in commands.lastIndex downTo 0) {
             commands[i].undo(state)
         }
     }

@@ -556,6 +556,16 @@ not available, and Prayers to Nuffle has wording that prevents this scenario.
 So for now, Jervis will throw an error if Players end up having the same skill
 twice.
 
+## Page 144 - Bribe
+The rules around Bribes are slightly unclear when it comes to handling the 
+Coach. Rolling a 1 results in "On a natural 1, the referee pockets the Bribe 
+but sends the player off anyway...", but there is no mention of the coach.
+
+For this reason, Jervis interprets Bribes the following way:
+
+If a 1 is rolled on the Argue the Call table and a 2+ on the Bribe, the player
+stays on the pitch, and there is no turnover, but the Coach is still banned.
+
 ## Page 144 - Team Mascot
 
 ### Loner

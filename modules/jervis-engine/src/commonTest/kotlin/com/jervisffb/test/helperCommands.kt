@@ -273,6 +273,16 @@ fun followUp(value: Boolean) = when (value) {
     false -> Cancel
 }
 
+fun argueTheCall(value: Boolean) = when (value) {
+    true -> Confirm
+    false -> Cancel
+}
+
+fun useBribe(value: Boolean) = when (value) {
+    true -> Confirm
+    false -> Cancel
+}
+
 fun foulAppearanceRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
     roll,
     reroll,

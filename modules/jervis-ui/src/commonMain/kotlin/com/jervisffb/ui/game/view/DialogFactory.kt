@@ -23,7 +23,7 @@ import com.jervisffb.engine.rules.common.procedures.SetupTeam
 import com.jervisffb.engine.rules.common.procedures.SetupTeamContext
 import com.jervisffb.engine.rules.common.procedures.WeatherRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.ArgueTheCallRoll
-import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
+import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
 import com.jervisffb.engine.rules.common.procedures.actions.move.ScoringATouchdown
 import com.jervisffb.engine.rules.common.procedures.tables.injury.ArmourRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.CasualtyRoll
@@ -65,7 +65,7 @@ object DialogFactory {
         val userInput: UserInputDialog? =
             when (val currentNode = controller.state.stack.currentNode()) {
 
-                is ArgueTheCallRoll.RollDice -> {
+                is ArgueTheCallRoll.RollDie -> {
                     MultipleChoiceUserInputDialog.createArgueTheCallRollDialog(
                         controller.state.getContext<FoulContext>(),
                         rules
@@ -126,7 +126,7 @@ object DialogFactory {
                     )
                 }
 
-                is FoulStep.DecideToArgueTheCall -> {
+                is BeingSentOff.DecideToArgueTheCall -> {
                     SingleChoiceInputDialog.createArgueTheCallDialog(controller.state.getContext<FoulContext>())
                 }
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.em
 import com.jervisffb.ui.utils.jdp
 import com.jervisffb.ui.utils.jsp
@@ -27,13 +28,14 @@ import com.jervisffb.ui.utils.jsp
 fun TeamFeature(
     value: Int?,
     icon: ImageBitmap,
+    leftSide: Boolean,
     // If false, it means it has been used, but will return.
     // Inducements used that are 1-time should just disappear.
-    available: Boolean = true
+    available: Boolean = true,
 ) {
     TeamFeature(
-        value,
-        {
+        value = value,
+        content = {
             Image(
                 modifier = Modifier, //.dropShadow(blurRadius = 4.dp),
                 bitmap = icon,
@@ -42,7 +44,8 @@ fun TeamFeature(
                 filterQuality = FilterQuality.None,
             )
         },
-        available
+        leftSide = leftSide,
+        available = available,
     )
 }
 
@@ -53,30 +56,43 @@ fun TeamFeature(
 fun TeamFeature(
     value: Int?,
     content: @Composable () -> Unit,
+    leftSide: Boolean,
     // If false, it means it has been used, but will return.
     // Inducements used that are 1-time should just disappear.
     available: Boolean = true,
+    distanceToIconPadding: Dp = 2.jdp,
+    textPadding: Dp = 6.jdp,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        if (!leftSide) {
+            TeamFeatureCount(Modifier.padding(start = textPadding, end = distanceToIconPadding).alpha(if (available) 1f else 0.3f), value, available)
+        }
         content()
-        if (value != null && value > 1) {
-            Text(
-                modifier = Modifier.padding(start = 6.jdp).alpha(if (available) 1f else 0.3f),
-                fontSize = 22.jsp,
-                text = value.toString(),
-                color = Color.White,
-                lineHeight = 1.em,
-                fontWeight = FontWeight.Bold,
-                fontFamily = JervisTheme.fontFamily(),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    shadow = Shadow(
-                        color = Color.Black,
-                        offset = Offset(2f, 2f),
-                    )
+        if (leftSide) {
+            TeamFeatureCount(Modifier.padding(start = distanceToIconPadding, end = textPadding).alpha(if (available) 1f else 0.3f), value, available)
+        }
+    }
+}
+
+@Composable
+private fun TeamFeatureCount(modifier: Modifier, value: Int?, available: Boolean) {
+    if (value != null && value > 1) {
+        Text(
+            modifier = modifier,
+            fontSize = 22.jsp,
+            text = value.toString(),
+            color = Color.White,
+            lineHeight = 1.em,
+            fontWeight = FontWeight.Bold,
+            fontFamily = JervisTheme.fontFamily(),
+            style = MaterialTheme.typography.bodySmall.copy(
+                shadow = Shadow(
+                    color = Color.Black,
+                    offset = Offset(2f, 2f),
                 )
             )
-        }
+        )
     }
 }

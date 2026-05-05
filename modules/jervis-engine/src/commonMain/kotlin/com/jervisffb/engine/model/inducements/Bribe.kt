@@ -1,5 +1,6 @@
 package com.jervisffb.engine.model.inducements
 
+import com.jervisffb.engine.rules.common.skills.Duration
 import kotlinx.serialization.Serializable
 
 /**
@@ -7,7 +8,8 @@ import kotlinx.serialization.Serializable
  * Its purpose is to track the usage of the Bribe during a game,
  * and now how/when to purchase it.
  *
- * See page 91 in the rulebook.
+ * See page 91 in the BB202 rulebook.
+ * See page 144 in the BB2025 rulebook.
  */
 @Serializable
-data class Bribe(var used: Boolean = false)
+data class Bribe(var used: Boolean = false, val duration: Duration = Duration.END_OF_GAME)

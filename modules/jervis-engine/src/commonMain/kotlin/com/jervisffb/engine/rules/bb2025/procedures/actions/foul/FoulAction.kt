@@ -30,7 +30,7 @@ import com.jervisffb.engine.model.context.FoulContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
-import com.jervisffb.engine.reports.ReportFoulResult
+import com.jervisffb.engine.reports.ReportFoulingPlayer
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.ResolveMoveTypeStep
@@ -66,7 +66,6 @@ object FoulAction : Procedure() {
         val context = state.getContext<FoulContext>()
         val activePlayerContext = state.getContext<ActivatePlayerContext>()
         return compositeCommandOf(
-            if (context.victim != null) ReportFoulResult(context) else null,
             RemoveContext<FoulContext>(),
             UpdateContext(
                 activePlayerContext.copy(
@@ -164,6 +163,9 @@ object FoulAction : Procedure() {
     }
 
     object ResolveFoul : ParentNode() {
+        override fun onEnterNode(state: Game, rules: Rules): Command? {
+            return ReportFoulingPlayer(state.getContext<FoulContext>())
+        }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = FoulStep
         override fun onExitNode(state: Game, rules: Rules): Command {
             val context = state.getContext<FoulContext>()

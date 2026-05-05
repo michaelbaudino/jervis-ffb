@@ -128,7 +128,11 @@ book.
     - [ ] Bloodweiser Kegs
     - [ ] Special Plays (soooo many cards)
     - [ ] Extra Team Training
-    - [ ] Bribes
+    - [x] Bribes
+      - [x] Decide after Argue the Call
+      - [x] 2+ to ignore result. Coach is still banned
+      - [x] 1 = Bribe lost, result stands
+      - [x] No turnover on success
     - [ ] Wandering Apothecaries
     - [ ] Mortuary Assistant
     - [ ] Plague Doctor
@@ -480,6 +484,7 @@ book.
     - [x] Cannot hand-off to opponent
     - [ ] Target must be Standing and not have lost their tackle zones
 - [x] Argue the Call Table
+    - [x] Rolling is optional
     - [x] You're Outta Here
     - [x] I Don't Care
     - [x] Well, When You Put It Like That...

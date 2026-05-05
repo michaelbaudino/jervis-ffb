@@ -79,6 +79,20 @@ object TeamFeatureStatusIndicator: PitchStatusIndicator {
             }
         }
 
+        // Bribes
+        val bribes = team.bribes.count { !it.used }
+        if (bribes > 0) {
+            featureList.add(
+                UiTeamFeature(
+                    name = "Bribe",
+                    value = bribes,
+                    type = UiTeamFeatureType.BRIBE,
+                    used = false
+                )
+            )
+        }
+
+
         return teamInfo.copy(
             featureList = teamInfo.featureList.addAll(featureList)
         )

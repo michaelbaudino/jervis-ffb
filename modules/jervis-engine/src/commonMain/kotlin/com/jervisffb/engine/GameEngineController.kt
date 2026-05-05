@@ -457,7 +457,7 @@ class GameEngineController(
     }
 
     // Move the state machine forward until we get to the next ActionNode that requires
-    // user input. Only used in MANUAL and TEST mode.
+    // user input.
     private fun rollForwardToNextActionNode() {
         if (
             !stack.isEmpty() &&
@@ -466,7 +466,7 @@ class GameEngineController(
                     stack.currentNode() is ParentNode ||
                     // Some action nodes only accept "Continue" events if all other options have been exhausted
                     // We want to roll over these as well.
-                    stack.currentNode() is ActionNode && getAvailableActions().let { it.size == 1 && it.first() == ContinueWhenReady }
+                    stack.currentNode() is ActionNode && getAvailableActions().singleOrNull() == ContinueWhenReady
             )
         ) {
             when (val currentNode: Node = stack.currentNode()) {
