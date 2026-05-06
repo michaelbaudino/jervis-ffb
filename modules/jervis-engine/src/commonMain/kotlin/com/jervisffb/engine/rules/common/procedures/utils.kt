@@ -22,6 +22,7 @@ import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.getSkillOrNull
 import com.jervisffb.engine.model.inducements.InfamousCoachAbility
 import com.jervisffb.engine.model.inducements.InfamousCoachingStaff
 import com.jervisffb.engine.model.inducements.SpecialPlayCard
@@ -33,6 +34,7 @@ import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.rules.JUMP_DISTANCE
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.SPRINT_EXTRA_RUSHES
+import com.jervisffb.engine.rules.bb2025.skills.Shadowing
 import com.jervisffb.engine.rules.common.rerolls.LeaderTeamReroll
 import com.jervisffb.engine.rules.common.skills.Duration
 import com.jervisffb.engine.rules.common.skills.RerollSource
@@ -264,17 +266,12 @@ private fun gatherResetPlayerTemporaryModifiersCommands(
     builder.addAll(resetSkillRerolls)
 
     // Shadowing is special as it tracks move usage, we need to reset its counter at the end of a turn
-    val resetShadowingCounter = if (duration == Duration.END_OF_TURN) {
-        val shadowingSkill = player.getSkillOrNull(SkillType.SHADOWING)
-        if (shadowingSkill is com.jervisffb.engine.rules.bb2025.skills.Shadowing) {
-            listOf(ResetShadowingSkill(player))
-        } else {
-            emptyList()
+    if (duration == Duration.END_OF_TURN) {
+        val shadowingSkill = player.getSkillOrNull<Shadowing>()
+        if (shadowingSkill != null) {
+            builder.add(ResetShadowingSkill(player))
         }
-    } else {
-        emptyList()
     }
-    builder.addAll(resetShadowingCounter)
 
     // Find all other temporary effects
     val removableTemporaryEffects = player.statusEffects

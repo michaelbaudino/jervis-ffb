@@ -74,7 +74,8 @@ object BeingSentOff: Procedure() {
     object DecideToArgueTheCall: ActionNode() {
         override fun actionOwner(state: Game, rules: Rules): Team = state.getContext<BeingSentOffContext>().player.team
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
-            return if (state.activeTeamOrThrow().coachBanned) {
+            val context = state.getContext<BeingSentOffContext>()
+            return if (context.player.team.coachBanned) {
                 // If the coach was already banned, they cannot argue the call again.
                 listOf(ContinueWhenReady)
             } else {

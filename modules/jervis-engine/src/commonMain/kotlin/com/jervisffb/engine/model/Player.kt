@@ -313,3 +313,7 @@ fun Player.isSkillAvailable(type: SkillType): Boolean {
 inline fun <reified T: Skill<*>> Player.getSkill(): T {
     return this.skills.first { it is T } as T
 }
+
+inline fun <reified T: Skill<*>> Player.getSkillOrNull(): T? {
+    return this.skills.firstOrNull { it is T } as T?
+}

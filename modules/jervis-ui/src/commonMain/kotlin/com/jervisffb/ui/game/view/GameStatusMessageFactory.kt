@@ -43,6 +43,7 @@ import com.jervisffb.engine.rules.common.procedures.BoneHeadRoll
 import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.Catch
 import com.jervisffb.engine.rules.common.procedures.CatchRoll
+import com.jervisffb.engine.rules.common.procedures.DealWithSecretWeaponsStep
 import com.jervisffb.engine.rules.common.procedures.DetermineKickingTeamStep
 import com.jervisffb.engine.rules.common.procedures.DeviateRoll
 import com.jervisffb.engine.rules.common.procedures.DeviateRollContext
@@ -565,6 +566,18 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                 when {
                     isActiveClient -> "Decide whether to use a Bribe"
                     else -> "Waiting for opponent to use a Bribe or not"
+                }
+            },
+            DealWithSecretWeaponsStep.ReceivingTeamSelectPlayerToSendOff to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Player to Send-off for using a Secret Weapon"
+                    else -> "Waiting for opponent to select a player to send-off using a Secret Weapon"
+                }
+            },
+            DealWithSecretWeaponsStep.KickingTeamSelectPlayerToSendOff to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Player to Send-off for using a Secret Weapon"
+                    else -> "Waiting for opponent to select a player to send-off using a Secret Weapon"
                 }
             }
         )

@@ -6,6 +6,8 @@ The TODO list is by no means exhaustive, it is just a place to dump things as
 they come up.
 
 ## Todo List
+- [ ] Mark Coach as Banned somehow on the Team Badge
+- [ ] Team Feature Icon for Bribe
 - [ ] Add Action Wheel Icon for Mascot Team Reroll
 - [ ] Add Action Wheel Icon for Leader Team Reroll
 - [ ] Add Action Wheel Icon for Brilliant Coaching Team Reroll

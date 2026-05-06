@@ -48,6 +48,7 @@ import com.jervisffb.engine.rules.common.procedures.Pickup
 import com.jervisffb.engine.rules.common.procedures.TheKickOff
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
+import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOffContext
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
 import com.jervisffb.engine.rules.common.procedures.actions.pass.PassContext
@@ -581,8 +582,8 @@ object ArgueTheCallWheelController: YesNoAnswerWheelController() {
     override val noLabel: String = "Stay Silent"
 
     override fun getActionWheelCenter(state: Game): PitchCoordinate {
-        val context = state.getContext<FoulContext>()
-        val player = context.fouler
+        val context = state.getContext<BeingSentOffContext>()
+        val player = context.player
         return player.coordinates
     }
 }
@@ -595,8 +596,8 @@ object UseBribeWheelController: YesNoAnswerWheelController() {
     override val noLabel: String = "Do not use Bribe"
 
     override fun getActionWheelCenter(state: Game): PitchCoordinate {
-        val context = state.getContext<FoulContext>()
-        val player = context.fouler
+        val context = state.getContext<BeingSentOffContext>()
+        val player = context.player
         return player.coordinates
     }
 }

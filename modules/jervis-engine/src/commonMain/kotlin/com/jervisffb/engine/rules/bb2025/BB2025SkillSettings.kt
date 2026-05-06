@@ -58,6 +58,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Regeneration
 import com.jervisffb.engine.rules.bb2025.skills.RightStuff
 import com.jervisffb.engine.rules.bb2025.skills.SafePairOfHands
 import com.jervisffb.engine.rules.bb2025.skills.SafePass
+import com.jervisffb.engine.rules.bb2025.skills.SecretWeapon
 import com.jervisffb.engine.rules.bb2025.skills.Shadowing
 import com.jervisffb.engine.rules.bb2025.skills.Sidestep
 import com.jervisffb.engine.rules.bb2025.skills.SneakyGit
@@ -614,9 +615,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.SECRET_WEAPON -> {
-                    // addEntry(type, SkillCategory.TRAITS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Secret Weapon", type, SkillCategory.TRAITS) { player, category,expiresAt ->
+                        SecretWeapon(player, category, expiresAt)
+                    }
                 }
                 SkillType.STAB -> {
                     addNoValueEntry("Stab", type, SkillCategory.TRAITS) { player, category,expiresAt ->

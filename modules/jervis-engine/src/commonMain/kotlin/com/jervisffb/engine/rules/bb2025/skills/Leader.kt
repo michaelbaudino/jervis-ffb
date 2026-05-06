@@ -37,10 +37,10 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  *    added in a later Drive in the same half.
  *
  * 2. During the half. If the Leader leaves the Pitch, the re-roll is
- *    disabled immediately, if no other Leaders are present.  If all Leaders are
+ *    disabled immediately if no other Leaders are present.  If all Leaders are
  *    marked as "Removed from Play", the re-roll is completely removed.
  *
- * 3. If the Leader leaves the Pitch, and is later returned, e.g. when setting
+ * 3. If the Leader leaves the Pitch and is later returned, e.g., when setting
  *    up a new Drive, the re-roll is re-enabled (if not already used).
  *
  * 4. A Leader re-roll added in the last half, carry over into Extra Time, but

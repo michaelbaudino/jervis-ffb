@@ -6,19 +6,23 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.inducements.Bribe
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
+import com.jervisffb.engine.rules.common.procedures.SetupTeam
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.SmartMoveTo
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.argueTheCall
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.skipTurns
 import com.jervisffb.test.useBribe
 import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertActiveTeam
 import com.jervisffb.test.utils.assertNoActivePlayer
+import com.jervisffb.test.utils.assertReserves
 import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -30,6 +34,7 @@ class BribeTests: JervisGameBB2025Test() {
     @BeforeTest
     override fun setUp() {
         super.setUp()
+        awayTeam["A1".playerId].addSkill(SkillType.SECRET_WEAPON)
         startDefaultGame()
 
         // Until we get proper Inducements Support, manually add Bribes
@@ -41,7 +46,6 @@ class BribeTests: JervisGameBB2025Test() {
         val target = homeTeam["H1".playerId]
         target.putProne()
 
-        // Foul 1st time and get the coach banned
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
@@ -57,11 +61,28 @@ class BribeTests: JervisGameBB2025Test() {
     }
 
     @Test
+    fun canBribeWhenChoosingNotToArgueTheCall() {
+        val target = homeTeam["H1".playerId]
+        target.putProne()
+
+        controller.rollForward(
+            *activatePlayer("A6", PlayerStandardActionType.FOUL),
+            SmartMoveTo(13, 4),
+            PlayerSelected(target), // Start foul
+            DiceRollResults(2.d6, 2.d6), // Roll double -> Sent off
+            argueTheCall(false),
+            useBribe(true),
+            2.d6, // Bribe succeed
+        )
+        state.assertActiveTeam(awayTeam)
+        state.assertNoActivePlayer()
+    }
+
+    @Test
     fun succeedOn2Plus() {
         val target = homeTeam["H1".playerId]
         target.putProne()
 
-        // Foul 1st time and get the coach banned
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
@@ -83,7 +104,6 @@ class BribeTests: JervisGameBB2025Test() {
         val target = homeTeam["H1".playerId]
         target.putProne()
 
-        // Foul 1st time and get the coach banned
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
@@ -141,4 +161,16 @@ class BribeTests: JervisGameBB2025Test() {
         fouler.assertActive()
     }
 
+    @Test
+    fun canBribeSecretWeapon() {
+        controller.rollForward(
+            *skipTurns(16),
+            PlayerSelected("A1".playerId), // Send-off player with Secret Weapon
+            argueTheCall(false),
+            useBribe(true),
+            2.d6,
+        )
+        awayTeam["A1".playerId].assertReserves()
+        assertEquals(SetupTeam.SelectPlayerOrEndSetup, controller.currentNode())
+    }
 }

@@ -66,6 +66,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025KnockedD
 import com.jervisffb.engine.rules.bb2025.skills.SureHands
 import com.jervisffb.engine.rules.common.procedures.Catch
 import com.jervisffb.engine.rules.common.procedures.CatchRoll
+import com.jervisffb.engine.rules.common.procedures.DealWithSecretWeaponsStep
 import com.jervisffb.engine.rules.common.procedures.Pickup
 import com.jervisffb.engine.rules.common.procedures.PickupRoll
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
@@ -800,6 +801,16 @@ open class ManualActionProvider(
             }
         }
 
+        if (
+            currentNode == DealWithSecretWeaponsStep.KickingTeamSelectPlayerToSendOff
+            || currentNode == DealWithSecretWeaponsStep.ReceivingTeamSelectPlayerToSendOff
+        ) {
+            actions.filterIsInstance<SelectPlayer>().singleOrNull()?.let {
+                if (it.players.size == 1) {
+                    return PlayerSelected(it.players.single())
+                }
+            }
+        }
         return null
     }
 

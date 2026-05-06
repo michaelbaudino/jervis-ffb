@@ -535,9 +535,9 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Right Stuff*
   - [x] Can be thrown using Throw Team-mate
   - [x] Can be thrown prone when using Throw Team-mate
-- [ ] Secret Weapon*
-  - [ ] Roll at end of drive
-  - [ ] Follow normal Argue the call procedures (e.g. bribe)
+- [x] Secret Weapon*
+  - [x] Roll at end of drive
+  - [x] Follow normal Argue the call procedures (e.g. bribe)
 - [x] Stab
   - [x] Replace Block
   - [x] Mighty Blow does not work on Stab

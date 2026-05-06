@@ -19,6 +19,7 @@ import com.jervisffb.engine.commands.RemoveTeamReroll
 import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.commands.SetTeamRerollEnabled
+import com.jervisffb.engine.commands.SetWasOnPitchDuringDrive
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.UpdateContext
 import com.jervisffb.engine.commands.fsm.ExitProcedure
@@ -35,11 +36,13 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.getSkill
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
+import com.jervisffb.engine.rules.bb2025.skills.SecretWeapon
 import com.jervisffb.engine.rules.common.rerolls.LeaderTeamReroll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
@@ -158,7 +161,20 @@ object SetupTeam : Procedure() {
             val context = state.getContext<SetupTeamContext>()
             val team = context.team
             return when (rules.isSetupValid(state, team).isEmpty()) {
-                true -> ExitProcedure()
+                true -> {
+                    // If a player with Secret Weapon is on the pitch, we need to track it.
+                    val trackSecretWeaponCommands = team
+                        .filter { it.location.isOnPitch(rules) }
+                        .filter { it.hasSkill(SkillType.SECRET_WEAPON) }
+                        .map { player ->
+                            val skill = player.getSkill<SecretWeapon>()
+                            SetWasOnPitchDuringDrive(skill, onPitch = true)
+                        }
+                    when (trackSecretWeaponCommands.isNotEmpty()) {
+                        true -> compositeCommandOf(trackSecretWeaponCommands) + ExitProcedure()
+                        false -> ExitProcedure()
+                    }
+                }
                 false -> GotoNode(InformOfInvalidSetup)
             }
         }

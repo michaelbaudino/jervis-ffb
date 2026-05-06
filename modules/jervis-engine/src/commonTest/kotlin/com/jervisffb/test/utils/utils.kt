@@ -219,6 +219,15 @@ fun Player.assertReserves() {
 }
 
 /**
+ * Test Helper, checking if a player is in the Banned box.
+ */
+fun Player.assertBanned() {
+    assertEquals(PlayerState.BANNED, state)
+    assertNull(intermediateState)
+    assertEquals(DogOut, location)
+}
+
+/**
  * Test Helper, checking if a player is on the Pitch in a given square.
  */
 fun Player.assertCoordinates(x: Int, y: Int) {

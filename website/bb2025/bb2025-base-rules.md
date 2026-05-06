@@ -536,6 +536,24 @@ player to become Prone this way, Jervis has adopted the interpretation that if a
 Stunned Player is either Knocked Down or Falls Over during a turn, and Armour
 isn't broken, they remain Stunned rather than reverting to Prone.
 
+## Page 83 - Deal with Secret Weapons
+The rulebook doesn't specify the order players are resolved if multiple Secret 
+Weapons were on the Pitch.
+
+Jervis has chosen to resolve them in this order:
+- Receiving Team Coach chooses the order on their team.
+- Kicking Team Coach chooses the order on their team.
+
+Normally you would default to the Active Team selecting the order, but given
+that no team is active during End of Drive. This cannot be used.
+
+So instead, this, somewhat arbitrary, order was chosen. Mostly because it is 
+easier to implement.
+
+The chance of this making a meaningful difference is very low, but there might
+be some edge cases where a Coach will decide to bribe their Secret Weapon if
+the other coach also bribed theirs.
+
 ## Page 97 - New Skills
 When gaining new skills through advancements, it is illegal to get the same
 skill twice.

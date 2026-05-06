@@ -31,8 +31,9 @@ object EndOfDriveSequence: Procedure() {
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null
 
-    object DealWithSecretWeapons: ComputationNode() {
-        override fun apply(state: Game, rules: Rules): Command {
+    object DealWithSecretWeapons: ParentNode() {
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = DealWithSecretWeaponsStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
             return GotoNode(RecoverKnockedOutPlayers)
         }
     }

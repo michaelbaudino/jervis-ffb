@@ -29,8 +29,8 @@ import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.DefensiveAssistsArmourModifier
 import com.jervisffb.engine.model.modifiers.OffensiveAssistArmourModifier
-import com.jervisffb.engine.reports.ReportArgueTheCall
 import com.jervisffb.engine.reports.ReportSkillUsed
+import com.jervisffb.engine.reports.ReportSpottedByRef
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.skills.Leader
 import com.jervisffb.engine.rules.builder.GameVersion
@@ -207,7 +207,7 @@ object FoulStep: Procedure() {
             val hasBribes = fouler.team.bribes.any { !it.used }
             val sentOffContext = BeingSentOffContext(fouler, isBribeAvailable = hasBribes)
             return compositeCommandOf(
-                ReportArgueTheCall(sentOffContext),
+                ReportSpottedByRef(sentOffContext, usingSecretWeapon = false),
                 AddContext(sentOffContext)
             )
         }
