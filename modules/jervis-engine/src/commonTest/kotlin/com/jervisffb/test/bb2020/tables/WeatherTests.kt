@@ -12,6 +12,7 @@ import com.jervisffb.engine.ext.d3
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
+import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerNo
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.context.CatchContext
@@ -39,8 +40,10 @@ import com.jervisffb.test.defaultSetup
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
 import com.jervisffb.test.pickup
+import com.jervisffb.test.recoverPlayers
 import com.jervisffb.test.skipTurns
 import com.jervisffb.test.throwBall
+import com.jervisffb.test.utils.putInKnockedOut
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -101,18 +104,18 @@ class WeatherTests: JervisGameBB2020Test() {
         )
 
         // Move all players to KO
+        val playersMoved = mutableListOf<Player>()
         listOf(homeTeam, awayTeam).forEach { team ->
             team.forEach { player ->
                 if (player.location.isOnPitch(rules)) {
-                    player.apply {
-                        state = PlayerState.KNOCKED_OUT
-                        location = DogOut
-                    }
+                    player.putInKnockedOut()
+                    playersMoved.add(player)
                 }
             }
         }
         controller.rollForward(
             *skipTurns(16),
+            *recoverPlayers(playersMoved, startWith = awayTeam),
             // Skip Sweltering Heat Rolls
         )
         assertEquals(Weather.SWELTERING_HEAT, state.weather)
@@ -130,18 +133,19 @@ class WeatherTests: JervisGameBB2020Test() {
         )
 
         // Move almost all players to KO
+        val playersMoved = mutableListOf<Player>()
         listOf(homeTeam, awayTeam).forEach { team ->
             team.forEach { player ->
                 if (player.location.isOnPitch(rules) && player.id != "H1".playerId && player.id != "A1".playerId) {
-                    player.apply {
-                        state = PlayerState.KNOCKED_OUT
-                        location = DogOut
-                    }
+                    player.putInKnockedOut()
+                    playersMoved.add(player)
                 }
             }
         }
+
         controller.rollForward(
             *skipTurns(16),
+            *recoverPlayers(playersMoved, startWith = awayTeam),
             3.d3, // Home Heat roll
             RandomPlayersSelected(listOf("H1".playerId)),
             2.d3, // Away Heat roll

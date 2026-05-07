@@ -122,6 +122,7 @@ fun PlayerLayer(
                     isTempSelected = false,
                     isActionWheelFocus = false,
                     isGoingDown = false,
+                    isHighlighted = false,
                     alpha = 1f,
                     filterQuality = FilterQuality.None,
                 )

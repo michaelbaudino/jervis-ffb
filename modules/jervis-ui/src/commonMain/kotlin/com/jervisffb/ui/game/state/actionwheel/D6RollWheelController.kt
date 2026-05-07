@@ -15,6 +15,8 @@ import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.DodgySnack
 import com.jervisffb.engine.rules.builder.DiceRollOwner
+import com.jervisffb.engine.rules.common.procedures.RecoverKnockedOutPlayersContext
+import com.jervisffb.engine.rules.common.procedures.RecoverPlayerRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.ArgueTheCallRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOffContext
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BribeRoll
@@ -298,6 +300,22 @@ object BribeRollWheelController: D6RollWheelController() {
                 true -> getHomeCenterCoordinates(state)
                 false -> getAwayCenterCoordinates(state)
             }
+        }
+    }
+}
+
+object RecoverPlayerRollWheelController: D6RollWheelController() {
+    override val buttonIdPrefix: String = "recover-player"
+    override val rollDiceNode: Node = RecoverPlayerRoll.RollDie
+    override val diceRollType: DiceRollType = DiceRollType.RECOVER_PLAYER
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val context = state.getContext<RecoverKnockedOutPlayersContext>()
+        val player = context.selectedPlayer ?: error("Missing selected player: $state")
+        val isHomeTeam = player.team.isHomeTeam()
+        return when (isHomeTeam) {
+            true -> getHomeCenterCoordinates(state)
+            false -> getAwayCenterCoordinates(state)
         }
     }
 }

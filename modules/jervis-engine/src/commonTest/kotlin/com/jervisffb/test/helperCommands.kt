@@ -28,6 +28,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Coin
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
+import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.ActionType
 import com.jervisffb.engine.rules.common.actions.BlockType
@@ -234,6 +235,22 @@ fun setupPlayer(id: PlayerId, square: PitchCoordinate) = arrayOf(
 )
 
 fun skipTurns(count: Int) = Array(count) { EndTurn }
+
+
+fun recoverPlayer(id: PlayerId) = arrayOf(
+    PlayerSelected(id),
+    4.d6,
+)
+
+fun recoverPlayers(players: List<Player>, startWith: Team): Array<GameAction> {
+    return players
+        .filter { it.team == startWith }
+        .plus(players.filter { it.team != startWith })
+        .flatMap {
+            listOf(PlayerSelected(it), 4.d6)
+        }
+        .toTypedArray()
+}
 
 // Do a standard 1 die block with no reroll
 fun standardBlock(target: Player, die: DBlockResult) = standardBlock(target.id.value, die)

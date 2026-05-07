@@ -17,6 +17,8 @@ import com.jervisffb.ui.menu.GameScreenModel
 /**
  * Contains all the information needed to display a player on the pitch.
  * Squares themselves are represented by [UiPitchSquare].
+ *
+ * Right now, this class is used for both On-Pitch and Off-Pitch players.
  */
 data class UiPitchPlayer(
     val id: PlayerId,
@@ -34,6 +36,7 @@ data class UiPitchPlayer(
     val hasActivated: Boolean,
     val dice: Int = 0, // Show block dice decorator
     val isBlocked: Boolean = false, // Show "blocked" indicator
+    val isHighlighted: Boolean = false, // Show "highlighted" indicator. This is different from "selectable"
 ) {
     constructor(
         model: Player,
@@ -54,7 +57,6 @@ data class UiPitchPlayer(
         isGoingDown = (
             model.intermediateState == PlayerIntermediateState.KNOCKED_DOWN
                 || model.intermediateState == PlayerIntermediateState.FALLEN_OVER
-                || model.team.game.rules.isInjuried(model)
         ),
         hasActivated = (model.available == Availability.HAS_ACTIVATED || model.available == Availability.UNAVAILABLE) && model.location.isOnPitch(model.team.game.rules)
     )

@@ -112,6 +112,7 @@ object BB2025DiceColorConfig : DiceColorConfig() {
             DiceRollType.QUALITY -> DiceRollTypeConfig(rollType, "Quality", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.QUICK_SNAP -> DiceRollTypeConfig(rollType, "Quick Snap", d3, d6Colors, DiceColor.WHITE)
             DiceRollType.REALLY_STUPID -> DiceRollTypeConfig(rollType, "Really Stupid", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.RECOVER_PLAYER -> DiceRollTypeConfig(rollType, "Recover Player", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.REGENERATION -> DiceRollTypeConfig(rollType, "Regeneration", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.RUSH -> DiceRollTypeConfig(rollType, "Rush", d6, d6Colors, DiceColor.YELLOW)
             DiceRollType.SCATTER -> DiceRollTypeConfig(rollType, "Scatter", d8, singleColor, DiceColor.DEFAULT)

@@ -38,14 +38,13 @@ object EndOfDriveSequence: Procedure() {
         }
     }
 
-    object RecoverKnockedOutPlayers: ComputationNode() {
-        override fun apply(state: Game, rules: Rules): Command {
-            return compositeCommandOf(
-                // TODO
-                GotoNode(TheDriveEnds)
-            )
+    object RecoverKnockedOutPlayers: ParentNode() {
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = RecoverKnockedOutPlayersStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            return GotoNode(TheDriveEnds)
         }
     }
+
     object TheDriveEnds: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             // Remove special rules or effects that lasted for the duration of the drive

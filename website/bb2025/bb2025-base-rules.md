@@ -554,6 +554,20 @@ The chance of this making a meaningful difference is very low, but there might
 be some edge cases where a Coach will decide to bribe their Secret Weapon if
 the other coach also bribed theirs.
 
+## Page 83 - Recover Knocked-out Players
+Similar to "Deal with Secret Weapons", the order of rolls is not specified by
+the rules. While the order doesn't matter (with the current rules), we still
+choose to resolve them the same way as in "Deal with Secret Weapons".
+
+This future-proofs the implementation in the case that the order does matter
+at some point, but to streamline the UX. The UI should decide the player order
+on behalf of the Coach.
+
+This means that right now Jervis goes:
+
+1. Receiving Team in order of Player numbers.
+2. Kicking Team in order of Player numbers.
+
 ## Page 97 - New Skills
 When gaining new skills through advancements, it is illegal to get the same
 skill twice.

@@ -408,13 +408,15 @@ book.
 
 ## End of Drive
 
-- [ ] Deal with Secret Weapons
+- [x] Deal with Secret Weapons
    - [x] Works as using Argue the Call
    - [x] If multiple secret weapons. If coach is banned, no more argues can be made.
    - [x] Bribe can be used
 - [ ] End of Drive Effects
     - [ ] Clear Sweltering Heat
-- [ ] Recover Knocked-Out players
+- [x] Recover Knocked-Out players
+  - [x] 1-3 fail
+  - [x] 4-6 succeed
 - [ ] The Drive Ends
 
 ## Actions

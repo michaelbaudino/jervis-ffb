@@ -54,6 +54,7 @@ enum class DiceRollType(val description: String) {
     REGENERATION("Regeneration"),
     QUALITY("Quality"),
     QUICK_SNAP("Quick Snap"),
+    RECOVER_PLAYER("Recover Player"),
     RUSH("Rush"),
     SCATTER("Scatter"),
     SECURE_THE_BALL("Secure The Ball"),

@@ -83,6 +83,7 @@ import com.jervisffb.ui.game.state.actionwheel.ProWheelController
 import com.jervisffb.ui.game.state.actionwheel.ProjectileVomitWheelController
 import com.jervisffb.ui.game.state.actionwheel.QuickSnapRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ReallyStupidWheelController
+import com.jervisffb.ui.game.state.actionwheel.RecoverPlayerRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.RushWheelController
 import com.jervisffb.ui.game.state.actionwheel.ScatterRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.SecureTheBallWheelController
@@ -144,6 +145,7 @@ import com.jervisffb.ui.game.state.indicators.MoveUsedStatusIndicator
 import com.jervisffb.ui.game.state.indicators.PitchStatusIndicator
 import com.jervisffb.ui.game.state.indicators.PreGamePlayerAndRefereeStatusIndicator
 import com.jervisffb.ui.game.state.indicators.PushDirectionArrowStatusIndicator
+import com.jervisffb.ui.game.state.indicators.RecoverPlayerStatusIndicator
 import com.jervisffb.ui.game.state.indicators.SwoopDirectionArrowIndicator
 import com.jervisffb.ui.game.state.indicators.TeamFeatureStatusIndicator
 import com.jervisffb.ui.game.state.indicators.TeamRerollStatusIndicator
@@ -211,13 +213,14 @@ class UiGameController(
         BallExitStatusIndicator,
         BallOnGroundStatusIndicator,
         BlockStatusIndicator,
-        PushDirectionArrowStatusIndicator,
-        SwoopDirectionArrowIndicator,
         MoveUsedStatusIndicator,
+        PreGamePlayerAndRefereeStatusIndicator,
+        PushDirectionArrowStatusIndicator,
+        RecoverPlayerStatusIndicator,
+        SwoopDirectionArrowIndicator,
         TeamFeatureStatusIndicator,
         TeamRerollStatusIndicator,
         TeamSetupsAvailableStatusIndicator,
-        PreGamePlayerAndRefereeStatusIndicator,
     )
     val actionWheelControllers = setOf(
         AccuracyBB2020WheelController,
@@ -300,6 +303,7 @@ class UiGameController(
         ChooseAlternativeToMascotWheelController,
         ArgueTheCallRollWheelController,
         BribeRollWheelController,
+        RecoverPlayerRollWheelController,
 
         // Pre-game / Kick-off Rolls
         HomeTeamFanFactorRoll,

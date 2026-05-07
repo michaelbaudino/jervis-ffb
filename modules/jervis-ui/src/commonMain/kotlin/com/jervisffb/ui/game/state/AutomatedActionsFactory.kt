@@ -14,7 +14,6 @@ import com.jervisffb.engine.actions.DirectionSelected
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.EndActionWhenReady
 import com.jervisffb.engine.actions.GameAction
-import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
@@ -45,7 +44,6 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.UseStripB
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.JumpStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassAccuracyRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallStep
@@ -60,6 +58,7 @@ import com.jervisffb.engine.rules.common.procedures.CatchRoll
 import com.jervisffb.engine.rules.common.procedures.DealWithSecretWeaponsStep
 import com.jervisffb.engine.rules.common.procedures.Pickup
 import com.jervisffb.engine.rules.common.procedures.PickupRoll
+import com.jervisffb.engine.rules.common.procedures.RecoverKnockedOutPlayersStep
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
 import com.jervisffb.engine.rules.common.procedures.TheKickOff
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
@@ -67,7 +66,6 @@ import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.DodgeRoll
 import com.jervisffb.engine.rules.common.procedures.actions.move.JumpRoll
 import com.jervisffb.engine.rules.common.procedures.actions.move.ScoringATouchdown
-import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
 import com.jervisffb.engine.rules.common.procedures.actions.pass.PassContext
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
 import com.jervisffb.engine.rules.common.procedures.rerolls.LonerRoll
@@ -340,7 +338,7 @@ class AutomatedActionsFactory(
             && (
                 currentNode == BB2025FallingOver.ChooseToUseSteadyFooting
                     || currentNode == BB2025KnockedDown.ChooseToUseSteadyFooting
-                )
+            )
         ) {
             return Confirm
         }
@@ -466,6 +464,16 @@ class AutomatedActionsFactory(
                 }
             }
         }
+
+        if (
+            currentNode == RecoverKnockedOutPlayersStep.ReceivingTeamSelectPlayerToRecover
+            || currentNode == RecoverKnockedOutPlayersStep.KickingTeamSelectPlayerToRecover
+        ) {
+            actions.getOrNull<SelectPlayer>()?.let {
+                return PlayerSelected(it.players.first())
+            }
+        }
+
         return null
     }
 

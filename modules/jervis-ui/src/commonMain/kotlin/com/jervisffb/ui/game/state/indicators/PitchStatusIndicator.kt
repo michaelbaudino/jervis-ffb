@@ -11,7 +11,7 @@ import com.jervisffb.ui.game.state.decorators.PitchActionDecorator
  * that isn't directly tied to an [GameActionDescriptor], but rather enhances
  * the information available to the coach.
  *
- * E.g. these can be used to display block indicators for a specific player.
+ * E.g., these can be used to display block indicators for a specific player.
  *
  * Changes to the UI that are made to indicate an available action should
  * be handled by [PitchActionDecorator].

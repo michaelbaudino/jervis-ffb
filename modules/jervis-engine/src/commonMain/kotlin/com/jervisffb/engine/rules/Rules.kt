@@ -680,6 +680,7 @@ abstract class Rules(
             DiceRollType.PITCH_INVASION_PLAYERS_AFFECTED,
             DiceRollType.PRAYERS_TO_NUFFLE, // Only in BB2020
             DiceRollType.QUICK_SNAP,
+            DiceRollType.RECOVER_PLAYER,
             DiceRollType.SOLID_DEFENSE,
             DiceRollType.SUDDEN_DEATH,
             DiceRollType.SWELTERING_HEAT,

@@ -51,6 +51,8 @@ import com.jervisffb.engine.rules.common.procedures.FanFactorRolls
 import com.jervisffb.engine.rules.common.procedures.Pickup
 import com.jervisffb.engine.rules.common.procedures.PickupRoll
 import com.jervisffb.engine.rules.common.procedures.ReallyStupidRoll
+import com.jervisffb.engine.rules.common.procedures.RecoverKnockedOutPlayersStep
+import com.jervisffb.engine.rules.common.procedures.RecoverPlayerRoll
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
 import com.jervisffb.engine.rules.common.procedures.ScatterRoll
 import com.jervisffb.engine.rules.common.procedures.SteadyFootingRoll
@@ -215,6 +217,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             QuickSnap.RollDie to "Roll D3 + 3 for Number of Players to Move during Quick Snap",
             ReallyStupidRoll.ReRollDie to "Re-roll D6 to avoid Really Stupid",
             ReallyStupidRoll.RollDie to "Roll D6 for Really Stupid",
+            RecoverPlayerRoll.RollDie to "Roll D6 to Recover Player",
             RushRoll.ReRollDie to "Re-roll D6 to Rush",
             RushRoll.RollDie to "Roll D6 to Rush",
             SecureTheBallRoll.ReRollDie to "Re-roll D6 to Secure the Ball",
@@ -579,7 +582,19 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                     isActiveClient -> "Select Player to Send-off for using a Secret Weapon"
                     else -> "Waiting for opponent to select a player to send-off using a Secret Weapon"
                 }
-            }
+            },
+            RecoverKnockedOutPlayersStep.ReceivingTeamSelectPlayerToRecover to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Player to Recover"
+                    else -> "Waiting for opponent to select a player to Recover"
+                }
+            },
+            RecoverKnockedOutPlayersStep.KickingTeamSelectPlayerToRecover to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Player to Recover"
+                    else -> "Waiting for opponent to select a player to Recover"
+                }
+            },
         )
     }
 

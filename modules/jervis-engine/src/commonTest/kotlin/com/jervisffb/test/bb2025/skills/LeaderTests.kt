@@ -45,13 +45,13 @@ import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.followUp
 import com.jervisffb.test.moveTo
+import com.jervisffb.test.recoverPlayer
 import com.jervisffb.test.skipTurns
 import com.jervisffb.test.standardBlock
 import com.jervisffb.test.teamSetup
 import com.jervisffb.test.utils.SelectSingleBlockDieResult
 import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.putInKnockedOut
-import com.jervisffb.test.utils.putInReserves
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -479,11 +479,11 @@ class LeaderTests: JervisGameBB2025Test() {
         assertFalse(awayTeam.rerolls.single { it is LeaderTeamReroll }.rerollUsed)
         assertFalse(awayTeam.rerolls.single { it is LeaderTeamReroll }.enabled)
         controller.rollForward(
-            Confirm
+            Confirm, // Confirm touchdown
         )
-        awayTeam["A1".playerId].putInReserves()
-        awayTeam["A10".playerId].putInReserves()
         controller.rollForward(
+            *recoverPlayer("A1".playerId),
+            *recoverPlayer("A10".playerId),
             *defaultSetup(homeFirst = false),
             *defaultKickOffAwayTeam(),
         )
@@ -571,9 +571,9 @@ class LeaderTests: JervisGameBB2025Test() {
         )
 
         // Setup for a new Drive during Extra Time
-        awayTeam["A1".playerId].putInReserves()
-        awayTeam["A10".playerId].putInReserves()
         controller.rollForward(
+            *recoverPlayer("A1".playerId),
+            *recoverPlayer("A10".playerId),
             *defaultSetup(homeFirst = false),
             *defaultKickOffAwayTeam(),
         )

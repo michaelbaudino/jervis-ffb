@@ -135,6 +135,7 @@ fun Player(
             isTempSelected = isTempSelected,
             isActionWheelFocus = contextMenuShowing,
             isGoingDown = player.isGoingDown,
+            isHighlighted = player.isHighlighted,
             alpha = if (player.hasActivated || player.isStunned) 0.5f else 1.0f,
         )
         if (player.carriesBall) {
@@ -250,6 +251,7 @@ fun PlayerImage(
     isTempSelected: Boolean,
     isActionWheelFocus: Boolean,
     isGoingDown: Boolean,
+    isHighlighted: Boolean,
     alpha: Float,
     filterQuality: FilterQuality = FilterQuality.Low,
 ) {
@@ -258,7 +260,7 @@ fun PlayerImage(
     // more investigation.
     val imageShader = remember(bitmap) { ImageShader(bitmap, TileMode.Decal, TileMode.Decal) }
     val playerBorderShader = when {
-        isActionWheelFocus -> playerInFocus
+        isActionWheelFocus || isHighlighted -> playerInFocus
         isTempSelected -> playerTempSelectedShader
         isGoingDown -> playerDownBorderShader
         else -> playerSelectedBorderShader
@@ -269,7 +271,7 @@ fun PlayerImage(
             .aspectRatio(1f)
             .fillMaxSize()
             .drawWithCache {
-                if (!isSelectable /* && !isGoingDown && !isActionWheelFocus */) {
+                if (!isSelectable && !isHighlighted /* && !isGoingDown && !isActionWheelFocus */) {
                     return@drawWithCache onDrawBehind { /* Do nothing */ }
                 }
                 val canvasWidth = size.width
