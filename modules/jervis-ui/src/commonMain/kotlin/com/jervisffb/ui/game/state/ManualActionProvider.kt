@@ -3,95 +3,31 @@ package com.jervisffb.ui.game.state
 import com.jervisffb.engine.ActionRequest
 import com.jervisffb.engine.GameEngineController
 import com.jervisffb.engine.GameSettings
-import com.jervisffb.engine.actions.BlockTypeSelected
 import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.Confirm
-import com.jervisffb.engine.actions.ConfirmWhenReady
-import com.jervisffb.engine.actions.DicePoolChoice
-import com.jervisffb.engine.actions.DicePoolResultsSelected
-import com.jervisffb.engine.actions.DirectionSelected
-import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.EndActionWhenReady
 import com.jervisffb.engine.actions.EndSetupWhenReady
 import com.jervisffb.engine.actions.EndTurnWhenReady
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.MoveTypeSelected
-import com.jervisffb.engine.actions.NoRerollSelected
-import com.jervisffb.engine.actions.PitchSquareSelected
-import com.jervisffb.engine.actions.PlayerSelected
-import com.jervisffb.engine.actions.PlayersSelected
-import com.jervisffb.engine.actions.RerollOptionSelected
-import com.jervisffb.engine.actions.SelectBlockType
-import com.jervisffb.engine.actions.SelectDicePoolResult
 import com.jervisffb.engine.actions.SelectDirection
 import com.jervisffb.engine.actions.SelectDogout
 import com.jervisffb.engine.actions.SelectMoveType
-import com.jervisffb.engine.actions.SelectNoReroll
 import com.jervisffb.engine.actions.SelectPitchLocation
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.actions.SelectPlayers
 import com.jervisffb.engine.actions.SelectRandomPlayers
-import com.jervisffb.engine.actions.SelectRerollOption
-import com.jervisffb.engine.ext.dicePoolId
-import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.Team
-import com.jervisffb.engine.model.context.MoveContext
-import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.context.getContextOrNull
-import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.PitchCoordinate
-import com.jervisffb.engine.rules.bb2020.procedures.actions.block.BB2020PushStepInitialMoveSequence
-import com.jervisffb.engine.rules.bb2020.procedures.actions.block.BB2020Stumble
-import com.jervisffb.engine.rules.bb2020.procedures.actions.block.standard.StandardBlockChooseResult
-import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BB2025Stumble
-import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.CreatePushChainStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.FollowUpStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.UseStripBallStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.JumpStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassAccuracyRoll
-import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowPlayerStep
-import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowTeammateAccuracyRoll
-import com.jervisffb.engine.rules.bb2025.procedures.skills.SafePairOfHandsStep
-import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025FallingOver
-import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025KnockedDown
-import com.jervisffb.engine.rules.bb2025.skills.SureHands
-import com.jervisffb.engine.rules.common.procedures.Catch
-import com.jervisffb.engine.rules.common.procedures.CatchRoll
-import com.jervisffb.engine.rules.common.procedures.DealWithSecretWeaponsStep
-import com.jervisffb.engine.rules.common.procedures.Pickup
-import com.jervisffb.engine.rules.common.procedures.PickupRoll
-import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
-import com.jervisffb.engine.rules.common.procedures.TheKickOff
-import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
-import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
-import com.jervisffb.engine.rules.common.procedures.actions.move.DodgeRoll
-import com.jervisffb.engine.rules.common.procedures.actions.move.JumpRoll
-import com.jervisffb.engine.rules.common.procedures.actions.move.ScoringATouchdown
 import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
-import com.jervisffb.engine.rules.common.procedures.actions.pass.PassContext
-import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
-import com.jervisffb.engine.rules.common.procedures.rerolls.LonerRoll
-import com.jervisffb.engine.rules.common.procedures.rerolls.ProRoll
-import com.jervisffb.engine.rules.common.procedures.rerolls.TeamCaptainRoll
-import com.jervisffb.engine.rules.common.procedures.tables.injury.ArmourRoll
-import com.jervisffb.engine.rules.common.procedures.tables.injury.InjuryRoll
-import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
-import com.jervisffb.engine.rules.common.rerolls.TeamReroll
-import com.jervisffb.engine.rules.common.skills.Skill
-import com.jervisffb.engine.rules.common.skills.SkillType
-import com.jervisffb.engine.rules.common.tables.Range
 import com.jervisffb.engine.utils.containsActionWithRandomBehavior
-import com.jervisffb.engine.utils.createRandomAction
-import com.jervisffb.engine.utils.doDivingTackleHaveAnAffect
 import com.jervisffb.ui.game.UiGameController
 import com.jervisffb.ui.game.UiSnapshotAccumulator
 import com.jervisffb.ui.game.state.actionwheel.ActionWheelDialogController
@@ -116,6 +52,7 @@ import com.jervisffb.utils.jervisLogger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Class responsible for enhancing the UI, so it is able to create a [GameAction].
@@ -134,6 +71,8 @@ open class ManualActionProvider(
     }
 
     private lateinit var availableActions: ActionRequest
+
+    val automatedActionsFactory = AutomatedActionsFactory(game, menuViewModel, gameSettings)
 
     // If set, it contains an action that should automatically be sent on the next call to getAction()
     var automatedAction: GameAction? = null
@@ -219,7 +158,7 @@ open class ManualActionProvider(
         // This also means that anyone queuing up actions, must queue up all intermediate actions
         // as well. Even the ones that are normally automatically created.
         if (queuedActions.isEmpty()) {
-            automatedAction = calculateAutomaticResponse(controller, controller.getAvailableActions().actions)
+            automatedAction = calculateAutomaticResponse(controller.getAvailableActions())
         }
     }
 
@@ -274,7 +213,7 @@ open class ManualActionProvider(
             // Do not pause for flow-control events, only events that would appear "visible"
             // to the player
             if (action !is MoveTypeSelected && delayBetweenActions) {
-                delay(150)
+                delay(150.milliseconds)
             }
             return action
         }
@@ -424,31 +363,22 @@ open class ManualActionProvider(
      * Check if we can respond automatically to an event without having to involve the user.
      *
      * Some requirements:
-     * - Any action returned this way should also have an entry in [Feature]
-     * - Except StandardBlock.RolLDice, since the ActionWheel behaves slightly different.
+     * - Any action returned this way should also have an entry in [Feature], so the User can toggle the behavior.
      */
     private fun calculateAutomaticResponse(
-        controller: GameEngineController,
-        actions: List<GameActionDescriptor>,
+        actions: ActionRequest,
     ): GameAction? {
+        val currentNode = game.currentNode()
 
         // When reacting to an `Undo` command, all automatic responses are disabled.
         // If not disabled, Undo'ing an action might put us in a state that will
         // automatically move us forward again, which will make it appear as if the
         // Undo didn't work.
-        if (controller.lastActionWasUndo()) {
+        if (game.lastActionWasUndo()) {
             return null
         }
 
-        // First, we check if we are playing Hotseat and the game is set to roll random
-        // actions on the "server". In this case, they are generated here as no server exists.
-        if (!gameSettings.clientSelectedDiceRolls && gameSettings.isHotseatGame && actions.containsActionWithRandomBehavior()) {
-            return createRandomAction(controller)
-        }
-
-        val currentNode = controller.currentProcedure()?.currentNode()
-
-        // The option for selecting Fumblerooskie is done a slightly different place in the UI, so we need to check
+        // The option for selecting Fumblerooskie is done in a slightly different place in the UI, so we need to check
         // if we should provide the response here.
         if (currentNode == StandardMoveStep.ChooseToUseFumblerooski
             || currentNode == JumpStep.ChooseToUseFumblerooskiAfterJumpingToTargetSquare
@@ -461,357 +391,7 @@ open class ManualActionProvider(
             return nextAction ?: Cancel
         }
 
-        // We only have "Confirm" actions on Touchdowns to trigger animations (for now)
-        // So we always provide it.
-        if (currentNode == ScoringATouchdown.InformOfTouchdown) {
-            return Confirm
-        }
-
-        // Do not reroll successful rolls that are considered "successful"
-        // If we are in the middle of a Dodge, Jump or Leap, we will assume that Diving Tackle
-        // will be used right after, i.e. you might want to reroll something that rolls equal to
-        // agility, which is normally a success.
-        if (menuViewModel.isFeatureEnabled(Feature.DO_NOT_REROLL_SUCCESSFUL_ACTIONS)) {
-            if (actions.filterIsInstance<SelectNoReroll>().count { it.rollSuccessful == true} > 0) {
-                // Check if Diving Tackle can be used right after the reroll, in that case, we should
-                // not automate this action
-                val currentProcedure = controller.currentProcedure()?.procedure
-                val automateAction = when (currentProcedure != null && (currentProcedure == DodgeRoll || currentProcedure == JumpRoll || currentProcedure == LeapRoll)) {
-                    true ->!doDivingTackleHaveAnAffect(controller.state)
-                    false -> true
-                }
-                if (automateAction) {
-                    return NoRerollSelected()
-                }
-            }
-        }
-
-        // Randomly select a kicking player
-        if (currentNode == TheKickOff.NominateKickingPlayer && menuViewModel.isFeatureEnabled(
-                Feature.SELECT_KICKING_PLAYER
-            )) {
-            return (currentNode as ActionNode).getAvailableActions(controller.state, controller.rules)
-                .filterIsInstance<SelectPlayer>()
-                .single()
-                .getPlayers(game.state).let {
-                    val playersWithKick = it.filter { it.isSkillAvailable(SkillType.KICK) }
-                    if (playersWithKick.isNotEmpty()) {
-                        PlayerSelected(playersWithKick.first())
-                    } else {
-                        PlayerSelected(it.random())
-                    }
-                }
-        }
-
-        // If a player action can only end, just end it immediately
-        if (menuViewModel.isFeatureEnabled(Feature.END_PLAYER_ACTION_IF_ONLY_OPTION) && actions.size == 1 && actions.first() is EndActionWhenReady) {
-            return EndAction
-        }
-
-        // Automatically select pushback direction when only one option is available.
-        if (actions.size == 1 && actions.first() is SelectPitchLocation && actions.first().createAll().size == 1 && currentNode is CreatePushChainStep.SelectPushDirection) {
-            val loc = (actions.first() as SelectPitchLocation).squares.first()
-            return PitchSquareSelected(loc.coordinate)
-        }
-        if (actions.size == 1 && actions.first() is SelectPitchLocation && actions.first().createAll().size == 1 && currentNode is BB2020PushStepInitialMoveSequence.SelectPushDirection) {
-            val loc = (actions.first() as SelectPitchLocation).squares.first()
-            return PitchSquareSelected(loc.coordinate)
-        }
-
-        // When selecting block results after reroll and only 1 dice is available.
-        if (currentNode == StandardBlockChooseResult.SelectBlockResult && actions.size == 1) {
-            val choices = (actions.first() as SelectDicePoolResult).pools
-            if (choices.size == 1 && choices.first().dice.size == 1) {
-                return DicePoolResultsSelected(listOf(
-                    DicePoolChoice(id = 0.dicePoolId, listOf(choices.first().dice.single().let { DicePoolChoice.SelectedDiceRoll(it.id, it.result) }))
-                ))
-            }
-        }
-
-        // When there is only one block type for a block, just select that one straight away
-        if (
-            menuViewModel.isFeatureEnabled(Feature.SELECT_BLOCK_TYPE_IF_ONLY_OPTION)
-            && (currentNode in setOf(
-                com.jervisffb.engine.rules.bb2020.procedures.actions.block.BlockAction.SelectBlockType,
-                com.jervisffb.engine.rules.bb2025.procedures.actions.block.BlockAction.SelectBlockType,
-                BlitzAction.SelectBlockType,
-            ))
-        ) {
-            actions.filterIsInstance<SelectBlockType>().firstOrNull()?.let {
-                if (it.size == 1) {
-                    return BlockTypeSelected(it.types.first())
-                }
-            }
-        }
-
-        // Automatically select "Push into the crowd" when it is the only option
-        if (
-            menuViewModel.isFeatureEnabled(Feature.PUSH_PLAYER_INTO_CROWD)
-            && actions.size == 1
-            && actions.first().let {
-                if (it is SelectDirection) {
-                    it.directions.all { direction ->
-                        val target = it.origin.move(direction, 1)
-                        target.isOutOfBounds(controller.rules)
-                    }
-                } else {
-                    false
-                }
-            }
-        ) {
-            return DirectionSelected((actions.first() as SelectDirection).directions.first())
-        }
-
-        // Automatically decide to follow op (or not), if you there really isn't a choice in the matter
-        if (currentNode is FollowUpStep.ChooseToFollowUp && actions.size == 1) {
-            return when (val action = actions.first()) {
-                is ConfirmWhenReady -> Confirm
-                is CancelWhenReady -> Cancel
-                else -> error("Unexpected action: $action")
-            }
-        }
-        if (currentNode is BB2020PushStepInitialMoveSequence.DecideToFollowUp && actions.size == 1) {
-            return when (val action = actions.first()) {
-                is ConfirmWhenReady -> Confirm
-                is CancelWhenReady -> Cancel
-                else -> error("Unexpected action: $action")
-            }
-        }
-
-        // Whether to use the Big Hand skill or not
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_BIG_HAND) && (currentNode == Pickup.ChooseToUseBigHand || currentNode == SecureTheBallStep.ChooseToUseBigHand)) {
-            if (controller.state.activePlayer?.isSkillAvailable(SkillType.BIG_HAND) == true) {
-                return Confirm
-            }
-        }
-
-        // Whether to use the Very Long Legs skill or not
-        if (
-            menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_VERY_LONG_LEGS)
-            && (currentNode == JumpStep.ChooseToUseVeryLongLegs || currentNode == com.jervisffb.engine.rules.bb2020.procedures.actions.move.JumpStep.ChooseToUseVeryLongLegs)) {
-            if (controller.state.getContextOrNull<MoveContext>()?.player?.isSkillAvailable(SkillType.VERY_LONG_LEGS) == true) {
-                return Confirm
-            }
-        }
-
-        // Use Dirty Player on Armour roll if it wasn't broken using the normal role
-        if (menuViewModel.isFeatureEnabled(Feature.USE_DIRTY_PLAYER_ON_ARMOUR) && (currentNode == ArmourRoll.ChooseToUseDirtyPlayer)) {
-            val context = controller.state.getContextOrNull<RiskingInjuryContext>()
-            if (context?.armourBroken != true) {
-                return Confirm
-            } else {
-                return Cancel
-            }
-        }
-
-        // Always use Dirty Player on Injury (if possible)
-        if (menuViewModel.isFeatureEnabled(Feature.USE_DIRTY_PLAYER_ON_INJURY) && (currentNode == InjuryRoll.ChooseToUseDirtyPlayer)) {
-            return Confirm
-        }
-
-        // When rerolling Catch rolls, prefer to use the free reroll from the Catch skill
-        if (menuViewModel.isFeatureEnabled(Feature.USE_CATCH_SKILL_REROLL) && (currentNode == CatchRoll.ChooseReRollSource)) {
-            val availableRerollOptions = availableActions.getOrNull<SelectRerollOption>()
-            availableRerollOptions?.options?.firstOrNull {
-                val source = it.getRerollSource(controller.state)
-                (source is Skill<*> && source.type == SkillType.CATCH)
-            }?.let {
-                return RerollOptionSelected(it, availableRerollOptions.dicePoolId)
-            }
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.USE_PASS_SKILL_REROLL) && (currentNode == PassAccuracyRoll.ChooseReRollSource)) {
-            val availableRerollOptions = availableActions.getOrNull<SelectRerollOption>()
-            availableRerollOptions?.options?.firstOrNull {
-                val source = it.getRerollSource(controller.state)
-                (source is Skill<*> && source.type == SkillType.PASS)
-            }?.let {
-                return RerollOptionSelected(it, availableRerollOptions.dicePoolId)
-            }
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_SAFE_PASS) && (currentNode == PassStep.ChooseToUseSafePass)) {
-            val context = controller.state.getContext<PassContext>()
-            if (context.thrower.isSkillAvailable(SkillType.SAFE_PASS)) {
-                return Confirm
-            }
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_TACKLE_ON_DODGE) && (currentNode == DodgeRoll.ChooseToUseTackle)) {
-            // Always select the first available player to use Tackle
-            val selectedPlayer = availableActions.get<SelectPlayer>().players.first()
-            return PlayerSelected(selectedPlayer)
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_TACKLE_ON_STUMBLE) && (currentNode == BB2020Stumble.ChooseToUseTackle)) {
-            return Confirm
-        }
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_TACKLE_ON_STUMBLE) && (currentNode == BB2025Stumble.ChooseToUseTackle)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.USE_SURE_HANDS_REROLL) && (currentNode == PickupRoll.ChooseReRollSource)) {
-            val rerollOptions = availableActions.getOrNull<SelectRerollOption>()
-            rerollOptions?.options?.firstOrNull { it.getRerollSource(controller.state) is SureHands }?.let {
-                return RerollOptionSelected(it, rerollOptions.dicePoolId)
-            }
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.USE_SURE_HANDS_ON_STRIP_BALL) && (currentNode == UseStripBallStep.ChooseToUseSureHands)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_THICK_SKULL) && currentNode == InjuryRoll.ChooseToUseThickSkull) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_LEAP_MODIFIER) && currentNode == LeapStep.ChooseToUseLeapModifier) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_SIDESTEP) && currentNode == CreatePushChainStep.DecideToUseSidestep) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_GRAB) && currentNode == CreatePushChainStep.DecideToUseGrab) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_STAND_FIRM) && currentNode == CreatePushChainStep.DecideToUseStandFirm) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_STEADY_FOOTING)
-            && (
-                currentNode == BB2025FallingOver.ChooseToUseSteadyFooting
-                    || currentNode == BB2025KnockedDown.ChooseToUseSteadyFooting
-            )
-        ) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_STRIP_BALL) && currentNode == UseStripBallStep.ChooseToUseStripBall) {
-            return Confirm
-        }
-
-        // Use Mighty Blow if Armour isn't already broken
-        if (menuViewModel.isFeatureEnabled(Feature.USE_MIGHTY_BLOW_ON_ARMOUR) && (currentNode == ArmourRoll.ChooseToUseMightyBlow)) {
-            val context = controller.state.getContextOrNull<RiskingInjuryContext>()
-            if (context?.armourBroken != true) {
-                return Confirm
-            } else {
-                return Cancel
-            }
-        }
-
-        // Always use Mighty Blow on Injury (if possible)
-        if (menuViewModel.isFeatureEnabled(Feature.USE_MIGHTY_BLOW_ON_INJURY) && (currentNode == InjuryRoll.ChooseToUseMightyBlow)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_STRONG_ARM) && (currentNode == ThrowTeammateAccuracyRoll.ChooseToUseStrongArm)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_SNEAKY_GIT) && (currentNode == FoulStep.ChooseToUseSneakyGit)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_EYE_GOUGE) && (currentNode == CreatePushChainStep.ChooseToUseEyeGouge)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_SAFE_PAIR_OF_HANDS) && (currentNode == SafePairOfHandsStep.ChooseToUseSafePairOfHands)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_DIVING_CATCH_ON_TARGET) && currentNode == Catch.ChooseToUseDivingCatch) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_DIVING_CATCH_ON_ADJACENT)
-            && (currentNode == ResolveBallLandingOnPitch.InactiveTeamChoosesDivingCatchPlayers
-                || currentNode == ResolveBallLandingOnPitch.ActiveTeamChoosesDivingCatchPlayers)
-        ) {
-            // Return all available players
-            availableActions.getOrNull<SelectPlayers>()?.let {
-                return PlayersSelected(it.players)
-            }
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.IGNORE_DIVING_TACKLE_IF_NO_EFFECT)
-            && (currentNode == DodgeRoll.ChooseToUseDivingTackleAfterReRoll || currentNode == JumpRoll.ChooseToUseDivingTackleAfterReRoll || currentNode == LeapRoll.ChooseToUseDivingTackleAfterReRoll)
-            && !doDivingTackleHaveAnAffect(controller.state)
-        ) {
-            return Cancel
-        }
-
-        // Use Lethal Flight if Armour isn't already broken
-        if (menuViewModel.isFeatureEnabled(Feature.USE_LETHAL_FLIGHT_ON_ARMOUR) && (currentNode == ArmourRoll.ChooseToUseLethalFlight)) {
-            val context = controller.state.getContextOrNull<RiskingInjuryContext>()
-            if (context?.armourBroken != true) {
-                return Confirm
-            } else {
-                return Cancel
-            }
-        }
-
-        // Always use Lethal Flight on Injury (if possible)
-        if (menuViewModel.isFeatureEnabled(Feature.USE_LETHAL_FLIGHT_ON_INJURY) && (currentNode == InjuryRoll.ChooseToUseLethalFlight)) {
-            return Confirm
-        }
-
-        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_BULLSEYE) && (currentNode == ThrowPlayerStep.ChooseToUseBullseye)) {
-            // If the throw is at the limit of the thrown range, the Coach should choose (as they might want to scatter beyond it)
-            // Otherwise we can automatically apply Bullseye.
-            val context = controller.state.getContext<ThrowTeamMateContext>()
-            val target = context.target ?: PitchCoordinate.UNKNOWN
-            val rules = controller.rules
-            val range = rules.rangeRuler.measure(context.thrower, target)
-            if (range == Range.OUT_OF_RANGE) return Confirm
-            val atEdgeOfAllowedRange = target.getSurroundingCoordinates(rules, distance = 1, includeOutOfBounds = false)
-                .any { neighbor ->
-                    val neighborRange = rules.rangeRuler.measure(context.thrower, neighbor)
-                    neighborRange == Range.LONG_PASS
-                }
-            if (!atEdgeOfAllowedRange) return Confirm
-        }
-
-        fun isOnlyTeamRerolls(availableActions: ActionRequest): Boolean {
-            return availableActions.getOrNull<SelectRerollOption>()?.let {
-                it.options.all { option -> option.getRerollSource(controller.state) is TeamReroll }
-            } ?: false
-        }
-
-        if (!menuViewModel.isFeatureEnabled(Feature.ACCEPT_PRO_ROLL) && currentNode == ProRoll.ChooseReRollSource) {
-            if (isOnlyTeamRerolls(availableActions)) {
-                return NoRerollSelected()
-            }
-        }
-
-        if (!menuViewModel.isFeatureEnabled(Feature.ACCEPT_LONER_ROLL) && currentNode == LonerRoll.ChooseReRollSource) {
-            if (isOnlyTeamRerolls(availableActions)) {
-                return NoRerollSelected()
-            }
-        }
-
-        if (!menuViewModel.isFeatureEnabled(Feature.ACCEPT_TEAM_CAPTAIN_ROLL) && currentNode == TeamCaptainRoll.ChooseReRollSource) {
-            if (isOnlyTeamRerolls(availableActions)) {
-                return NoRerollSelected()
-            }
-        }
-
-        if (
-            currentNode == DealWithSecretWeaponsStep.KickingTeamSelectPlayerToSendOff
-            || currentNode == DealWithSecretWeaponsStep.ReceivingTeamSelectPlayerToSendOff
-        ) {
-            actions.filterIsInstance<SelectPlayer>().singleOrNull()?.let {
-                if (it.players.size == 1) {
-                    return PlayerSelected(it.players.single())
-                }
-            }
-        }
-        return null
+        return automatedActionsFactory.createAction(actions)
     }
 
     /**
