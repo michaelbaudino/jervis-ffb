@@ -48,20 +48,20 @@ import kotlinx.serialization.Serializable
  * We use a parameter object to make it easy to create builders in all rule
  * classes.
  */
-@kotlinx.serialization.Serializable
+@Serializable
 data class RulesParametersHolder(
     override val name: String = "Default",
     override val baseVersion: GameVersion = GameVersion.BB2020,
     override val gameType: GameType = GameType.STANDARD,
     override val timers: TimerSettings = TimerSettings.Companion.BB_CLOCK,
     override val inducements: InducementSettings = InducementSettings(DEFAULT_INDUCEMENTS_BB2025),
-    @kotlinx.serialization.Serializable(IntRangeSerializer::class)
+    @Serializable(IntRangeSerializer::class)
     override val moveRange: IntRange = 1..9,
-    @kotlinx.serialization.Serializable(IntRangeSerializer::class)
+    @Serializable(IntRangeSerializer::class)
     override val strengthRange: IntRange = 1..8,
-    @kotlinx.serialization.Serializable(IntRangeSerializer::class)
+    @Serializable(IntRangeSerializer::class)
     override val agilityRange: IntRange = 1 .. 6,
-    @kotlinx.serialization.Serializable(IntRangeSerializer::class)
+    @Serializable(IntRangeSerializer::class)
     override val passingRange: IntRange = 1.. 6,
     @Serializable(IntRangeSerializer::class)
     override val armorValueRange: IntRange = 3 .. 11,
@@ -109,4 +109,5 @@ data class RulesParametersHolder(
     override val useApothecaryBehavior: UseApothecaryBehavior = UseApothecaryBehavior.STANDARD,
     override val skillSettings: SkillSettings = BB2020SkillSettings(),
     override val allowPlayerEditsDuringGame: Boolean = false,
+    override val canUseMultipleRerollsOnDicePools: Boolean = false
 ): RulesParameters

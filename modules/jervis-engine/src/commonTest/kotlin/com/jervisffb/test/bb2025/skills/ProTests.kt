@@ -9,6 +9,7 @@ import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.RerollOptionSelected
+import com.jervisffb.engine.actions.SelectDicePoolResult
 import com.jervisffb.engine.actions.SelectRerollOption
 import com.jervisffb.engine.ext.d16
 import com.jervisffb.engine.ext.d6
@@ -21,6 +22,7 @@ import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.getSkill
 import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.rules.bb2025.skills.Brawler
 import com.jervisffb.engine.rules.bb2025.skills.Pro
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
@@ -51,6 +53,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 /**
@@ -318,5 +321,46 @@ class ProTests: JervisGameBB2025Test() {
         assertFalse(player.getSkill<Pro>().rerollUsed)
         assertEquals(player, state.activePlayer)
         player.assertStanding()
+    }
+
+    @Test
+    fun usingProPreventsOtherRerollsOnDicePool() {
+        val attacker = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.BRAWLER)
+            addSkill(SkillType.PRO)
+            baseStrength = 4
+            strength = 4
+        }
+        val defender = homeTeam["H1".playerId]
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
+            PlayerSelected(defender),
+            DiceRollResults(2.dblock, 2.dblock),
+        )
+        val rerollOptions = controller.getAvailableActions().get<SelectRerollOption>().options
+        assertEquals(5, rerollOptions.size)
+        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Brawler && it.dice.size == 1 })
+        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Pro && it.dice.size == 1 })
+        val rerollOption = rerollOptions[2] // Select Pro reroll
+        assertTrue(rerollOption.getRerollSource(state) is Pro)
+        controller.rollForward(
+            RerollOptionSelected(rerollOption),
+            *proRoll(4.d6),
+            6.dblock, // Reroll first die using Pro, we cannot reroll other dice
+        )
+        val actions = controller.getAvailableActions()
+        assertIs<SelectDicePoolResult>(actions.single())
+        controller.rollForward(
+            SelectSingleBlockDieResult(index = 0), // Select POW
+            DirectionSelected(Direction.LEFT),
+            Cancel, // Do not follow up
+        )
+        assertTrue(attacker.getSkill<Pro>().rerollUsed)
+        controller.rollForward(
+            DiceRollResults(1.d6, 1.d6)
+        )
+        defender.assertProne()
+        state.assertNoActivePlayer()
+        state.assertActiveTeam(awayTeam)
     }
 }

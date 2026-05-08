@@ -6,6 +6,7 @@ import com.jervisffb.engine.rules.bb2025.skills.BigHand
 import com.jervisffb.engine.rules.bb2025.skills.Block
 import com.jervisffb.engine.rules.bb2025.skills.BloodLust
 import com.jervisffb.engine.rules.bb2025.skills.BoneHead
+import com.jervisffb.engine.rules.bb2025.skills.Brawler
 import com.jervisffb.engine.rules.bb2025.skills.BreakTackle
 import com.jervisffb.engine.rules.bb2025.skills.BreatheFire
 import com.jervisffb.engine.rules.bb2025.skills.Bullseye
@@ -434,9 +435,9 @@ class BB2025SkillSettings: SkillSettings() {
                     // }
                 }
                 SkillType.BRAWLER -> {
-                    // addEntry(type, SkillCategory.STRENGTH) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Brawler", type, SkillCategory.STRENGTH) { player, category,expiresAt ->
+                        Brawler(player, category, expiresAt)
+                    }
                 }
                 SkillType.BREAK_TACKLE -> {
                     addNoValueEntry("Break Tackle", type, SkillCategory.STRENGTH) { player, category,expiresAt ->

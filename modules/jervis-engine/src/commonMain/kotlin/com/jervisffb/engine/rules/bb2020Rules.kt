@@ -139,6 +139,7 @@ abstract class BB2020Rules(
             gameType = GameType.STANDARD,
             foulActionBehavior = FoulActionBehavior.BB2020,
             inducements = InducementSettings(DEFAULT_INDUCEMENTS_BB2020),
+            canUseMultipleRerollsOnDicePools = true,
         )
     }
 

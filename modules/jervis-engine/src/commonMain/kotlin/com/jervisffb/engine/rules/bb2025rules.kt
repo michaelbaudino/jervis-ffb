@@ -169,7 +169,8 @@ abstract class BB2025Rules(
             casualtyTable = BB2025CasualtyTable,
             lastingInjuryTable = BB2025LastingInjuryTable,
             argueTheCallTable = BB2025ArgueTheCallTable,
-            rangeRuler = BB2025RangeRuler,)
+            rangeRuler = BB2025RangeRuler,
+        )
     }
 }
 

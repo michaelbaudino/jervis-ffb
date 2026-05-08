@@ -8,9 +8,11 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.RerollSourceId
 import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.SkillKeyword
+import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.rules.DiceRollType
+import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.procedures.DieRoll
 import com.jervisffb.engine.rules.common.procedures.UseStandardSkillReroll
 import com.jervisffb.engine.rules.common.rerolls.DiceRerollOption
@@ -18,6 +20,7 @@ import com.jervisffb.engine.rules.common.skills.Duration
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
+import com.jervisffb.engine.utils.anyRerollUsed
 
 /**
  * Represents the "Brawler (Active)" skill.
@@ -54,18 +57,22 @@ class Brawler(
     ): Boolean {
         if (type != DiceRollType.BLOCK) return false
         if (rerollUsed) return false
+        if (dicePool.anyRerollUsed() && !state.rules.canUseMultipleRerollsOnDicePools) return false
 
         @Suppress("UNCHECKED_CAST")
         val diceRolls = dicePool as List<DieRoll<DBlockResult>>
 
-        // Only works if other have been re-rolled and a both-down result exists
+        // Only works if no other dice have been re-rolled and a both-down result exists
         val isBlockingPlayer = (state.getContextOrNull<BlockContext>()?.attacker == player)
+
+        val context = state.getContextOrNull<ActivatePlayerContext>()
+        val isDeclaredBlockAction = (context?.declaredAction?.type == PlayerStandardActionType.BLOCK)
 
         val hasRerollableResult = diceRolls.any  {
             it.rerollSource == null && it.result.blockResult == BlockDice.BOTH_DOWN
         }
 
-        return isBlockingPlayer && hasRerollableResult
+        return isDeclaredBlockAction && isBlockingPlayer && hasRerollableResult
     }
 
     override fun calculateRerollOptions(

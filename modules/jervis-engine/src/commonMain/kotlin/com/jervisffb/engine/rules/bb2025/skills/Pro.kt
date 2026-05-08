@@ -14,6 +14,7 @@ import com.jervisffb.engine.rules.common.skills.Duration
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
+import com.jervisffb.engine.utils.anyRerollUsed
 
 /**
  * Representation of the Pro (Active) skill.
@@ -32,7 +33,7 @@ class Pro(
     override val name: String = type.description
     override val id: RerollSourceId = RerollSourceId("${player.id.value}-${skillId.serialize()}-reroll")
     override val compulsory: Boolean = false
-    override val resetAt: Duration = Duration.PERMANENT
+    override val resetAt: Duration = Duration.END_OF_ACTIVATION
     override var used: Boolean = false
     override val workWithoutTackleZones: Boolean = false
     override val workWhenProne: Boolean = false
@@ -46,6 +47,8 @@ class Pro(
     override fun canReroll(state: Game, type: DiceRollType, dicePool: List<DieRoll<*>>, wasSuccess: Boolean?): Boolean {
         if (rerollUsed) return false
         if (state.activePlayer != player) return false
+        if (dicePool.anyRerollUsed() && !state.rules.canUseMultipleRerollsOnDicePools) return false
+
         // It is a bit unclear if Pro can re-roll a different set of dice than a Team re-roll.
         // For now, we assume the answer is mostly no. The activePlayer check will filter out
         // most candidates anyway (like Landing). Team Captain/Mascot is the exceptions so far.

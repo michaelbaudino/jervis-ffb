@@ -518,3 +518,11 @@ fun doDivingTackleHaveAnAffect(state: Game): Boolean {
 
     return true
 }
+
+/**
+ * Returns `true` if a reroll has been used on _any_ die in the dice pool,
+ * `false` if not.
+ */
+fun List<DieRoll<*>>.anyRerollUsed(): Boolean {
+    return any { it.rerollSource != null }
+}

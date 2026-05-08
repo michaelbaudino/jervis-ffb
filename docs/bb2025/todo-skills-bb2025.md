@@ -243,7 +243,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Does not work on: Armour, Injury, Casualty
   - [x] Does not work outside activation
   - [x] Does not work on "not made on players behalf": Argue the Call, Crowd, Team Captain, Team Mascot
-  - [x] Failed Pro still counts as "having re-rolled", preventing other rerolls of the same dice_
+  - [x] Failed Pro still counts as "having re-rolled", preventing other rerolls of the same dice.
+  - [x] Using Pro, prevents rerolls on other dice (e.g., Brawler)
 - [x] Steady Footing
   - [x] If success, prevents turn over
   - [x] Prevent Fall Over (during own turn)
@@ -391,7 +392,12 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 ## Strength Skills
 
 - [ ] Arm Bar
-- [ ] Brawler
+- [x] Brawler
+  - [x] Only works on Declaring a block, not performing it.
+  - [x] Can only re-roll one dice
+  - [x] Work on both-down
+  - [x] Does not work if no both-down dice are present
+  - [x] Does not work if another reroll already happened
 - [x] Break Tackle
   - [x] Can only use once pr turn
   - [x] If used on the first roll, it also applies to any reroll
@@ -431,6 +437,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
     - [ ] Cheering Fans Assist only works on one the first block resolved
     - [ ] Trickster work against both blocks, but treat both defender positions as taken.
     - [ ] Exactly where in the sequence is the Leader reroll removed?
+    - [ ] Brawler does not work
 - [x] Stand Firm
   - [x] Prevent being pushed back in the first block
   - [x] Prevent being pushed back in a chain push
