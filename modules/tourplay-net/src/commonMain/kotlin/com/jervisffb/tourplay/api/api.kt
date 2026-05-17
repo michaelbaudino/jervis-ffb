@@ -60,7 +60,7 @@ public data class TourPlayRoster(
 
 @Serializable
 public data class RosterMaster(
-    public val teamRace: String,
+    public val teamRace: Int,
     public val name: String,
     public val lineUpMasters: List<LineUpMaster>,
     public val prizeReRoll: Int,
