@@ -144,7 +144,7 @@ abstract class SkillSettings {
                 keywordValue != null -> SkillValue.Keyword(keywordValue)
                 else -> SkillValue.None
             }
-            skillCache.keys.firstOrNull { type -> type.name == name }?.let { skillType ->
+            skillCache.keys.firstOrNull { type -> type.description == name }?.let { skillType ->
                 SkillId(skillType, skillValue)
             }
         }
