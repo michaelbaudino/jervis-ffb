@@ -1,17 +1,14 @@
 package com.jervisffb.engine.rules.common.rerolls
 
 import com.jervisffb.engine.fsm.Procedure
-import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.RerollSourceId
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.common.procedures.DieRoll
 import com.jervisffb.engine.rules.common.procedures.UseStandardSkillReroll
 import com.jervisffb.engine.rules.common.skills.RerollSource
-import kotlinx.serialization.Serializable
 
 interface D6StandardSkillReroll : RerollSource {
     override val rerollProcedure: Procedure
-        get() = UseStandardSkillReroll
+        get() =  UseStandardSkillReroll
 
     override fun calculateRerollOptions(
         type: DiceRollType,
@@ -24,15 +21,3 @@ interface D6StandardSkillReroll : RerollSource {
     }
 }
 
-@Serializable
-data class DiceRerollOption(
-    val rerollId: RerollSourceId,
-    val dice: List<DieRoll<*>>,
-) {
-    constructor(rerollId: RerollSourceId, dieRoll: DieRoll<*>): this(rerollId, listOf(dieRoll))
-    constructor(source: RerollSource, dieRoll: DieRoll<*>): this(source.id, listOf(dieRoll))
-
-    fun getRerollSource(game: Game): RerollSource {
-        return game.getRerollSourceById(rerollId)
-    }
-}

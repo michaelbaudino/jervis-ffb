@@ -636,11 +636,7 @@ abstract class Rules(
      * Note; this doesn't mean that a reroll is available, just that it is allowed
      * if possible.
      */
-    fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean {
-        // It is only allowed to reroll a die a single time. So if a rerollSource
-        // exists, it cannot be rerolled again
-        return dicePool.none { it.rerollSource != null }
-    }
+    abstract fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean
 
     /**
      * Return `true` if a Team Reroll is allowed to re-roll this type of roll.

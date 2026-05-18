@@ -68,7 +68,14 @@ abstract class D3WithRerollProcedure: Procedure() {
     final override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val owner = getActionOwner(state)
         val rollContextCommands = onEnterRollProcedure(state, rules)
-        val rerollContextCommand = AddContext(UseRerollContext(type = rollType, team = owner.team, player = owner))
+        val rerollContextCommand = AddContext(
+            UseRerollContext(
+                type = rollType,
+                originalRoll = emptyList(), // Will be set later
+                team = owner.team,
+                player = owner
+            )
+        )
         return compositeCommandOf(
             rollContextCommands,
             rerollContextCommand
@@ -149,9 +156,11 @@ abstract class D3WithRerollProcedure: Procedure() {
                     if (rerollContext.type != rollType) {
                         INVALID_GAME_STATE("Reroll type mismatch: expected $rollType, got $rerollContext")
                     }
+                    val rerollData = getRerollData(state, rules)
                     val updatedContext = rerollContext.copy(
+                        originalRoll = listOf(rerollData.roll),
                         source = action.getRerollSource(state),
-                        selectedRerollOption = action.option
+                        rerollDice = action.getRerollDice(),
                     )
                     compositeCommandOf(
                         UpdateContext(updatedContext),

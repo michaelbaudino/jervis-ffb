@@ -68,7 +68,10 @@ object UseTeamReroll : Procedure() {
         val reroll = context.source ?: INVALID_GAME_STATE("Cannot use team reroll as no reroll source: $context")
         return compositeCommandOf(
             SetTeamRerollUsed(state.activeTeamOrThrow(), reroll),
-            UpdateContext(context.copy(rerollAllowed = true))
+            UpdateContext(context.copy(
+                rerollDice = context.originalRoll,
+                rerollAllowed = true,
+            ))
         )
     }
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null

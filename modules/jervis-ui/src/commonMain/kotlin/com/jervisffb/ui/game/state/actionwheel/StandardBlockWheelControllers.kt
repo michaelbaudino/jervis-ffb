@@ -33,7 +33,7 @@ import com.jervisffb.ui.menu.LocalPitchDataWrapper
 import kotlin.time.ExperimentalTime
 
 /**
- * Control first block roll.
+ * Control rolling block dice.
  * This is only used when dice rolls are done locally.
  */
 object StandardBlockRollWheelController : ActionWheelDialogController() {
@@ -56,33 +56,67 @@ object StandardBlockRollWheelController : ActionWheelDialogController() {
         sharedData: LocalPitchDataWrapper,
     ) {
         val currentNode = acc.gameController.currentNode()
-        val diceValues = if (currentNode == StandardBlockRerollDice.ReRollDie) {
+        val request = actions.get<RollDice>()
+        val diceButtons = if (currentNode in listOf(StandardBlockRerollDice.ReRollDie, SingleStandardBlockRerollDice.ReRollDie)) {
+            // This is a re-roll, so we want to show all dice, even the ones we do not re-roll,
+            // they are just not selectable.
             val context = acc.game.getContext<BlockContext>()
-            context.roll.map { it.result }
+            val diceRoll = context.roll
+            val rerollContext = acc.game.getRerollContext()
+            val rerollDice = rerollContext.rerollDice ?: error("No reroll was selected")
+
+            diceRoll.mapIndexed { index, die ->
+                val isEnabled = (die in rerollDice)
+                DieButtonData(
+                    id = ButtonId("block-$index"),
+                    label = { null },
+                    diceRollType = DiceRollType.BLOCK,
+                    diceValue = die.result,
+                    action = { /* Do nothing */ },
+                    enabled = isEnabled,
+                    options = DBlockResult.allOptions(),
+                    expandable = isEnabled,
+                    preferLtr = (index == 0),
+                )
+            }
         } else {
-            actions.get<RollDice>().dice.map { DBlockResult.random() }
+            // This is not a reroll, so just show the number of dice provided by the Action Request.
+            List(request.dice.size) { index ->
+                DieButtonData(
+                    id = ButtonId("block-$index"),
+                    label = { null },
+                    diceRollType = DiceRollType.BLOCK,
+                    diceValue = DBlockResult.random(),
+                    action = { /* Do nothing */ },
+                    enabled = true,
+                    options = DBlockResult.allOptions(),
+                    expandable = true,
+                    preferLtr = (index == 0),
+                )
+            }
         }
-        val diceButtons = diceValues.mapIndexed { index, diceValue ->
-            DieButtonData(
-                id = ButtonId("block-$index"),
-                label = { null },
-                diceRollType = DiceRollType.BLOCK,
-                diceValue = diceValue,
-                action = { /* Do nothing */ },
-                options = DBlockResult.allOptions(),
-                expandable = true,
-                preferLtr = (index == 0),
-            )
+
+        // When re-rolling dice, we use the same dice id's as used in StandardBlockChooseResultOrRerollWheelController
+        // to make the animations nicer.
+        val buttonId = if (currentNode == SingleStandardBlockRerollDice.ReRollDie) {
+            val context = acc.game.getRerollContext()
+            val rerollDescription = context.source?.rerollDescription ?: ""
+            ButtonId("reroll-$rerollDescription")
+        } else {
+            ButtonId("confirm")
         }
 
         val actionButtons = listOf(
             ActionButtonData(
-                id = ButtonId("confirm"),
+                id = buttonId,
                 label = { "Confirm Roll" },
                 icon = ActionIcon.CONFIRM,
                 action = {
-                    val dice = diceButtons.map {
-                        it.diceValue
+                    val dice = diceButtons.mapNotNull {
+                        when (it.enabled) {
+                            true -> it.diceValue
+                            false -> null
+                        }
                     }
                     provider.userActionSelected(DiceRollResults(dice))
                 },
@@ -108,23 +142,53 @@ object StandardBlockRollWheelController : ActionWheelDialogController() {
         acc: UiSnapshotAccumulator,
         selectedAction: GameAction,
     ): Boolean {
-        val dice = selectedAction.safeCast<DiceRollResults>().rolls.map { it as DBlockResult }
+        val serverDice = selectedAction.safeCast<DiceRollResults>().rolls.map { it as DBlockResult }
         val serverRoll = (acc.gameController.rules.diceRollsOwner == DiceRollOwner.ROLL_ON_SERVER)
         if (serverRoll) {
-            val diceButtons = dice.mapIndexed { index, die ->
-                DieButtonData(
-                    id = ButtonId("block-$index"),
-                    label = { null },
-                    diceRollType = DiceRollType.BLOCK,
-                    diceValue = die,
-                    action = { /* Do nothing */ },
-                    options = DBlockResult.allOptions(),
-                    expandable = false,
-                    animateRoll = RollAnimationData(
-                        endValue = die,
-                    ),
-                )
+            val rerollContext = acc.game.getRerollContextOrNull()
+            val isReroll = (rerollContext != null && rerollContext.rerollDice != null)
+            val diceButtons = if (isReroll) {
+                // Map server dice back to their position in the original roll
+                // `serverRoll` -> find dieId in `rerollDice` -> find index in `originalRoll`
+                val dicePool = rerollContext.originalRoll
+                val rerollDice = rerollContext.rerollDice ?: error("No reroll was selected")
+                val rolledDieIds = serverDice.indices.map { index -> rerollDice[index].id }
+                dicePool.mapIndexed { index, die ->
+                    val indexRolledOnServer = rolledDieIds.indexOfFirst { it == die.id }
+                    val newValue = if (indexRolledOnServer != -1) serverDice[indexRolledOnServer] else null
+                    DieButtonData(
+                        id = ButtonId("block-$index"),
+                        label = { null },
+                        diceRollType = DiceRollType.BLOCK,
+                        diceValue = newValue ?: die.result,
+                        action = { /* Do nothing */ },
+                        options = DBlockResult.allOptions(),
+                        expandable = false,
+                        enabled = (newValue != null),
+                        animateRoll = if (newValue != null) {
+                            RollAnimationData(endValue = newValue)
+                        } else {
+                            null
+                        }
+                    )
+                }
+            } else {
+                serverDice.mapIndexed { index, die ->
+                    DieButtonData(
+                        id = ButtonId("block-$index"),
+                        label = { null },
+                        diceRollType = DiceRollType.BLOCK,
+                        diceValue = die,
+                        action = { /* Do nothing */ },
+                        options = DBlockResult.allOptions(),
+                        expandable = false,
+                        animateRoll = RollAnimationData(
+                            endValue = die
+                        ),
+                    )
+                }
             }
+
             val wheelState = ActionWheelUiStateData(
                 center = getActionWheelCenter(acc.game),
                 topItems = diceButtons,
@@ -133,7 +197,8 @@ object StandardBlockRollWheelController : ActionWheelDialogController() {
                 bottomItems = emptyList(),
                 bottomAnimationType = ButtonLayoutMode.CONTRACT_NEW_SUBMENU,
                 onDismiss = null,
-                animationOnly = true
+                animationOnly = true,
+                bottomMessage = DiceRollType.BLOCK.description
             )
             acc.addActionWheelEvent(wheelState)
             return true

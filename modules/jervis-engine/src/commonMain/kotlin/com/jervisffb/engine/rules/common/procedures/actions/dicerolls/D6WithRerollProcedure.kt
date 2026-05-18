@@ -35,6 +35,7 @@ import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportRerollUsed
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
+import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 import com.jervisffb.engine.utils.calculateAvailableRerollsForPlayer
@@ -78,7 +79,14 @@ abstract class D6WithRerollProcedure: Procedure() {
     final override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val owner = getActionOwner(state)
         val rollContextCommands = onEnterRollProcedure(state, rules)
-        val rerollContextCommand = AddContext(UseRerollContext(type = rollType, team = owner.team, player = owner))
+        val rerollContextCommand = AddContext(
+            UseRerollContext(
+                type = rollType,
+                originalRoll = emptyList(), // Will be set later
+                team = owner.team,
+                player = owner
+            )
+        )
         return compositeCommandOf(
             rollContextCommands,
             rerollContextCommand
@@ -155,13 +163,15 @@ abstract class D6WithRerollProcedure: Procedure() {
                 Continue -> rerollNotAvailableCommand()
                 is NoRerollSelected -> noRerollSelectedCommand()
                 is RerollOptionSelected -> {
+                    val rollData = getRerollData(state, rules)
                     val rerollContext = state.getRerollContext()
                     if (rerollContext.type != rollType) {
                         INVALID_GAME_STATE("Reroll type mismatch: expected $rollType, got $rerollContext")
                     }
                     val updatedContext = rerollContext.copy(
+                        originalRoll = listOf(rollData.roll),
                         source = action.getRerollSource(state),
-                        selectedRerollOption = action.option
+                        rerollDice = action.getRerollDice(),
                     )
                     compositeCommandOf(
                         UpdateContext(updatedContext),
@@ -201,6 +211,15 @@ abstract class D6WithRerollProcedure: Procedure() {
         }
     }
 
+    /**
+     * Class representing a "common" re-roll [Node].
+     *
+     * Common in this context means:
+     *
+     * 1. Using the reroll can be delegated to [RerollSource.rerollProcedure].
+     * 2. We can immediately jump to the next node without adding any other
+     *    [Command] objects.
+     */
     class CommonUseRerollSource(
         private val rerollDiceNode: ActionNode,
         private val noRerollCommand: () -> Command = { ExitProcedure() }

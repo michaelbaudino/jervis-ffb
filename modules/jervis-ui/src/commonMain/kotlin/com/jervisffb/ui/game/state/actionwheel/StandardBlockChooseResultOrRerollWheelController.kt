@@ -20,7 +20,10 @@ import com.jervisffb.engine.rules.bb2020.procedures.actions.block.standard.Stand
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.SingleStandardBlockChooseReroll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.SingleStandardBlockChooseResult
 import com.jervisffb.ui.game.UiSnapshotAccumulator
+import com.jervisffb.ui.game.dialogs.wheel.ActionButtonCancelSubMenu
 import com.jervisffb.ui.game.dialogs.wheel.ActionButtonData
+import com.jervisffb.ui.game.dialogs.wheel.ActionButtonOpenSubMenu
+import com.jervisffb.ui.game.dialogs.wheel.ButtonData
 import com.jervisffb.ui.game.dialogs.wheel.ButtonId
 import com.jervisffb.ui.game.dialogs.wheel.ButtonLayoutMode
 import com.jervisffb.ui.game.dialogs.wheel.DieButtonData
@@ -90,21 +93,73 @@ object StandardBlockChooseResultOrRerollWheelController : ActionWheelDialogContr
             )
         }
 
-        val actionButtons = mutableListOf<ActionButtonData>()
+        val actionButtons = mutableListOf<ButtonData>()
         if (
             currentNode == StandardBlockChooseReroll.ReRollSourceOrAcceptRoll
             || currentNode == SingleStandardBlockChooseReroll.ChooseRerollSourceOrAcceptRoll
         ) {
+            // The buttonId's here must be kept in sync with `StandardBlockWheelControllers` to make sure the buttons
+            // animate correctly.
+            // TODO The Rules Engine no longer sends multiple reroll options for the same type, but not all use cases has been
+            //  fleshed out yet, so keep this code around for now. Re-evaluate once Multiple Block are in place.
             val rerollButtons = actions.getOrNull<SelectRerollOption>()?.let { rerollOption ->
-                rerollOption.options.map { option ->
-                    val rerollSource = option.getRerollSource(acc.game)
-                    ActionButtonData(
-                        id = ButtonId("Reroll-${rerollSource.rerollDescription}"),
-                        label = { rerollSource.rerollDescription },
-                        icon = ActionIcon.TEAM_REROLL,
-                        enabled = true,
-                        action = { provider.userActionSelected(RerollOptionSelected(option)) }
-                    )
+                val optionsBySource = rerollOption.options.groupBy { option ->
+                    option.getRerollSource(acc.game).rerollDescription
+                }
+                optionsBySource.map { (description, options) ->
+                    val rerollSource = options.first().getRerollSource(acc.game)
+                    if (options.size == 1) {
+                        ActionButtonData(
+                            id = ButtonId("Reroll-$description"),
+                            label = { rerollSource.rerollDescription },
+                            icon = ActionIcon.TEAM_REROLL,
+                            enabled = true,
+                            action = { provider.userActionSelected(RerollOptionSelected(options.first())) }
+                        )
+                    } else {
+
+                        val subMenuDice = context.roll.mapIndexed { index, die ->
+                            val matchingOption = options.find { opt ->
+                                opt.dice!!.contains(die)
+                            }
+                            DieButtonData(
+                                id = ButtonId("block-$index"),
+                                label = { null },
+                                diceRollType = DiceRollType.BLOCK,
+                                diceValue = die.result,
+                                options = DBlockResult.allOptions(),
+                                expandable = false,
+                                enabled = (matchingOption != null),
+                                preferLtr = (index == 0),
+                                action = if (matchingOption != null) {
+                                    { provider.userActionSelected(RerollOptionSelected(matchingOption)) }
+                                } else {
+                                    {}
+                                },
+                            )
+                        }
+                        val cancelButton = ActionButtonCancelSubMenu(
+                            id = ButtonId("Reroll-$description"),
+                            label = { "Cancel" },
+                            enabled = true
+                        )
+                        val wheelState = ActionWheelUiStateData(
+                            center = getActionWheelCenter(acc.game),
+                            topItems = subMenuDice,
+                            topExpandMode = MenuExpandMode.Compact(),
+                            topAnimationType = ButtonLayoutMode.EXPEND_NEW_SUBMENU,
+                            bottomItems = listOf(cancelButton),
+                            bottomExpandMode = MenuExpandMode.Compact(),
+                            bottomAnimationType = ButtonLayoutMode.EXPEND_NEW_SUBMENU,
+                        )
+                        ActionButtonOpenSubMenu(
+                            id = ButtonId("Reroll-$description"),
+                            label = { rerollSource.rerollDescription },
+                            icon = ActionIcon.TEAM_REROLL,
+                            enabled = true,
+                            subMenu = wheelState,
+                        )
+                    }
                 }
             }
             actionButtons.addAll(rerollButtons ?: emptyList())

@@ -2,6 +2,7 @@ package com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock
 
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.buildCompositeCommand
+import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
 import com.jervisffb.engine.commands.context.RemoveContext
 import com.jervisffb.engine.commands.context.UpdateContext
@@ -74,7 +75,11 @@ object SingleStandardBlockStep : Procedure() {
     override val initialNode: Node = CheckForFoulAppearance
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val blockContext = state.getContext<BlockContext>()
-        val context = UseRerollContext(type = DiceRollType.BLOCK, blockContext.attacker)
+        val context = UseRerollContext(
+            type = DiceRollType.BLOCK,
+            roll = blockContext.roll,
+            player = blockContext.attacker
+        )
         return AddContext(context)
     }
     override fun onExitProcedure(state: Game, rules: Rules): Command {
@@ -134,9 +139,18 @@ object SingleStandardBlockStep : Procedure() {
     object SelectRerollType : ParentNode() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = SingleStandardBlockChooseReroll
         override fun onExitNode(state: Game, rules: Rules): Command {
-            return when (state.getRerollContextOrNull()?.rerollAllowed == true) {
-                true -> GotoNode(RerollDice)
-                false -> GotoNode(SelectBlockResult)
+            val context = state.getRerollContextOrNull()
+            return when {
+                (context == null) -> GotoNode(SelectBlockResult) // No reroll selected
+                (context.rerollAborted) -> {
+                    compositeCommandOf(
+                        UpdateContext(context.copy(rerollAborted = false)),
+                        GotoNode(SelectRerollType),
+                    )
+                }
+                (context.rerollAllowed) -> GotoNode(RerollDice)
+                (!context.rerollAllowed) -> GotoNode(SelectBlockResult)
+                else -> INVALID_GAME_STATE("Unknown reroll state: $context")
             }
         }
     }

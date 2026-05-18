@@ -64,6 +64,7 @@ object TeamMascotRoll: Procedure() {
         val context = state.getContext<MascotRollContext>()
         val rerollContext = UseRerollContext(
             type = DiceRollType.TEAM_MASCOT,
+            originalRoll = emptyList(), // Will be set later
             team = context.team,
         )
         return AddContext(rerollContext)
@@ -82,12 +83,17 @@ object TeamMascotRoll: Procedure() {
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             return castDiceRoll<D6Result>(action) { d6 ->
                 val context = state.getContext<MascotRollContext>()
+                val rerollContext = state.getRerollContext()
                 val success = isSuccess(d6)
+                val roll = D6DieRoll.create(state, d6)
                 compositeCommandOf(
                     ReportDiceRoll(DiceRollType.TEAM_MASCOT, d6),
                     UpdateContext(context.copy(
-                        roll = D6DieRoll.create(state, d6),
+                        roll = roll,
                         isSuccess = success,
+                    )),
+                    UpdateContext(rerollContext.copy(
+                        originalRoll = listOf(roll),
                     )),
                     GotoNode(ChooseReRollSource)
                 )
@@ -116,7 +122,9 @@ object TeamMascotRoll: Procedure() {
                     val context = state.getContext<MascotRollContext>()
                     val rerollContext = state.getRerollContext()
                     compositeCommandOf(
-                        UpdateContext(rerollContext.copy(source = action.getRerollSource(state))),
+                        UpdateContext(rerollContext.copy(
+                            source = action.getRerollSource(state),
+                        )),
                         ReportRerollUsed(action.getRerollSource(state)),
                         GotoNode(UseRerollSource),
                     )

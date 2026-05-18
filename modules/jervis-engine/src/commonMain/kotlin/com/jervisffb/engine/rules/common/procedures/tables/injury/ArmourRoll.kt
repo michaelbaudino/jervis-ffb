@@ -91,7 +91,12 @@ object ArmourRoll: Procedure() {
         // be on that team.
         val team = context.player.team.otherTeam()
         val player = context.causedBy
-        val rerollContext = UseRerollContext(DiceRollType.ARMOUR, team = team, player = player)
+        val rerollContext = UseRerollContext(
+            type = DiceRollType.ARMOUR,
+            originalRoll = emptyList(),  // Not used here as Lone Fouler is the only reroll and handled independently
+            team = team,
+            player = player
+        )
         return AddContext(rerollContext)
     }
     override fun onExitProcedure(state: Game, rules: Rules): Command {
@@ -348,7 +353,8 @@ object ArmourRoll: Procedure() {
                     ).singleOrNull() ?: error("Lone Fouler returned more than one re-roll option")
                     val rerollContext = state.getRerollContext().copy(
                         source = rerollSource,
-                        selectedRerollOption = rerollOption
+                        rerollDice = rerollOption.dice,
+                        rerollAllowed = true
                     )
                     compositeCommandOf(
                         ReportSkillUsed(fouler, SkillType.LONE_FOULER),

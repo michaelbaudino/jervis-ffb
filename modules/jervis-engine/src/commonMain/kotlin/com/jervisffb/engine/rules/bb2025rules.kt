@@ -25,6 +25,7 @@ import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.SetupRule
 import com.jervisffb.engine.rules.common.TeamCaptainNotOnPitch
 import com.jervisffb.engine.rules.common.actions.PlayerAction
+import com.jervisffb.engine.rules.common.procedures.DieRoll
 import com.jervisffb.engine.rules.common.roster.PlayerSpecialRule
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.skills.SpecialActionProvider
@@ -38,6 +39,12 @@ import kotlinx.serialization.Serializable
 abstract class BB2025Rules(
     private val bb2025RuleParameters: RulesParametersHolder
 ) : Rules(bb2025RuleParameters) {
+
+    override fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean {
+        // In BB2025, as soon as a single die in a dice pool has been rerolled,
+        // no other rerolls are allowed.
+        return dicePool.none { it.rerollSource != null }
+    }
 
     override fun isSetupValid(state: Game, team: Team): List<SetupRule> {
         val setupErrors = super.isSetupValid(state, team).toMutableList()

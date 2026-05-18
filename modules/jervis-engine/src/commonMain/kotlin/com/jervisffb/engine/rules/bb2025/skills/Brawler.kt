@@ -14,12 +14,13 @@ import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.procedures.DieRoll
-import com.jervisffb.engine.rules.common.procedures.UseStandardSkillReroll
+import com.jervisffb.engine.rules.common.procedures.rerolls.UseBrawlerReroll
 import com.jervisffb.engine.rules.common.rerolls.DiceRerollOption
 import com.jervisffb.engine.rules.common.skills.Duration
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
+import com.jervisffb.engine.utils.INVALID_GAME_STATE
 import com.jervisffb.engine.utils.anyRerollUsed
 
 /**
@@ -47,7 +48,7 @@ class Brawler(
     override val rerollResetAt: Duration = Duration.END_OF_ACTION
     override val rerollDescription: String = "Brawler Reroll"
     override var rerollUsed: Boolean = false
-    override val rerollProcedure: Procedure = UseStandardSkillReroll
+    override val rerollProcedure: Procedure = UseBrawlerReroll
 
     override fun canReroll(
         state: Game,
@@ -83,9 +84,9 @@ class Brawler(
         @Suppress("UNCHECKED_CAST")
         val diceRolls = value as List<DieRoll<DBlockResult>>
         return diceRolls
-            .filter { it.result.blockResult == BlockDice.BOTH_DOWN }
-            .map { die ->
-                DiceRerollOption(this.id, die)
-            }
+            .firstOrNull { it.result.blockResult == BlockDice.BOTH_DOWN }
+            ?.let { _ ->
+                listOf(DiceRerollOption(this.id, null))
+            } ?: INVALID_GAME_STATE("No Both Down results were found: $diceRolls")
     }
 }

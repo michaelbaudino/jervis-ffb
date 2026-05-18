@@ -60,7 +60,9 @@ object TeamMascotStep: Procedure() {
     object RollDie: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val rerollContext = state.getRerollContext()
-            val rollContext = MascotRollContext(rerollContext.team)
+            val rollContext = MascotRollContext(
+                rerollContext.team
+            )
             return AddContext(rollContext)
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = TeamMascotRoll
@@ -119,11 +121,14 @@ object TeamMascotStep: Procedure() {
         }
     }
 
+    // Use the alternative reroll selected by the coach instead of the failed Team Mascot.
     object UseAlternativeReroll: ParentNode() {
-        override fun onEnterNode(state: Game, rules: Rules): Command? {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val originalReroll = state.getRerollContext()
             val context = state.getContext<MascotContext>()
             val rerollContext = UseRerollContext(
-                type = DiceRollType.TEAM_MASCOT,
+                type = originalReroll.type,
+                originalRoll = originalReroll.originalRoll,
                 team = context.team,
                 source = context.alternativeRerollSelected?.getRerollSource(state)
             )

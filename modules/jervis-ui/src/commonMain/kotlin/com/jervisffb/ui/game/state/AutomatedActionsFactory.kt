@@ -71,6 +71,7 @@ import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowT
 import com.jervisffb.engine.rules.common.procedures.rerolls.LonerRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.ProRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamCaptainRoll
+import com.jervisffb.engine.rules.common.procedures.rerolls.UseBrawlerReroll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.ArmourRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.InjuryRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
@@ -465,12 +466,25 @@ class AutomatedActionsFactory(
             }
         }
 
+        // Select the next player we want to roll Recover for between drives.
+        // This is done automatically as there is no known scenario where choosing
+        // makes sense.
         if (
             currentNode == RecoverKnockedOutPlayersStep.ReceivingTeamSelectPlayerToRecover
             || currentNode == RecoverKnockedOutPlayersStep.KickingTeamSelectPlayerToRecover
         ) {
             actions.getOrNull<SelectPlayer>()?.let {
                 return PlayerSelected(it.players.first())
+            }
+        }
+
+        // If a player has Brawler and rolls multiple Both Down, we automatically choose
+        // one of the dice as choosing between them has no effect.
+        if (currentNode == UseBrawlerReroll.SelectBothDownToReroll) {
+            actions.getOrNull<SelectDicePoolResult>()?.let {
+                it.pools.singleOrNull()?.dice?.first()
+            }?.let {
+                return DicePoolResultsSelected.fromSingleDice(it)
             }
         }
 

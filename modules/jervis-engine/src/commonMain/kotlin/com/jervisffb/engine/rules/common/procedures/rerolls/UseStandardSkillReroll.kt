@@ -29,7 +29,10 @@ object UseStandardSkillReroll : Procedure() {
                     true -> SetSkillRerollUsed(context.source, used = true)
                     false -> null
                 },
-                UpdateContext(context.copy(rerollAllowed = true)),
+                UpdateContext(context.copy(
+                    rerollDice = context.originalRoll,
+                    rerollAllowed = true,
+                )),
                 ExitProcedure()
             )
         }

@@ -22,6 +22,7 @@ import com.jervisffb.engine.rules.builder.KickingPlayerBehavior
 import com.jervisffb.engine.rules.builder.UseApothecaryBehavior
 import com.jervisffb.engine.rules.common.actions.PlayerAction
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
+import com.jervisffb.engine.rules.common.procedures.DieRoll
 import com.jervisffb.engine.rules.common.skills.Skill
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.skills.SpecialActionProvider
@@ -38,6 +39,13 @@ import kotlinx.serialization.Serializable
 abstract class BB2020Rules(
     private val bb2020RuleParameters: RulesParametersHolder
 ) : Rules(bb2020RuleParameters) {
+
+    override fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean {
+        // It is only allowed to reroll a die a single time. So if a rerollSource
+        // exists, it cannot be rerolled again, but if some reroll can reroll some
+        // of the other dice that is allowed.
+        return !dicePool.all { it.rerollSource != null }
+    }
 
     override fun getAvailableActions(state: Game, player: Player): List<PlayerAction> {
         if (state.activePlayer != player) INVALID_GAME_STATE("$player is not the active player")

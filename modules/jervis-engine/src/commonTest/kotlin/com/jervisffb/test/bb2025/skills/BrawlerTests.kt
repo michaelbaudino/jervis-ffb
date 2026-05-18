@@ -61,7 +61,7 @@ class BrawlerTests: JervisGameBB2025Test() {
         )
         val rerollOptions = controller.getAvailableActions().get<SelectRerollOption>().options
         assertEquals(2, rerollOptions.size)
-        assertEquals(1, rerollOptions.count { it.getRerollSource(state) is Brawler && it.dice.size == 1 })
+        assertEquals(1, rerollOptions.count { it.getRerollSource(state) is Brawler && it.dice?.size == null })
         controller.rollForward(
             RerollOptionSelected(rerollOptions.first()),
             6.dblock
@@ -112,26 +112,29 @@ class BrawlerTests: JervisGameBB2025Test() {
         assertTrue(rerollOptions.none { it.getRerollSource(state) is Brawler })
     }
 
-    // Cannot use Brawler, if Pro was used to reroll the other die (in a 2 dice block)
+    // Cannot use other rerolls if Brawler was used on a single die.
     @Test
-    fun cannotUseIfOtherDieWasRerolled() {
-        val attacker = awayTeam["A1".playerId]
-        attacker.addSkill(SkillType.PRO)
+    fun usingBrawlerPreventsOtherRerollsOnDicePool() {
+        val attacker = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.PRO)
+            baseStrength = 4
+            strength = 4
+        }
         val defender = homeTeam["H1".playerId]
         controller.rollForward(
             *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
             PlayerSelected(defender),
-            DiceRollResults(2.dblock, 2.dblock),
+            DiceRollResults(2.dblock, 3.dblock),
         )
         val rerollOptions = controller.getAvailableActions().get<SelectRerollOption>().options
-        assertEquals(5, rerollOptions.size)
-        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Brawler })
-        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Pro })
-        val rerollOption = rerollOptions.first() // Select Brawler reroll
+        assertEquals(3, rerollOptions.size)
+        assertTrue(rerollOptions.any { it.getRerollSource(state) is Brawler })
+        assertTrue(rerollOptions.any { it.getRerollSource(state) is Pro })
+        val rerollOption = rerollOptions[0] // Select Brawler reroll
         assertTrue(rerollOption.getRerollSource(state) is Brawler)
         controller.rollForward(
             RerollOptionSelected(rerollOption),
-            6.dblock // Reroll first die using Brawler, we cannot reroll other dice
+            6.dblock, // Reroll first die using Brawler, we cannot reroll other dice
         )
         val actions = controller.getAvailableActions()
         assertIs<SelectDicePoolResult>(actions.single())

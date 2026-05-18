@@ -100,7 +100,9 @@ import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.jervis_ui.generated.resources.Res
 import com.jervisffb.jervis_ui.generated.resources.jervis_brush_chalk
 import com.jervisffb.ui.SETTINGS_MANAGER
+import com.jervisffb.ui.game.dialogs.wheel.ActionButtonCancelSubMenu
 import com.jervisffb.ui.game.dialogs.wheel.ActionButtonData
+import com.jervisffb.ui.game.dialogs.wheel.ActionButtonOpenSubMenu
 import com.jervisffb.ui.game.dialogs.wheel.ButtonData
 import com.jervisffb.ui.game.dialogs.wheel.ButtonId
 import com.jervisffb.ui.game.dialogs.wheel.ButtonLayoutMode
@@ -156,9 +158,35 @@ fun ActionWheel(
     tipRotationDegree: Float = 0f,
     onAnimationFinished: () -> Unit,
 ) {
+    // Track UI states so we can support navigating in and out of submenus.
+    // This means supporting updates from both inside and outside the component.
+    var lastUiState by remember { mutableStateOf<ActionWheelUiState>(NoActionWheel) }
+    val currentUiStateHolder = remember { mutableStateOf(uiState) }
+    var currentUiState by currentUiStateHolder
+    var isSubmenuAnimation by remember { mutableStateOf(false) }
+    remember(uiState) {
+        currentUiStateHolder.value = uiState
+        isSubmenuAnimation = false
+    }
+
+    val updateUiStateHandler = remember {
+        { newUiState: ActionWheelUiState ->
+            lastUiState = currentUiStateHolder.value
+            currentUiStateHolder.value = newUiState
+            isSubmenuAnimation = true
+        }
+    }
+    val cancelCurrentUiStateHandler = remember {
+        {
+            currentUiStateHolder.value = lastUiState
+            lastUiState = NoActionWheel
+            isSubmenuAnimation = true
+        }
+    }
+
     val animationDurationMs = when {
-        uiState.enableAnimation && uiState.isHiding() -> 100 // Hiding should be faster
-        uiState.enableAnimation -> 300
+        currentUiState.enableAnimation && currentUiState.isHiding() -> 100 // Hiding should be faster
+        currentUiState.enableAnimation -> 300
         else -> 0
     }
     var previousState by remember { mutableStateOf<ActionWheelUiState>(NoActionWheel) }
@@ -170,40 +198,40 @@ fun ActionWheel(
     val bottomRenderButtons = remember { mutableStateListOf<ButtonData>() }
     val ringAlpha = remember { Animatable(0f) }
 
-    var buttonsEnabled by remember(uiState) { mutableStateOf(false) }
+    var buttonsEnabled by remember(currentUiState) { mutableStateOf(false) }
     var hoverText by remember { mutableStateOf<String?>(null) }
     // If a button has temporary primary focus, it will dim all other remaining buttons and disable their onClick handlers
     var temporaryPrimaryFocus by remember { mutableStateOf<ButtonId?>(null) }
 
     LaunchedEffect(Unit) {
         bottomRenderButtons.clear()
-        bottomRenderButtons.addAll(uiState.bottomItems)
+        bottomRenderButtons.addAll(currentUiState.bottomItems)
         topRenderButtons.clear()
-        topRenderButtons.addAll(uiState.topItems)
+        topRenderButtons.addAll(currentUiState.topItems)
     }
 
     // Update the wheel position synchronously before the frame is drawn, so the wheel
     // never renders at a stale position (e.g. when bottomMessage stays the same across
     // two states that are at different pitch coordinates).
-    DisposableEffect(uiState) {
-        offsetDelegate(uiState)
+    DisposableEffect(currentUiState) {
+        offsetDelegate(currentUiState)
         onDispose { }
     }
 
     // Trigger animations on state changes.
     // This effect is also responsible for tracking previous items until they are fully gone.
-    LaunchedEffect(uiState) {
+    LaunchedEffect(currentUiState) {
         hoverText = null
-        if (uiState.animationOnly) {
+        if (currentUiState.animationOnly) {
             topAnimatable.clear()
             bottomAnimatable.clear()
-            // With "animation only", we normally does not want to go back to the
+            // With "animation only", we normally do not want to go back to the
             // "previous state", so we always reset it here.
             previousState = NoActionWheel
         }
 
         val from = previousState
-        val to = uiState
+        val to = currentUiState
 
         // 1) Make sure render list has union(from, to)
         val bottomUnion = (from.bottomItems + to.bottomItems).reversed().distinctBy { it.id }.reversed()
@@ -220,8 +248,9 @@ fun ActionWheel(
             topAnims = topAnimatable,
             bottomAnims = bottomAnimatable,
             animationDurationMs = animationDurationMs,
-            maxRingAlpha = if (uiState.animationOnly) 0f else maxRingAlpha,
+            maxRingAlpha = if (currentUiState.animationOnly) 0f else maxRingAlpha,
             ringAlpha = ringAlpha,
+            subMenuAnimation = isSubmenuAnimation
         )
 
         // 3) After animation completes, remove items that are gone
@@ -239,7 +268,7 @@ fun ActionWheel(
             topAnimatable.clear()
         }
 
-        previousState = uiState
+        previousState = currentUiState
         buttonsEnabled = true
         onAnimationFinished()
     }
@@ -268,7 +297,9 @@ fun ActionWheel(
             onPrimaryFocus = { id, isPrimary ->
                 temporaryPrimaryFocus = if (isPrimary) id else null
                 buttonsEnabled = !isPrimary
-            }
+            },
+            updateUiStateHandler,
+            cancelCurrentUiStateHandler
         )
 
         WheelButtons(
@@ -281,12 +312,14 @@ fun ActionWheel(
             onPrimaryFocus = { id, isPrimary ->
                 temporaryPrimaryFocus = if (isPrimary) id else null
                 buttonsEnabled = !isPrimary
-            }
+            },
+            updateUiStateHandler,
+            cancelCurrentUiStateHandler
         )
 
-        if (hoverText.isNullOrEmpty() && (uiState.bottomMessage?.isNotBlank() == true)) {
+        if (hoverText.isNullOrEmpty() && (currentUiState.bottomMessage?.isNotBlank() == true)) {
             RingMessage(
-                message = uiState.bottomMessage ?: "",
+                message = currentUiState.bottomMessage ?: "",
                 angle = 90f,
                 radius = (ringSize - borderSize) / 2f,
             )
@@ -303,13 +336,15 @@ private suspend fun runWheelAnimations(
     animationDurationMs: Int,
     maxRingAlpha: Float,
     ringAlpha: Animatable<Float, AnimationVector1D>,
+    subMenuAnimation: Boolean,
+
 ) = coroutineScope {
     val topJob = async {
         animateRegion(
             animationsCache = topAnims,
             to = to.topItems,
             from = from.topItems,
-            animationMode = if (to.isLastActionUndo()) ButtonLayoutMode.EXPAND_UNDO else to.topAnimationType,
+            animationMode = if (to.isLastActionUndo() && !subMenuAnimation) ButtonLayoutMode.EXPAND_UNDO else to.topAnimationType,
             animationDuration = animationDurationMs
         )
     }
@@ -318,7 +353,7 @@ private suspend fun runWheelAnimations(
             animationsCache = bottomAnims,
             to = to.bottomItems,
             from = from.bottomItems,
-            animationMode = if (to.isLastActionUndo()) ButtonLayoutMode.EXPAND_UNDO else to.bottomAnimationType,
+            animationMode = if (to.isLastActionUndo() && !subMenuAnimation) ButtonLayoutMode.EXPAND_UNDO else to.bottomAnimationType,
             animationDuration = animationDurationMs
         )
     }
@@ -381,6 +416,19 @@ private suspend fun animateRegion(
             if (disappearing.isNotEmpty()) {
                 delay(shortAnimation.toLong().milliseconds)
             }
+
+            // These dice are not being rolled, so just show immediately
+            appearing.forEach { button ->
+                if (button.animateRoll == null) {
+                    launch {
+                        animationsCache[button.id]!!.let { anim ->
+                            anim.alpha.snapTo(1f)
+                            anim.angleDegree.snapTo(button.targetAngle)
+                        }
+                    }
+                }
+            }
+
             animatingRoll.forEach {
                 launch {
                     animationsCache[it.id]!!.let { anim ->
@@ -574,8 +622,13 @@ private fun WheelButtons(
     wheelRadius: Dp,
     buttonsClickable: Boolean,
     onHover: (String?) -> Unit,
+    // If set, this button is currently showing sub-options, i.e. when selecting
+    // the value of dice rolls.
     primaryFocus: ButtonId? = null,
+    // Called when the primary focus of a dice button changes
     onPrimaryFocus: (ButtonId, Boolean) -> Unit = { _, _ -> },
+    updateUiStateHandler: (ActionWheelUiState) -> Unit,
+    cancelCurrentUiStateHandler: () -> Unit,
 ) {
     val radiusPx = with(LocalDensity.current) { wheelRadius.toPx() }
     Box(Modifier.size(wheelRadius), Alignment.Center) {
@@ -591,6 +644,8 @@ private fun WheelButtons(
                         isFullyVisible = (primaryFocus == null) || (item.id == primaryFocus),
                         onHover,
                         onPrimaryFocus,
+                        updateUiStateHandler,
+                        cancelCurrentUiStateHandler
                     )
                 }
             }
@@ -700,10 +755,13 @@ private fun MenuItemButton(
     animationData: ItemAnimatable,
     radiusPx: Float,
     isOnClickEnabled: Boolean,
+    // `true` if this menu has the "primary" focus.
     isFullyVisible: Boolean,
     // Show or hide a hover description inside the wheel
     onHover: (String?) -> Unit,
     onPrimaryFocus: (ButtonId, Boolean) -> Unit = { _, _ -> },
+    updateUiStateHandler: (ActionWheelUiState) -> Unit,
+    cancelCurrentUiStateHandler: () -> Unit,
 ) {
     val angle by animationData.angleDegree.asState()
     val alpha by animationData.alpha.asState()
@@ -723,9 +781,30 @@ private fun MenuItemButton(
                     alpha,
                     item.icon,
                     isOnClickEnabled = if (!isOnClickEnabled) false else item.enabled,
-                    isFullyVisible = if (!isFullyVisible) false else item.enabled,
                     onHover = onHover,
                     onClick = item.action
+                )
+            }
+            is ActionButtonCancelSubMenu -> {
+                ActionButton(
+                    item.label,
+                    alpha,
+                    item.icon,
+                    isOnClickEnabled = if (!isOnClickEnabled) false else item.enabled,
+                    onHover = onHover,
+                    onClick = cancelCurrentUiStateHandler
+                )
+            }
+            is ActionButtonOpenSubMenu -> {
+                ActionButton(
+                    item.label,
+                    alpha,
+                    item.icon,
+                    isOnClickEnabled = if (!isOnClickEnabled) false else item.enabled,
+                    onHover = onHover,
+                    onClick = {
+                        updateUiStateHandler(item.subMenu)
+                    }
                 )
             }
             is DieButtonData<*> -> {
@@ -733,6 +812,7 @@ private fun MenuItemButton(
                 ExpandableDiceSelector(
                     item as DieButtonData<DieResult>,
                     animationData,
+                    enabled = item.enabled,
                     isOnClickEnabled = isOnClickEnabled && item.enabled,
                     isFullyVisible = isFullyVisible,
                     onClick = item.action,
@@ -906,7 +986,6 @@ fun ActionButton(
     alpha: Float,
     icon: ActionIcon,
     isOnClickEnabled: Boolean = true,
-    isFullyVisible: Boolean = true,
     onHover: (String?) -> Unit = {},
     onClick: () -> Unit = { },
 ) {
@@ -1102,11 +1181,13 @@ fun CoinImage(
 fun ExpandableDiceSelector(
     button: DieButtonData<DieResult>,
     animationData: ItemAnimatable,
+    enabled: Boolean,
     isOnClickEnabled: Boolean = true,
     isFullyVisible: Boolean = true,
     onClick: () -> Unit = { },
     onHover: (String?) -> Unit = { },
     alpha: Float = 1f,
+    disabledAlpha: Float = 0.4f,
     onExpandedChanged: (ButtonId, Boolean) -> Unit = { _, _ -> },
 ) {
 
@@ -1190,7 +1271,7 @@ fun ExpandableDiceSelector(
     // The visible button, both the normal and jumping one.
     Box(
         modifier = Modifier
-            .alpha(if (!isFullyVisible) 0.3f else 1f)
+            .alpha(if ((!isFullyVisible || !enabled) && !isAnimating) disabledAlpha else 1f)
             .applyIf(isAnimating) {
                 graphicsLayer {
                     translationY = yOffset
@@ -1394,7 +1475,7 @@ private fun DiceButton(
                     color = dropShadowColor.copy(alpha = 0.75f)
                     offset = Offset.Zero
                     radius = 12.jdp.toPx()
-                    this.alpha = alpha * alpha
+                    this.alpha = alpha
                 }
             }
             .graphicsLayer {

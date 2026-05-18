@@ -3,6 +3,7 @@ package com.jervisffb.resources.bb2025
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerNo
 import com.jervisffb.engine.rules.StandardBB2025Rules
+import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.serialize.FILE_FORMAT_VERSION
 import com.jervisffb.engine.serialize.JervisMetaData
 import com.jervisffb.engine.serialize.buildTeamFile
@@ -66,7 +67,7 @@ object BB2025StandaloneStandardTeams {
             roster = SKAVEN_TEAM_BB2025
             team = teamBuilder(rules, SKAVEN_TEAM_BB2025) {
                 name = "Skaven Starter Team #1"
-                addPlayer(PlayerId("Sk1"), "Blitzer-1", PlayerNo(1), SKAVEN_BLITZER)
+                addPlayer(PlayerId("Sk1"), "Blitzer-1", PlayerNo(1), SKAVEN_BLITZER, skills = listOf(SkillType.BRAWLER.id(), SkillType.PRO.id()))
                 addPlayer(PlayerId("Sk2"), "Blitzer-2", PlayerNo(2), SKAVEN_BLITZER)
                 addPlayer(PlayerId("Sk3"), "GutterRunner-3", PlayerNo(3), GUTTER_RUNNER)
                 addPlayer(PlayerId("Sk4"), "GutterRunner-4", PlayerNo(4), GUTTER_RUNNER)

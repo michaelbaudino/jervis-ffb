@@ -6,6 +6,7 @@ import com.jervisffb.engine.model.Coin
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.ui.game.icons.ActionIcon
 import com.jervisffb.ui.game.state.actionwheel.ActionWheelDialogController
+import com.jervisffb.ui.game.view.ActionWheelUiState
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration
 
@@ -41,6 +42,31 @@ data class ActionButtonData(
     override val action: () -> Unit,
     val enabled: Boolean = true,
 ): ButtonData {
+    override var targetAngle: Float = 0f
+    override var defaultStartingAngle: Float = 0f
+    override val animateRoll: RollAnimationData<*>? = null
+}
+
+data class ActionButtonOpenSubMenu(
+    override val id: ButtonId,
+    override val label: () -> String,
+    val icon: ActionIcon,
+    val enabled: Boolean = true,
+    val subMenu: ActionWheelUiState,
+): ButtonData {
+    override val action: () -> Unit = { /* Do nothing. This will not be used */ }
+    override var targetAngle: Float = 0f
+    override var defaultStartingAngle: Float = 0f
+    override val animateRoll: RollAnimationData<*>? = null
+}
+
+data class ActionButtonCancelSubMenu(
+    override val id: ButtonId,
+    override val label: () -> String,
+    val enabled: Boolean = true,
+): ButtonData {
+    val icon: ActionIcon = ActionIcon.CANCEL
+    override val action: () -> Unit = { /* Do nothing. This will not be used */ }
     override var targetAngle: Float = 0f
     override var defaultStartingAngle: Float = 0f
     override val animateRoll: RollAnimationData<*>? = null

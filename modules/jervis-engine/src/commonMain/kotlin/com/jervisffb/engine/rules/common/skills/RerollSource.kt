@@ -50,7 +50,7 @@ interface RerollSource {
         wasSuccess: Boolean? = null,
     ): List<DiceRerollOption>
 
-    // Helper method, for just rolling a single dice. Which is by far, the most common scenario.
+    // Helper method, for just rolling a single dice. Which is, by far, the most common scenario.
     fun calculateRerollOptions(type: DiceRollType, die: DieRoll<*>, wasSuccess: Boolean?): List<DiceRerollOption> =
         calculateRerollOptions(
             type,

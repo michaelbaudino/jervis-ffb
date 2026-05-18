@@ -33,7 +33,11 @@ object StandardBlockStep : Procedure() {
     override val initialNode: Node = DetermineAssists
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val blockContext = state.getContext<BlockContext>()
-        val context = UseRerollContext(type = DiceRollType.BLOCK, player = blockContext.attacker)
+        val context = UseRerollContext(
+            type = DiceRollType.BLOCK,
+            roll = blockContext.roll,
+            player = blockContext.attacker
+        )
         return AddContext(context)
     }
     override fun onExitProcedure(state: Game, rules: Rules): Command {

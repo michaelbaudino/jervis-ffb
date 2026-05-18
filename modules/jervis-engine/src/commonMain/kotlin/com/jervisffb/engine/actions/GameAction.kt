@@ -432,6 +432,9 @@ data class RerollOptionSelected(val option: DiceRerollOption, val dicePoolId: In
     fun getRerollSource(state: Game): RerollSource {
         return state.getRerollSourceById(option.rerollId)
     }
+    fun getRerollDice(): List<DieRoll<*>> {
+        return option.dice.orEmpty()
+    }
 }
 
 @Serializable

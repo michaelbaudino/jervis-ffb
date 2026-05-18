@@ -57,7 +57,7 @@ object StandardBlockChooseReroll: Procedure() {
                     val context = state.getRerollContext()
                     val updatedContext = context.copy(
                         source = action.getRerollSource(state),
-                        selectedRerollOption = action.option
+                        rerollDice = action.getRerollDice(),
                     )
                     compositeCommandOf(
                         UpdateContext(updatedContext),
@@ -68,7 +68,6 @@ object StandardBlockChooseReroll: Procedure() {
             }
         }
     }
-
 
     // ------------------------------------------------------------------------------------------------------------
     // HELPER FUNCTIONS

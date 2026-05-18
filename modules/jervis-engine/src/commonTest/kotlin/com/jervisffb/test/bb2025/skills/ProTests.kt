@@ -122,10 +122,11 @@ class ProTests: JervisGameBB2025Test() {
             DiceRollResults(1.dblock, 2.dblock),
         )
         val rerollOptions = controller.getAvailableActions().get<SelectRerollOption>().options
-        assertEquals(3, rerollOptions.size)
-        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Pro && it.dice.size == 1 })
+        assertEquals(2, rerollOptions.size)
+        assertTrue(rerollOptions.any { it.getRerollSource(state) is Pro })
         controller.rollForward(
             RerollOptionSelected(rerollOptions.first()),
+            SelectSingleBlockDieResult(index = 0),
             *proRoll(3.d6),
             6.dblock
         )
@@ -338,13 +339,14 @@ class ProTests: JervisGameBB2025Test() {
             DiceRollResults(2.dblock, 2.dblock),
         )
         val rerollOptions = controller.getAvailableActions().get<SelectRerollOption>().options
-        assertEquals(5, rerollOptions.size)
-        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Brawler && it.dice.size == 1 })
-        assertEquals(2, rerollOptions.count { it.getRerollSource(state) is Pro && it.dice.size == 1 })
-        val rerollOption = rerollOptions[2] // Select Pro reroll
+        assertEquals(3, rerollOptions.size)
+        assertTrue(rerollOptions.any { it.getRerollSource(state) is Brawler })
+        assertTrue(rerollOptions.any { it.getRerollSource(state) is Pro })
+        val rerollOption = rerollOptions[1] // Select Pro reroll
         assertTrue(rerollOption.getRerollSource(state) is Pro)
         controller.rollForward(
             RerollOptionSelected(rerollOption),
+            SelectSingleBlockDieResult(index = 0),
             *proRoll(4.d6),
             6.dblock, // Reroll first die using Pro, we cannot reroll other dice
         )

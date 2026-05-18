@@ -7,7 +7,7 @@ import com.jervisffb.engine.rules.common.procedures.DieRoll
 
 /**
  * A "Dice Pool" is the main concept wrapping any pool of dice (of the same type)
- * tht is being rolled at the same time.
+ * that is being rolled at the same time.
  *
  * Note, a roll of single die is also tracked as a dice pool, albeit a very
  * simple one.

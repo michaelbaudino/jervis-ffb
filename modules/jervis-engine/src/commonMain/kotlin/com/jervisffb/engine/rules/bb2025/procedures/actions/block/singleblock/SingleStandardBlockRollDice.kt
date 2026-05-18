@@ -16,6 +16,7 @@ import com.jervisffb.engine.fsm.castDiceRollList
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.BlockContext
+import com.jervisffb.engine.model.context.UseRerollContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.reports.ReportDiceRoll
@@ -33,7 +34,10 @@ object SingleStandardBlockRollDice: Procedure() {
     override val initialNode: Node = RollDice
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null
-    override fun isValid(state: Game, rules: Rules) = state.assertContext<BlockContext>()
+    override fun isValid(state: Game, rules: Rules) {
+        state.assertContext<BlockContext>()
+        state.assertContext<UseRerollContext>()
+    }
 
     object RollDice : ActionNode() {
         override fun actionOwner(state: Game, rules: Rules): Team = state.getContext<BlockContext>().attacker.team
@@ -50,6 +54,7 @@ object SingleStandardBlockRollDice: Procedure() {
                     }
                 return compositeCommandOf(
                     ReportDiceRoll(roll),
+                    UpdateContext(state.getRerollContext().copy(originalRoll = roll)),
                     UpdateContext(state.getContext<BlockContext>().copy(roll = roll)),
                     ExitProcedure(),
                 )

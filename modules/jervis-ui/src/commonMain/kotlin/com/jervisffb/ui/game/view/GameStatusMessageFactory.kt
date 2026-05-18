@@ -20,6 +20,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.FollowUpS
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.push.UseStripBallStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.SingleStandardBlockChooseReroll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.SingleStandardBlockChooseResult
+import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.SingleStandardBlockRerollDice
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.JumpStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapStep
@@ -80,6 +81,8 @@ import com.jervisffb.engine.rules.common.procedures.rerolls.ProRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamCaptainRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamMascotRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamMascotStep
+import com.jervisffb.engine.rules.common.procedures.rerolls.UseBrawlerReroll
+import com.jervisffb.engine.rules.common.procedures.rerolls.UseProReroll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.ArmourRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.InjuryRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
@@ -595,6 +598,24 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                     else -> "Waiting for opponent to select a player to Recover"
                 }
             },
+            UseProReroll.SelectDieToReroll to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Die to Reroll using Pro"
+                    else -> "Waiting for opponent to select die to Reroll using Pro"
+                }
+            },
+            UseBrawlerReroll.SelectBothDownToReroll to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Die to Reroll using Brawler"
+                    else -> "Waiting for opponent to select die to Reroll using Brawler"
+                }
+            },
+            SingleStandardBlockRerollDice.ReRollDie to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Reroll Selected Block Dice"
+                    else -> "Waiting for Opponent to Reroll Block Dice"
+                }
+            }
         )
     }
 

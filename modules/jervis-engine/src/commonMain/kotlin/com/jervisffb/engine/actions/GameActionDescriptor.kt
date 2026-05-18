@@ -151,7 +151,8 @@ data object TossCoin : GameActionDescriptor {
 // Roll a number of dice and return their result. Returned results must be in the same order
 // as the types defined here.
 data class RollDice(
-    val dice: List<Dice>
+    // Which kind of dice should be rolled
+    val dice: List<Dice>,
 ) : GameActionDescriptor {
     constructor(vararg dice: Dice) : this(dice.toList())
     override val size: Int
@@ -461,13 +462,29 @@ data class SelectRandomPlayers(
     }
 }
 
+/**
+ * Descriptor for selecting a reroll option. Each "type" should only be listed
+ * once here. Depending on the reroll type, [DiceRerollOption.dice] might be
+ * empty.
+ *
+ * E.g. for team rerolls it is pre-filled as we know it will reroll all dice,
+ * while for Pro, it will not as we will select the die being rerolled as part
+ * of handling the reroll.
+ */
 data class SelectRerollOption(
     val options: List<DiceRerollOption>,
     // Identifier for the dice pool being rerolled
-    // This is only used in the cases, where you might be juggling multiple dice
+    // This is only used in the cases where you might be juggling multiple dice
     // rolls at the same time, like during Multiple Block
     val dicePoolId: Int = 0,
 ) : GameActionDescriptor {
+
+    init {
+        if (options.groupBy { it.rerollId }.size != options.size) {
+            throw IllegalArgumentException("Each reroll source must be unique: $options")
+        }
+    }
+
     override val size: Int = options.size
     override fun createRandom(random: Random): GameAction = RerollOptionSelected(options.random(random), dicePoolId)
     override fun createAll(): List<GameAction> {
