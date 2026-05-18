@@ -1,6 +1,5 @@
 @file:OptIn(
     ExperimentalWasmDsl::class,
-    org.jetbrains.compose.ExperimentalComposeLibrary::class
 )
 
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -64,7 +63,6 @@ kotlin {
     jvm()
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -83,10 +81,8 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = fileName
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside the browser
-                        add(projectDirPath)
-                    }
+                    // Serve sources to debug inside the browser
+                    static(projectDirPath)
                 }
             }
         }
@@ -108,10 +104,13 @@ kotlin {
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.jsonserialization)
-                implementation(compose.components.resources)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
+                val composeVersion = libs.versions.compose.get()
+                val material3Version = libs.versions.material3.get()
+                implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
+                implementation("org.jetbrains.compose.runtime:runtime:$composeVersion")
+                implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
+                implementation("org.jetbrains.compose.ui:ui:$composeVersion")
+                implementation("org.jetbrains.compose.material3:material3:$material3Version")
                 implementation("com.adamglin:compose-shadow:2.0.4")
             }
         }
@@ -129,25 +128,22 @@ kotlin {
                 implementation("javazoom.vorbisspi:vorbisspi:1.0.3")
                 implementation("com.jcraft:jorbis:0.0.17")
                 implementation("org.tritonus:tritonus_share:0.0.1")
-                implementation(compose.components.uiToolingPreview)
+                val composeVersion = libs.versions.compose.get()
+                implementation("org.jetbrains.compose.ui:ui-tooling-preview:$composeVersion")
+                implementation("org.jetbrains.compose.ui:ui-test-junit4:$composeVersion")
                 implementation(compose.desktop.currentOs)
-                implementation(compose.desktop.uiTestJUnit4)
             }
         }
         val jvmTest by getting
         val wasmJsMain by getting {
             resources.srcDir(generateIndexHtml.map { it.outputs.files.singleFile })
         }
-        val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
         val iosMain by creating {
             dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-            }
         }
     }
 }
@@ -222,10 +218,11 @@ compose.desktop {
 // and WASM, which is problematic as it will break the build. For that reason,
 // we need to filter them out.
 dependencies {
-    linuxAmd64(compose.desktop.linux_x64)
-    macAmd64(compose.desktop.macos_x64)
-    macAarch64(compose.desktop.macos_arm64)
-    windowsAmd64(compose.desktop.windows_x64)
+    val composeVersion = libs.versions.compose.get()
+    linuxAmd64("org.jetbrains.compose.desktop:desktop-jvm-linux-x64:$composeVersion")
+    macAmd64("org.jetbrains.compose.desktop:desktop-jvm-macos-x64:$composeVersion")
+    macAarch64("org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:$composeVersion")
+    windowsAmd64("org.jetbrains.compose.desktop:desktop-jvm-windows-x64:$composeVersion")
 }
 
 val nonDesktopTargets = listOf("ios", "wasm")
