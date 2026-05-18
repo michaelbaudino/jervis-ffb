@@ -45,9 +45,9 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
-import io.ktor.util.encodeBase64
 import kotlinx.serialization.json.Json
 import kotlin.collections.emptyList
+import kotlin.io.encoding.Base64
 
 /**
  * Wrapper around https://fumbbl.com/apidoc/
@@ -86,7 +86,7 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
     suspend fun authenticate(clientId: String, clientSecret: String): Result<AuthResult> = runCatching {
         checkNotNull(coachName) { "Coach name required to log in." }
         val response = client.post("$BASE_URL/oauth/token") {
-            header("Authorization", "Basic ${"$clientId:$clientSecret".encodeBase64()}")
+            header("Authorization", "Basic ${Base64.encode("$clientId:$clientSecret".encodeToByteArray())}")
             contentType(ContentType.Application.FormUrlEncoded)
             setBody("grant_type=client_credentials")
         }
@@ -212,11 +212,7 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
                 passing = position.stats.PA,
                 armorValue = position.stats.AV,
                 skills = position.skills.mapNotNull {
-                    convertFumbblSkillToSkillId(rules,it).also {
-                        if (it == null) {
-
-                        }
-                    }
+                    convertFumbblSkillToSkillId(rules,it)
                 },
                 primary = mapToSkillCategory(position.normalSkills),
                 secondary = mapToSkillCategory(position.doubleSkills),

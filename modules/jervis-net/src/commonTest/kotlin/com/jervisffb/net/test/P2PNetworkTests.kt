@@ -310,7 +310,7 @@ class P2PNetworkTests {
             val closeReason = session.closeReason.await()
             assertNotNull(closeReason)
             assertEquals(JervisExitCode.UNEXPECTED_ERROR.code, closeReason.code)
-            assertTrue(closeReason.message.startsWith("kotlinx.serialization.json.internal.JsonDecodingException"))
+            assertTrue(closeReason.message.startsWith("kotlinx.serialization.json.JsonDecodingException"))
         } finally {
             // Unsure why we need to also close the session on this side to avoid coroutine errors
 //            session.close(CloseReason(CloseReason.Codes.NORMAL, ""))

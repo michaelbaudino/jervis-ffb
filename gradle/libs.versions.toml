@@ -5,16 +5,16 @@ buildconfig = "6.0.9" # https://github.com/gmazzo/gradle-buildconfig-plugin
 clikt = "5.1.0" # https://github.com/ajalt/clikt
 compose = "1.11.0" # https://github.com/JetBrains/compose-multiplatform
 conveyor = "2.0" # https://plugins.gradle.org/plugin/dev.hydraulic.conveyor
-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
-cryptography = "0.4.0" # https://github.com/whyoleg/cryptography-kotlin/releases/tag/0.4.0
-datetimex = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
+coroutines = "1.11.0" # https://github.com/Kotlin/kotlinx.coroutines
+cryptography = "0.6.0" # https://github.com/whyoleg/cryptography-kotlin
+datetimex = "0.8.0" # https://github.com/Kotlin/kotlinx-datetime
 datastore = "1.2.1" # https://developer.android.com/jetpack/androidx/releases/datastore
 immutableCollections = "0.4.0" # https://github.com/Kotlin/kotlinx.collections.immutable
-javaAssist = "3.30.2-GA" # https://github.com/jboss-javassist/javassist
+javaAssist = "3.31.0-GA" # https://github.com/jboss-javassist/javassist
 jgit = "7.2.0.202503040940-r" # https://github.com/eclipse-jgit/jgit
 kermit = "2.1.0" # https://github.com/touchlab/Kermit
 kotlin = "2.3.20" # https://github.com/JetBrains/kotlin
-ktor = "3.3.3" # https://github.com/ktorio/ktor
+ktor = "3.5.0" # https://github.com/ktorio/ktor
 ktlint = "12.2.0" # https://plugins.gradle.org/plugin/org.jlleitschuh.gradle.ktlint
 material3 = "1.9.0" # https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3
 minimalJson = "0.9.5" # https://github.com/ralfstx/minimal-json
@@ -86,4 +86,3 @@ conveyor = { id = "dev.hydraulic.conveyor" , version.ref = "conveyor" }
 
 [bundles]
 voyager = [ "voyager-navigator", "voyager-screenmodel", "voyager-bottom-sheet-navigator", "voyager-tab-navigator", "voyager-transitions" ]
-
