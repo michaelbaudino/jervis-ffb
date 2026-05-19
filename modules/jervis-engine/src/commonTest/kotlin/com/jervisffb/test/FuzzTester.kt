@@ -44,6 +44,8 @@ import kotlin.random.Random
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.fail
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * This class can be used to fuzz-test the rule engine by running a lot of
@@ -56,8 +58,10 @@ import kotlin.test.fail
  * Some notes about performance:
  * - The log-level can have a huge impact on performance when running these
  *   tests. It is recommended to set it to `Assert` in [com.jervisffb.utils.DEFAULT_LOG_LEVEL]
- * - Disabling checking the validity can also help. See [GameEngineController] constructor.
- * - The tests are highly parallizable, but memory can be an issue
+ * - Disabling checking the validity can also help. See [GameEngineController.validateActions]
+ *   constructor.
+ * - The tests are highly parallizable, but memory can be an issue.
+ * - Average runtime per game on an Apple M3 is 4-5 ms.
  **/
 @Ignore // Comment out to run
 class FuzzTester {
@@ -70,7 +74,7 @@ class FuzzTester {
                 undoActionBehavior = UndoActionBehavior.ALLOWED
             }
             val state = createDefaultGameStateBB2020(rules)
-            val controller = GameEngineController(state)
+            val controller = GameEngineController(state, validateActions = false)
             controller.startManualMode(logAvailableActions = false)
             while (controller.stack.isNotEmpty()) {
                 val userAction = getSetupAction(controller) ?: createRandomAction(controller, random, canUndo = true)
@@ -99,7 +103,6 @@ class FuzzTester {
                 controller.handleAction(userAction)
             }
             // Check that all procedures cleaned up after themselves
-            // Disabled while this change is being implemented
             if (!state.contexts.isEmpty()) {
                 error("Some procedure contexts are still present after finishing a game")
             }
@@ -130,6 +133,7 @@ class FuzzTester {
             (0 until games step batchSize).forEach { startIndex ->
                 launch(dispatcher) {
                     val endIndex = (startIndex + batchSize).coerceAtMost(games)
+                    val start = Clock.System.now()
                     for (gameNo in startIndex until endIndex) {
                         val seed = Random.nextLong()
                         try {
@@ -138,6 +142,9 @@ class FuzzTester {
                             fail("Game $gameNo (seed: $seed) crashed with exception:\n${e.stackTraceToString()}")
                         }
                     }
+                    val end = Clock.System.now()
+                    val duration = end - start
+                    println("Batch #${startIndex/batchSize} finished in ${duration.inWholeMilliseconds}ms, avg game time: ${duration.inWholeMilliseconds / batchSize.toFloat() }ms")
                 }
             }
         }
