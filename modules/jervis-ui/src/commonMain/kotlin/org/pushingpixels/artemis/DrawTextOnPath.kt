@@ -37,8 +37,6 @@ import androidx.compose.ui.graphics.asSkiaPath
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.skiaCanvas
-import androidx.compose.ui.graphics.skiaPaint
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -70,7 +68,7 @@ fun DrawScope.drawTextOnPath(
     letterSpacing: TextUnit = 1.sp,
 ) {
     this.drawIntoCanvas {
-        val nativeCanvas = it.skiaCanvas
+        val nativeCanvas = it.nativeCanvas
 
         val skiaFont = font
         skiaFont.size = textSize.toPx()
@@ -175,7 +173,7 @@ fun DrawScope.drawTextOnPath(
             blob = textBlob,
             x = 0.0f,
             y = 0.0f,
-            paint = paint.skiaPaint,
+            paint = paint.asFrameworkPaint(),
         )
     }
 }

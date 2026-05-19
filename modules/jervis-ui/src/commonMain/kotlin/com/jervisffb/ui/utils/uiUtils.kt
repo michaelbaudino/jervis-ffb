@@ -3,10 +3,8 @@ package com.jervisffb.ui.utils
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
@@ -21,7 +19,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.asSkiaBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toComposeImageBitmap
@@ -298,12 +295,4 @@ fun OuterGlow(
         // Real content on top (unblurred)
         content()
     }
-}
-
-
-// This was `androidx.compose.foundation.Canvas` previously.
-// Not 100% sure why it isn't available on Desktop in 1.11?
-@Composable
-fun Canvas(modifier: Modifier, onDraw: DrawScope.() -> Unit) {
-    Spacer(modifier.drawBehind { onDraw() })
 }

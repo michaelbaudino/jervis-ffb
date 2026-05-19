@@ -37,8 +37,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.skiaCanvas
-import androidx.compose.ui.graphics.skiaPaint
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.ContentScale
@@ -313,7 +312,7 @@ fun TitleBarWithSidebar(
             color = JervisTheme.rulebookOrange
             isAntiAlias = true
         }
-        val nativePaint = paint.skiaPaint
+        val nativePaint = paint.asFrameworkPaint()
 
         // Calculate how to place the text.
         // It should follow the red line, while skewing the
@@ -328,7 +327,7 @@ fun TitleBarWithSidebar(
 
         val line = Line(Point(0f, size.height), Point(size.width, (size.height * (160f/280f))))
 
-        drawContext.canvas.skiaCanvas.apply {
+        drawContext.canvas.nativeCanvas.apply {
             save()
             translate(0f + 282.dp.toPx(), line.getY(316.dp.toPx())) // TODO. How to translate across the line?
             rotate(-angleDegrees)

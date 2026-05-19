@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.skiaPaint
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.platform.LocalDensity
@@ -99,7 +98,7 @@ fun Modifier.coloredShadow(
     drawBehind {
         drawIntoCanvas { canvas ->
             val paint = Paint()
-            val frameworkPaint = paint.skiaPaint
+            val frameworkPaint = paint.asFrameworkPaint()
 
             if (blurRadius != 0f) {
                 frameworkPaint.maskFilter = MaskFilter.makeBlur(FilterBlurMode.NORMAL, blurRadius / 2, true)
@@ -125,7 +124,7 @@ fun Modifier.dropShadow(
     drawBehind {
         drawIntoCanvas { canvas ->
             val paint = Paint()
-            val frameworkPaint = paint.skiaPaint
+            val frameworkPaint = paint.asFrameworkPaint()
             if (blurRadius != 0.dp) {
 //                frameworkPaint.maskFilter = (BlurMaskFilter(blurRadius.toPx(), FilterBlurMode.NORMAL))
                 frameworkPaint.maskFilter = MaskFilter.makeBlur(FilterBlurMode.NORMAL, blurRadius.toPx())

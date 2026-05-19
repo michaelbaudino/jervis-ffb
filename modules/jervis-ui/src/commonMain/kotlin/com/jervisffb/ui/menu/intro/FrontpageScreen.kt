@@ -1,5 +1,6 @@
 package com.jervisffb.ui.menu.intro
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,10 +34,8 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.asComposeShader
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.skiaCanvas
-import androidx.compose.ui.graphics.skiaPaint
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.text.SpanStyle
@@ -64,13 +63,11 @@ import com.jervisffb.ui.game.viewmodel.MenuViewModel
 import com.jervisffb.ui.menu.JervisScreen
 import com.jervisffb.ui.menu.MenuScreen
 import com.jervisffb.ui.menu.TopbarButton
-import com.jervisffb.ui.utils.Canvas
 import com.jervisffb.ui.utils.jdp
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.skia.ColorFilter
 import org.jetbrains.skia.ColorMatrix
 import org.jetbrains.skia.ISize
-import org.jetbrains.skia.Shader.Companion.makeFractalNoise
 import org.jetbrains.skia.TextLine
 import kotlin.math.PI
 import kotlin.math.atan
@@ -351,7 +348,7 @@ fun TitleHeader(mainTitle: String, subTitle: String) {
             color = JervisTheme.rulebookOrange
             isAntiAlias = true
         }
-        val nativePaint = paint.skiaPaint
+        val nativePaint = paint.asFrameworkPaint()
 
         // Calculate how to place the text.
         // It should follow the red line, while skewing the
@@ -368,7 +365,7 @@ fun TitleHeader(mainTitle: String, subTitle: String) {
         val padding = 32.jdp.toPx()
         val lineHeight = skiaFont.size * 1.3f
 
-        drawContext.canvas.skiaCanvas.apply {
+        drawContext.canvas.nativeCanvas.apply {
             save()
             translate(0f, size.height)
             rotate(-angleDegrees)
@@ -385,7 +382,7 @@ fun TitleHeader(mainTitle: String, subTitle: String) {
 fun createGrayscaleNoiseShader(): Shader {
 
     // Create Noise
-    val shader = makeFractalNoise(
+    val shader = Shader.makeFractalNoise(
         baseFrequencyX = 0.1f, // Adjust for desired texture
         baseFrequencyY = 0.1f,
         numOctaves = 5,
@@ -405,7 +402,7 @@ fun createGrayscaleNoiseShader(): Shader {
                 0f, 0f, 0f, 1f, 0f                      // Alpha unchanged
             )
         )
-    ).asComposeShader()
+    )
 }
 
 fun DrawScope.drawPaperBackground(size: Size) {

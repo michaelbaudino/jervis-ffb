@@ -17,8 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.skiaCanvas
-import androidx.compose.ui.graphics.skiaPaint
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -117,7 +116,7 @@ fun MenuTitleBar(
             color = JervisTheme.rulebookOrange
             isAntiAlias = true
         }
-        val nativePaint = paint.skiaPaint
+        val nativePaint = paint.asFrameworkPaint()
 
         // Calculate how to place the text.
         // It should follow the red line, while skewing the
@@ -130,7 +129,7 @@ fun MenuTitleBar(
         val paddingX = textPaddingLeft.toPx()
         val paddingY = 16.dp.toPx()
 
-        drawContext.canvas.skiaCanvas.apply {
+        drawContext.canvas.nativeCanvas.apply {
             save()
             translate(0f, size.height - textBottomPadding.toPx())
             rotate(-angleDegrees)

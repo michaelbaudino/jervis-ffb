@@ -1,5 +1,6 @@
 package com.jervisffb.ui.menu
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -7,10 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.asComposeShader
 import com.jervisffb.ui.game.view.JervisTheme
-import com.jervisffb.ui.utils.Canvas
 import org.jetbrains.skia.ColorFilter
 import org.jetbrains.skia.ColorMatrix
 import org.jetbrains.skia.ISize
@@ -20,7 +20,7 @@ import org.jetbrains.skia.ISize
 fun PaperBackground(modifier: Modifier = Modifier) {
 
     // Create Noise
-    val shader = org.jetbrains.skia.Shader.makeFractalNoise(
+    val shader = Shader.makeFractalNoise(
         baseFrequencyX = 0.1f, // Adjust for desired texture
         baseFrequencyY = 0.1f,
         numOctaves = 5,
@@ -42,13 +42,13 @@ fun PaperBackground(modifier: Modifier = Modifier) {
         )
     )
 
-    Canvas(Modifier.fillMaxSize()) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
         // Background color
         drawRect(color = JervisTheme.rulebookPaper, size = size)
         // Add Noise
         drawRect(
             size = size,
-            brush = ShaderBrush(grayscaleShader.asComposeShader()),
+            brush = ShaderBrush(grayscaleShader),
             alpha = 0.3f,
         )
         // Re-add background color to make the noise blend more into the background
