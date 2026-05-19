@@ -1,14 +1,20 @@
 # Jervis UI
 
-This module contains the UI code for the Jervis Game Client.
+This module contains the UI modules for the Jervis Game Client. Most of the code
+is in the `shared` module. The other `<*>App` modules, only contain wrappers
+for launching the actual application on the particular platform.
 
-### Updating Resources
+## iOS
+
+iOS has its own `iOSApp` module that is an XCode project.
+
+## Updating Resources
 
 It is possible to sync the latest FUMBBL resource with the Jervis project
 by using the following Gradle command:
 
 ```
-./gradlew updateFFBResources
+./gradlew :jervis-ui:shared:updateFFBResources
 ```
 
 This task will clone the FFB repository, take the resource folder and

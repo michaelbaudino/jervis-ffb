@@ -87,18 +87,21 @@ first time. This should be fixed after the first build.
 A local desktop game client can be started using:
 
 ```shell
-./gradlew :modules:jervis-ui:run
+./gradlew :modules:jervis-ui:desktopApp:run
 ```
 
 A local WASM client can be started using:
 
 ```shell
-./gradlew :modules:jervis-ui:wasmJsBrowserDevelopmentRun
+./gradlew :modules:jervis-ui:webApp:wasmJsBrowserDevelopmentRun
 ```
 
 The iPad version can be built and installed using Xcode. Use the project file
 found here [`modules/iosApp/iosApp.xcodeproj`](modules/iosApp/iosApp.xcodeproj). 
 You will need to supply your own signature under "Signing & Capabilities".
+
+With the `Koltlin Multiplatform` plugin installed in IntelliJ, it can also be
+started from there using the `iosApp` run configuration.
 
 ### Building Documentation Website
 The documentation website is built by installing Zensical:

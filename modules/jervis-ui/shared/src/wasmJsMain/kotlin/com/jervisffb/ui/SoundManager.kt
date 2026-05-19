@@ -1,0 +1,30 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+@file:OptIn(ExperimentalResourceApi::class, ExperimentalWasmJsInterop::class)
+
+package com.jervisffb.ui
+
+import com.jervisffb.shared.generated.resources.Res
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+
+/**
+ * We cannot create dynamic JS code in WASM, so we need to delegate playing sounds
+ * back to a JS function defined in the `index.html`.
+ */
+@JsFun("playSound")
+external fun playSound(filePath: String)
+
+actual object SoundManager {
+
+    private val sounds: MutableMap<SoundEffect, String> = mutableMapOf()
+
+    actual suspend fun initialize() {
+        SoundEffect.entries.forEach { soundEffect ->
+            val uri = Res.getUri("files/fumbbl/sounds/${soundEffect.fileName}")
+            sounds[soundEffect] = uri
+        }
+    }
+
+    actual fun play(sound: SoundEffect) {
+        playSound(sounds[sound]!!)
+    }
+}

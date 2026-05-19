@@ -15,14 +15,16 @@ dependencyResolutionManagement {
     }
 }
 
+include(":Debug-FantasyFootballClient")
 include(":modules:fumbbl-cli")
 include(":modules:fumbbl-net")
 include(":modules:jervis-engine")
 include(":modules:jervis-net")
-include(":modules:jervis-ui")
 include(":modules:jervis-resources")
 include(":modules:jervis-test-utils")
-include(":modules:replay-analyzer")
+include(":modules:jervis-ui:desktopApp")
+include(":modules:jervis-ui:shared")
+include(":modules:jervis-ui:webApp")
 include(":modules:platform-utils")
+include(":modules:replay-analyzer")
 include(":modules:tourplay-net")
-include(":Debug-FantasyFootballClient")
