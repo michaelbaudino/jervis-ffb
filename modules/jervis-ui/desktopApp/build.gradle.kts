@@ -9,6 +9,10 @@ plugins {
 
 }
 
+group = "com.jervisffb"
+@Suppress("UNCHECKED_CAST")
+version = (rootProject.ext["mavenVersion"] as Provider<String>).get()
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xexplicit-backing-fields")
