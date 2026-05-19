@@ -125,6 +125,7 @@ object DealWithSecretWeaponsStep: Procedure() {
             return compositeCommandOf(
                 UpdateContext(context.copy(selectedPlayer = null)),
                 SetWasOnPitchDuringDrive(skill, onPitch = false),
+                RemoveContext<BeingSentOffContext>(),
                 GotoNode(if (state.receivingTeam == player.team) ReceivingTeamSelectPlayerToSendOff else KickingTeamSelectPlayerToSendOff),
             )
         }
