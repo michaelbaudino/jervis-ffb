@@ -377,7 +377,7 @@ jobs:
         run: echo "JERVIS_APP_VERSION=$(./gradlew -q printDistributionVersion)" >> $GITHUB_ENV
 
       - name: Build JVM app
-        run: ./gradlew jvmJar -P"jervis.releaseType=dev"
+        run: ./gradlew :modules:jervis-ui:desktopApp:jar -P"jervis.releaseType=dev"
 
       - name: Decode macOS signing certificate
         run: |
