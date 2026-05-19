@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-windows
-          path: ./modules/jervis-ui/build/compose/binaries/main-release/exe/*
+          path: ./modules/jervis-ui/desktopApp/build/compose/binaries/main-release/exe/*
           if-no-files-found: error
           retention-days: 1
 
@@ -166,7 +166,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-macos
-          path: ./modules/jervis-ui/build/compose/binaries/main-release/dmg/*
+          path: ./modules/jervis-ui/desktopApp/build/compose/binaries/main-release/dmg/*
           if-no-files-found: error
           retention-days: 1
 
@@ -206,7 +206,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-linux
-          path: ./modules/jervis-ui/build/compose/binaries/main-release/deb/*
+          path: ./modules/jervis-ui/desktopApp/build/compose/binaries/main-release/deb/*
           if-no-files-found: error
           retention-days: 1
 
@@ -246,7 +246,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-browser
-          path: ./modules/jervis-ui/build/dist/wasmJs/productionExecutable/*
+          path: ./modules/jervis-ui/webApp/build/dist/wasmJs/productionExecutable/*
           if-no-files-found: error
           retention-days: 1
 
