@@ -181,7 +181,7 @@ object BeingSentOff: Procedure() {
 
                 if (banPlayer) {
                     add(buildCompositeCommand {
-                        if (player.hasBall()) {
+                        if (playerHadBall) {
                             // Prepare the ball to bounce
                             val ball = player.ball!!
                             addAll(
@@ -205,7 +205,10 @@ object BeingSentOff: Procedure() {
     object BounceBallWhenBanned: ParentNode() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
         override fun onExitNode(state: Game, rules: Rules): Command {
-            return ExitProcedure()
+            return compositeCommandOf(
+                SetCurrentBall(null),
+                ExitProcedure()
+            )
         }
     }
 
