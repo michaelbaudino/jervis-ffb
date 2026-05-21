@@ -18,6 +18,9 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.moveTo
+import com.jervisffb.test.rushRoll
+import com.jervisffb.test.rushTo
 import com.jervisffb.test.useApothecary
 import com.jervisffb.test.utils.assertCoordinates
 import com.jervisffb.test.utils.assertKnockedOut
@@ -187,5 +190,32 @@ class StabTests: JervisGameBB2025Test() {
         assertNull(state.activePlayer)
         defender.assertKnockedOut()
         state.singleBall().assertCoordinates(12, 4)
+    }
+
+    @Test
+    fun rushToStabDuringBlitz() {
+        val attacker = state.awayTeam["A10".playerId]
+        attacker.addSkill(SkillType.STAB)
+        val defender = state.homeTeam["H1".playerId]
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerStandardActionType.BLITZ),
+            PlayerSelected(defender.id),
+            *moveTo(15, 7),
+            *moveTo(14, 7),
+            *moveTo(14, 6),
+            *moveTo(14, 5),
+            *moveTo(14, 4),
+            *moveTo(14, 3),
+            *moveTo(13, 3),
+            *rushTo(12, 4),
+            PlayerSelected(defender.id), // Start block
+            *rushRoll(2.d6), // Needs to rush to make the block
+            BlockTypeSelected(BlockType.STAB),
+            DiceRollResults(6.d6, 5.d6), // Armour Roll
+            DiceRollResults(1.d6, 1.d6), // Injury Roll
+        )
+        assertNull(state.activePlayer)
+        assertEquals(0, attacker.team.turnData.blitzActions)
+        defender.assertStunned()
     }
 }
