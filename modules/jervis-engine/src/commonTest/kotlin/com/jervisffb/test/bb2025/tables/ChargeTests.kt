@@ -7,6 +7,7 @@ import com.jervisffb.engine.actions.DirectionSelected
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.EndTurn
 import com.jervisffb.engine.actions.ForegoActivationSelected
+import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.PlayersSelected
@@ -22,6 +23,7 @@ import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
+import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.singleInstanceOf
 import com.jervisffb.test.JervisGameBB2025Test
@@ -35,6 +37,7 @@ import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
 import com.jervisffb.test.utils.SelectSingleBlockDieResult
 import com.jervisffb.test.utils.SelectSkillReroll
+import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.assertStunned
 import kotlin.test.Ignore
@@ -96,6 +99,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     PlayerSelected("A1".playerId),
                     BlockTypeSelected(BlockType.STANDARD),
                     DiceRollResults(6.dblock, 6.dblock),
+                    NoRerollSelected(),
                     SelectSingleBlockDieResult(),
                     DirectionSelected(Direction.DOWN_RIGHT),
                     Cancel,
@@ -129,6 +133,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     PlayerSelected("H10".playerId),
                     PitchSquareSelected(11, 7),
                     6.d6, // Throw
+                    NoRerollSelected(),
                     DiceRollResults(2.d8, 2.d8, 2.d8),  // Scatter
                     6.d6 // Landing
                 ),
@@ -204,7 +209,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     *activatePlayer("H9", PlayerStandardActionType.MOVE),
                     SmartMoveTo(12, 10),
                     *moveTo(13, 10),
-                    1.d6, // Fail Dodge -> Turnover
+                    *dodge(1.d6),
                     DiceRollResults(2.d6, 2.d6)
                 ),
             )
@@ -230,6 +235,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     PlayerSelected("A1".playerId),
                     BlockTypeSelected(BlockType.STANDARD),
                     DiceRollResults(1.dblock, 1.dblock),
+                    NoRerollSelected(),
                     SelectSingleBlockDieResult(), // Select Player Down!
                     DiceRollResults(1.d6, 1.d6),
                 ),
@@ -311,7 +317,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     *activatePlayer("H9", PlayerStandardActionType.MOVE),
                     SmartMoveTo(12, 10),
                     *moveTo(13, 10),
-                    1.d6, // Fail Dodge -> Turnover
+                    *dodge(1.d6),
                     DiceRollResults(6.d6, 6.d6),
                     DiceRollResults(1.d6, 1.d6) // Stun
                 ),
@@ -436,7 +442,7 @@ class ChargeTests: JervisGameBB2025Test() {
                     *activatePlayer("H9", PlayerStandardActionType.MOVE),
                     SmartMoveTo(12, 10),
                     *moveTo(13, 10),
-                    *dodge(6.d6, reroll = null),
+                    *dodge(6.d6),
                     EndAction,
                     EndTurn,
                 ),
@@ -444,5 +450,30 @@ class ChargeTests: JervisGameBB2025Test() {
         )
         assertEquals(1, state.awayTeam.turnMarker)
         assertEquals(0, state.homeTeam.turnMarker)
+    }
+
+    @Test
+    fun teamRerollsWork() {
+        val players = listOf("H6".playerId, "H7".playerId, "H8".playerId, "H9".playerId)
+        controller.rollForward(
+            *defaultPregame(),
+            *defaultSetup(),
+            *defaultKickOffHomeTeam(
+                kickoffEvent = arrayOf(
+                    DiceRollResults(6.d6, 4.d6), // Roll Charge
+                    1.d3, // How many players to activate.
+                    PlayersSelected(players),
+                    *activatePlayer("H9", PlayerStandardActionType.MOVE),
+                    SmartMoveTo(12, 10),
+                    *moveTo(13, 10),
+                    1.d6, // Fail Dodge
+                    TeamRerollSelected<RegularTeamReroll>(),
+                    6.d6,
+                    EndAction,
+                ),
+                bounce = null
+            )
+        )
+        assertEquals(homeTeam, state.activeTeam)
     }
 }

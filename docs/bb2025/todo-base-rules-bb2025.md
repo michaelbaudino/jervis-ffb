@@ -146,6 +146,7 @@ book.
     - [ ] Wizard
         - [ ] Hireling Sports-Wizard
         - [ ] How many others(???)
+        - [ ] Works during Charge!
     - [ ] Biased Referee
         - [ ] Biased Referee
         - [ ] How many others(???)
@@ -226,7 +227,7 @@ book.
         - [x] End when player Falls Over
         - [x] Ends when player is knocked down
         - [x] Can dodge 
-        - [x] Team Rerolls are not available
+        - [x] Team Rerolls are available
         - [x] Can forego activations
         - [x] Move player under ball on receiver side
         - [x] Stunned players are marked as STUNNED after Charge ended

@@ -47,6 +47,32 @@ move a player into the opponent's side before resolving the ball coming down.
 When the ball comes down, it would result in a touchback, and the ball could 
 then be given to the player that moved into the opponent's half.
 
+## Page 48 - Charge
+In the rulebook it isn't clear if Team Rerolls are allowed during Charge! as 
+Charge says it works "...exactly like a Teams turn..." and Team Rerolls 
+(page 33) use the wording "...can only be used when the team is active...".
+So the question was: Is a team activ during Charge!?
+
+Neither was it clear, exactly how close Charge! is to a Team Turn, as the
+"...exactly like a Team's Turn..." is in association with activating players, 
+and not as a general statement. This has implications for Wizards that trigger 
+end-of-team-turn.
+
+Since the Designer's Commentary rules that Team Rerolls work during Charge!
+This implies that the statement in the rulebook is more general than just being
+restricted to actions, so Jervis is extrapolating from that to interpret Charge!
+as working as a team turn in its entirety.
+
+This has the following implications:
+- The charging team is marked "active".
+- Team Rerolls work
+- Skills like Dodge work
+- Wizards are allowed to trigger when Charge ends
+
+!!! bloodbowl "Designer's Commentary May 2026"
+    
+    Explicitely declares that Team Rerolls are allowed during Charge!.
+
 ## Page 50 - End Turn and Forgo Activation
 The wording around turns is a bit unclear about whether you _must_ activate all
 players (or forgo their activation), but the wording "until they have all

@@ -20,6 +20,7 @@ import com.jervisffb.engine.actions.SelectPlayers
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.ResetAvailableTeamActions
 import com.jervisffb.engine.commands.SetActiveTeam
+import com.jervisffb.engine.commands.SetCanUseTeamRerolls
 import com.jervisffb.engine.commands.SetCurrentBall
 import com.jervisffb.engine.commands.SetPlayerAvailability
 import com.jervisffb.engine.commands.SetPlayerState
@@ -81,6 +82,9 @@ import kotlin.math.min
  * can avoid it as e.g., a failed blitz (Push instead of POW) might influence
  * which players you want to move next.
  *
+ * Designer's Commentary:
+ * - May 2026: It was clarified that Team Rerolls can be used during Charge!
+ *
  * Developer's Commentary:
  * The exact functionality of Charge is still a bit unclear in a number of areas:
  *
@@ -98,7 +102,7 @@ import kotlin.math.min
  *
  * Turn or not:
  * The wording is "may then be activated, one at a time, exactly as if it was
- * their teams turn", isn't exactly clear and leads to a number of
+ * their team's turn", isn't exactly clear and leads to a number of
  * interpretations:
  *
  * 1) The entire Charge is treated as a normal team turn. This enables things
@@ -110,7 +114,7 @@ import kotlin.math.min
  *    action itself. This means that skills like Dodge can be used.
  *
  * All of this probably needs a FAQ to be clarified, so for now we are going
- * with an educated guess that requires the least amount of weirdness. These
+ * with an educated guess that requires the least amount of weirdness. The
  * proposed semantics:
  *
  * - All players can declare a Move action
@@ -128,21 +132,17 @@ import kotlin.math.min
  *   - Projectile Vomit
  *   - Punt
  *   - Stab (as block)
- * - Charge is not a Team Turn, so the team is not "active". This means that
- *   team rerolls do not work and effects that trigger end-of-turn cannot be
- *   applied (like Wizards). This is similar to BB2020.
+ * - Charge is considered a Team Turn, and the team is marked as "active". This
+ *   means that Team Rerolls, Wizards, and skills like Dodge are all allowed.
  * - You are not forced to activate or forego activation on all players.
  *   This is entirely optional.
- * - All skills that only work during a team turn will work for the activated
- *   players as the "exactly as a team turn" are assumed to extend to performing
- *   the action as well. This avoids the weirdness BB2020 had with a lot of
- *   skills not working during a Blitz.
  */
 object Charge : Procedure() {
     override val initialNode: Node = RollForPlayers
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         return compositeCommandOf(
             SetActiveTeam(state.kickingTeam),
+            SetCanUseTeamRerolls(true),
             // CurrentBall was set for the kick-off event because it makes some things easier, but a Charge!
             // is more like a normal turn, so for this procedure we do not want it set automatically. It will
             // be re-set again when leaving this procedure.
@@ -159,6 +159,7 @@ object Charge : Procedure() {
         val context = state.getContextOrNull<ChargeContext>()
         return compositeCommandOf(
             if (context != null) RemoveContext(context) else null,
+            SetCanUseTeamRerolls(false),
             SetActiveTeam(null),
             SetTurnOver(null),
             SetCurrentBall(state.singleBall()),
