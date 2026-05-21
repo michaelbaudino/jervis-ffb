@@ -169,6 +169,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Team Foul Action can be performed
   - [x] Quick Foul is not applied on Pile Driver fouls
   - [x] Lone Fouler, Put the Boot In, Sneaky Git and Dirty Player all work
+  - [x] Does not prevent use of a normal Foul Action
 - [x] Put the Boot In
   - [x] Doesn't work when prone
   - [x] Usage is optional (for now we always use it)
@@ -179,6 +180,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Cannot foul twice
   - [x] Cannot move if foul is a turnover
 - [ ] Saboteur
+  - [ ] If hitting a player with Ball & Chain, the B&C player is Knocked Out automatically (FAQ May 2026).
 - [x] Shadowing
   - [x] Only works on opponent turn
   - [x] 4+ to succeed
@@ -233,6 +235,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
     - [ ] Works on players with the Foul Appearance trait
     - [ ] 2nd block is not required to be a normal block but can be any valid "block" special action (FAQ)
     - [ ] Foul Appearance must be rolled for both blocks. If failed on first block, 2nd block isn't happening
+    - [ ] Brawler will only work on one of the blocks (FAQ May 2026)
 - [x] Kick
   - [x] Usage is optional
   - [x] Reduces distance from D6 to D3
@@ -349,6 +352,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Cloud Burster
   - [x] Prevents interceptions
 - [ ] Dump-off
+  - [ ] Trigger just before rolling block dice, and not when Block/Blitz is declared (FAQ May 2026)
+  - [ ] Cannot be used on a bomb (FAQ May 2026)
 - [x] Give and Go
   - [x] Works on successful Quick Pass
   - [x] Does not work on Short Pass and above
@@ -426,6 +431,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Does not work if Distracted
   - [x] Works for both Attacker and Defender
 - [ ] Multiple Block
+    - [ ] Does not work during a Blitz (FAQ May 2026) 
     - [ ] During Multiple Block: Scoring Turnovers will win over End-Turn turnovers.
     - [ ] Only normal blocks are available, no special actions
     - [ ] Tackle is available for both blocks
@@ -439,6 +445,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
     - [ ] Trickster work against both blocks, but treat both defender positions as taken.
     - [ ] Exactly where in the sequence is the Leader reroll removed?
     - [ ] Brawler does not work
+    - [ ] Target A counts as assisting in the Block against Target B and vice versa (FAQ May 2026)
+    - [ ] Special Actions like Stab or Chainsaw does not work during Multiple Block (FAQ May 2026)
 - [x] Stand Firm
   - [x] Prevent being pushed back in the first block
   - [x] Prevent being pushed back in a chain push
@@ -460,14 +468,20 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [ ] Animal Savagery*
   - [ ] Must use Mighty Blow on Armour 
   - [ ] Must use Claw
+  - [ ] Can continue action if not distracted or a turnover happend (FAQ May 2026)
 - [ ] Animosity (X)*
 - [ ] Always Hungry*
+  - [ ] Eating a player only causes turnover if it was holding the ball (FAQ May 2026)
 - [ ] Ball & Chain*
+  - [ ] Is stopped if moving into a Stand Firm player, move still used, block still happens (FAQ May 2026)
+  - [ ] Moving off the pitch count as "Pushed into the Crowd" (FAQ May 2026)
+  - [ ] Is not Knocked Out if rolling Stunned after being "Pushed into the Crowd" (FAQ May 2026)
 - [ ] Bombardier
   - [ ] Accurate skill works
   - [ ] Cannoneer skill works
   - [ ] Safe Pass skills works
   - [ ] Hail Mary Pass works
+  - [ ] Balls never bounce, but blow up in the square they would otherwise bounce from (FAQ May 2026)
 - [x] Bone Head*
   - [x] Clear after activating
   - [x] Roll after selecting action
@@ -511,6 +525,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Do not use Big Hand / Extra Arms on Pickup
   - [x] Secure the Ball rolls are automatic 1's
   - [x] Cannot intercept
+- [ ] Pick-me-up
+  - [ ] Does not work if Distracted (FAQ May 2026)
 - [ ] Plague Ridden
 - [ ] Pogo Stick
     - [x] Pogo over any square using Jump rules
@@ -614,6 +630,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [ ] Keep the ball when moving
   - [ ] Pickup Ball when moving, before being blocked
   - [ ] Score only after block completes
+  - [ ] Works if Chomped and will clear it
 - [x] Unchannelled Fury*
   - [x] Pro can be used as a reroll
   - [x] Roll after selecting action

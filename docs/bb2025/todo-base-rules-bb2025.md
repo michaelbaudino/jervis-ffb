@@ -401,6 +401,7 @@ book.
     - [ ] Nega-trait players cannot Stall (as they all require rolls)
     - [ ] Do not check for stalling after turn-over
     - [ ] NAF / FUMBBL interpretations
+    - [ ] Using Fumblerooski does not prevent Stalling (May FAQ 2026)
 - [ ] Conceding
     - [ ] Free if 3 or less players at beginning of turn
 
