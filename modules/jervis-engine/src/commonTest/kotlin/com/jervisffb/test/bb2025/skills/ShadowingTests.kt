@@ -1,5 +1,6 @@
 package com.jervisffb.test.bb2025.skills
 
+import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.EndTurn
 import com.jervisffb.engine.actions.PlayerSelected
@@ -16,7 +17,9 @@ import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
+import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.makeDistracted
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -57,7 +60,7 @@ class ShadowingTests: JervisGameBB2025Test() {
             EndAction // Shadowing does not trigger for the teams own players
         )
         activePlayer.assertCoordinates(14, 9)
-        assertEquals(awayTeam, state.activeTeam)
+        state.awayTeam.assertActive()
     }
 
     @Test
@@ -74,7 +77,7 @@ class ShadowingTests: JervisGameBB2025Test() {
             EndTurn
         )
         activePlayer.assertCoordinates(14, 5)
-        assertEquals(homeTeam, state.activeTeam)
+        state.homeTeam.assertActive()
     }
 
     @Test
@@ -98,7 +101,7 @@ class ShadowingTests: JervisGameBB2025Test() {
         )
         assertEquals("H2".playerId, state.pitch[13, 5].player?.id)
         movingPlayer.assertCoordinates(14, 5)
-        assertEquals(homeTeam, state.activeTeam)
+        state.homeTeam.assertActive()
     }
 
     @Test
@@ -115,7 +118,7 @@ class ShadowingTests: JervisGameBB2025Test() {
         )
         shadowingPlayer.assertCoordinates(12, 5)
         activePlayer.assertCoordinates(14, 5)
-        assertEquals(awayTeam, state.activeTeam)
+        state.awayTeam.assertActive()
     }
 
     @Test
@@ -132,7 +135,7 @@ class ShadowingTests: JervisGameBB2025Test() {
         )
         shadowingPlayer.assertCoordinates(13, 5)
         activePlayer.assertCoordinates(14, 5)
-        assertEquals(awayTeam, state.activeTeam)
+        state.awayTeam.assertActive()
     }
 
     @Test
@@ -151,6 +154,22 @@ class ShadowingTests: JervisGameBB2025Test() {
         )
         shadowingPlayer.assertCoordinates(13, 5)
         activePlayer.assertCoordinates(15, 5)
-        assertEquals(awayTeam, state.activeTeam)
+        state.awayTeam.assertActive()
+    }
+
+    @Test
+    fun doesNotWorkOnFailedDodge() {
+        val shadowingPlayer = homeTeam[1.playerNo]
+        val activePlayer = awayTeam[1.playerNo]
+        controller.rollForward(
+            *activatePlayer(activePlayer, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            *dodge(1.d6),
+            DiceRollResults(1.d6, 1.d6),
+        )
+        state.homeTeam.assertActive()
+        state.assertNoActivePlayer()
+        shadowingPlayer.assertCoordinates(12, 5)
+        activePlayer.assertCoordinates(14, 5)
     }
 }

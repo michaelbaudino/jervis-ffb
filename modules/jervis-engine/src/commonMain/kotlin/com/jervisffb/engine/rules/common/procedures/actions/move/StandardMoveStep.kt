@@ -62,13 +62,15 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  * will be used, but the actual usage was then rejected, preventing the player
  * from moving.
  *
+ *
  * Developer's Commentary
- * The order of checks during a Move is a bit unclear, so this list is a
- * best-effort implementation.
+ * The order of checks during a Move is a bit unclear. It was clarified a bit
+ * in the May 2026 Designer's Commentary, but some things are still unclear, so
+ * this list is a best-effort implementation.
  *
  * For now, we check things in the following order:
  *
- * 1. Tentacles.
+ * 1. Tentacles
  * 2. Fumblerooski
  * 3. Rush
  *  a. Sprint
@@ -78,7 +80,7 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  *   b. Break Tackle
  *   c. Prehensile Tail
  *   d. Diving Tackle
- * 5. Shadowing
+ * 5. Shadowing. Only works if Dodge is successful (FAQ May 2026).
  */
 object StandardMoveStep: Procedure() {
     override val initialNode: Node = CheckForSprint
@@ -268,8 +270,8 @@ object StandardMoveStep: Procedure() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = DodgeRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
             val dodgeContext = state.getContext<DodgeRollContext>()
-            val player = dodgeContext.player
             return if (dodgeContext.isSuccess) {
+                // FAQ May 2026: Shadowing only works if Dodge is successful
                 compositeCommandOf(
                     RemoveContext<DodgeRollContext>(),
                     GotoNode(CheckForShadowing)

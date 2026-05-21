@@ -610,6 +610,22 @@ of unspecified scenarios with regard to how the thrown player be handled?
 For this reason, Jervis assumes that Safe Pass is only applicable for normal
 Pass actions (and by extension, throwing bombs).
 
+## Page 136 - Shadowing
+
+The rulebook is clear that Shadowing works when "...attempts to Dodge out of a 
+square...".
+
+However, the Designer's Commentary has changed that to only work on successful
+dodges. It is unclear if this is a mistake, since it is mentioned in the FAQ
+section and not in the Errata.
+
+For now, Jervis assumes it is intentional, and Shadowing will only work on
+successful dodges.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+    
+    If the Dodge is successful, a Shadowing roll can be made.
+
 ## Page 136 - Sprint
 Sprint is an optional skill, but for most cases, there is no downside to just
 applying it automatically.
