@@ -156,4 +156,26 @@ class LoneFoulerTests: JervisGameBB2025Test() {
         fouler.assertStanding()
         target.assertProne()
     }
+
+    // Clarified in Designer's Commentary May 2026
+    @Test
+    fun isNotSentOffIfRerollingDouble() {
+        val fouler = awayTeam["A6".playerId]
+        fouler.addSkill(SkillType.LONE_FOULER)
+        val target = homeTeam["H1".playerId]
+        target.putProne()
+        assertEquals(9, target.armorValue)
+        controller.rollForward(
+            *activatePlayer("A6", PlayerStandardActionType.FOUL),
+            SmartMoveTo(13, 4),
+            PlayerSelected("H1".playerId),
+            DiceRollResults(2.d6, 2.d6),
+            Confirm, // Use Lone Fouler
+            DiceRollResults(5.d6, 6.d6),
+            DiceRollResults(2.d6, 3.d6),
+        )
+        assertNull(state.activePlayer)
+        fouler.assertStanding()
+        target.assertStunned()
+    }
 }

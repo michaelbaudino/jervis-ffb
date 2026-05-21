@@ -317,6 +317,17 @@ adding available Offensive or Defensive assists is not optional. This means
 that the active Coach does not get a chance to "disable" assists, because they
 want to use Lone Fouler instead.
 
+Also, there has been arguments that rolling a failed double on the first 
+armour-roll will trigger being Sent Off, regardless of it being re-rolled with 
+Lone Fouler. The Designer's Commentary has clarified that this is not the case.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    If I re-roll this, and the re-roll is not a double, does the player still
+    get sent off?
+    No. The double result has been re-rolled and therefore does not exist for
+    the purpose of the outcome.
+
 !!! naf "NAF"
     
     Offensive and Defensive Assists are not optional.
