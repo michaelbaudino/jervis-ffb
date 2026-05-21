@@ -127,6 +127,7 @@ class PileDriverTests: JervisGameBB2025Test() {
         defender.assertProne()
     }
 
+    // Clarified to work in Designer's Commentary May 2026
     @Test
     fun loneFoulerWorks() {
         val attacker = awayTeam["A1".playerId]
@@ -183,6 +184,7 @@ class PileDriverTests: JervisGameBB2025Test() {
         defender.assertKnockedOut()
     }
 
+    // Clarified to work in Designer's Commentary May 2026
     @Test
     fun sneakyGitWorks() {
         val attacker = awayTeam["A1".playerId]
@@ -279,5 +281,32 @@ class PileDriverTests: JervisGameBB2025Test() {
         )
         assertNull(state.activePlayer)
         attacker.assertStanding()
+    }
+
+    // Clarified to work in Designer's Commentary May 2026
+    @Test
+    fun doesNotPreventFoulAction() {
+        val attacker = awayTeam["A1".playerId].also {
+            it.addSkill(SkillType.PILE_DRIVER)
+            it.addSkill(SkillType.BLOCK)
+        }
+        val fouler = awayTeam["A2".playerId]
+        val defender = homeTeam["H1".playerId]
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
+            *standardBlock("H1", 2.dblock),
+            Confirm, // Use Block
+            DiceRollResults(1.d6, 3.d6), // AV roll
+            Confirm, // Use Pile Driver
+            DiceRollResults(5.d6, 6.d6), // AV Roll
+            DiceRollResults(1.d6, 2.d6), // Injury Roll
+            *activatePlayer(fouler, PlayerStandardActionType.FOUL),
+            PlayerSelected(defender),
+            DiceRollResults(5.d6, 6.d6), // AV Roll
+            DiceRollResults(6.d6, 3.d6), // Injury Roll
+            useApothecary(false),
+        )
+        assertNull(state.activePlayer)
+        defender.assertKnockedOut()
     }
 }

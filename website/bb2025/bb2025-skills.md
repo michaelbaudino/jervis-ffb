@@ -590,9 +590,11 @@ being:
 4. The player is prone and still "active", but there is nothing
    they can do at this point, except ending their Activation.
 
-!!! naf "NAF"
+!!! bloodbowl "Designer's Commentary May 2026"
 
-    Pile Driver does not count towards the limit of fouls per turn.
+    ...Can I perform a normal Foul Action in addition to the Pile Driver 
+    Foul?...
+    Yes to all.
 
 ## Page 134 - Put the Boot In
 Technically, using the skill should be optional, but there doesn't seem to be
