@@ -18,6 +18,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
+import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.SmartMoveTo
@@ -33,6 +34,7 @@ import com.jervisffb.test.qualityRoll
 import com.jervisffb.test.rushRoll
 import com.jervisffb.test.standardBlock
 import com.jervisffb.test.steadyFootingRoll
+import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertCoordinates
 import com.jervisffb.test.utils.assertFallenOver
 import com.jervisffb.test.utils.assertKnockedDown
@@ -323,5 +325,46 @@ class SteadyFootingTests: JervisGameBB2025Test() {
         assertEquals(player, state.activePlayer)
         player.assertStanding()
         player.assertCoordinates(12, 4)
+    }
+
+    // This behavior was clarified in Designer's Commentary May 2026.
+    @Test
+    fun teamRerollsWorkOnSteadyFooting() {
+        val player = awayTeam["A1".playerId]
+        player.addSkill(SkillType.STEADY_FOOTING)
+        controller.rollForward(
+            *activatePlayer(player, PlayerStandardActionType.MOVE),
+            *moveTo(12, 4),
+            *dodge(1.d6),
+            Confirm, // Use Steady Footing
+            1.d6,
+            TeamRerollSelected<RegularTeamReroll>(),
+            6.d6,
+        )
+        assertEquals(player, state.activePlayer)
+        player.assertStanding()
+        player.assertCoordinates(12, 4)
+    }
+
+    // This behavior was clarified in Designer's Commentary May 2026.
+    @Test
+    fun workMultipleTimesPerActivation() {
+        val player = awayTeam["A1".playerId]
+        player.addSkill(SkillType.STEADY_FOOTING)
+        controller.rollForward(
+            *activatePlayer(player, PlayerStandardActionType.MOVE),
+            *moveTo(14, 4),
+            *dodge(1.d6),
+            Confirm,
+            *steadyFootingRoll(6.d6),
+            *moveTo(13, 5),
+            *moveTo(14, 5),
+            *dodge(1.d6),
+            Confirm,
+            *steadyFootingRoll(6.d6),
+        )
+        assertEquals(player, state.activePlayer)
+        player.assertStanding()
+        player.assertCoordinates(14, 5)
     }
 }

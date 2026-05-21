@@ -674,6 +674,14 @@ performed.
 
     Stab is an Active Trait, which can not be used when Prone.
 
+## Page 136 - Steady Footing
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Can I use Team Re-rolls on the Steady Footing roll? Can I roll for Steady
+    Footing multiple times in a turn?
+    
+    Yes to both.
+
 ## Page 136 - Strip Ball
 Strip Ball requires that a player is "Pushed Back" (note, this is different
 from the Push Back result on the Block die). Since Stand Firm prevents a player
