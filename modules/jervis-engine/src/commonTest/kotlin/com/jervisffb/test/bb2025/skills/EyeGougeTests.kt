@@ -33,7 +33,9 @@ import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.skipTurns
 import com.jervisffb.test.standardBlock
 import com.jervisffb.test.utils.assertProne
+import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.putProne
+import com.jervisffb.test.utils.putStunned
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -139,18 +141,40 @@ class EyeGougeTests: JervisGameBB2025Test() {
     }
 
     @Test
-    fun workOnFoulAssists() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
-        homeTeam["H2".playerId].state = PlayerState.STUNNED
+    fun preventOffensiveFoulAssists() {
+        val target = homeTeam["H1".playerId]
+        target.putProne()
+        homeTeam["H2".playerId].putStunned()
         awayTeam["A1".playerId].addStatusEffect(PlayerStatusEffect.eyeGouge())
+        assertEquals(9, target.armorValue)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
-            PlayerSelected("H1".playerId), // Start foul, A1 can assist if not having Eye Gouge
+            PlayerSelected(target), // Start foul, A1 could have assisted if not for Eye Gouge.
             DiceRollResults(5.d6, 3.d6)
         )
         assertNull(state.activePlayer)
         homeTeam["H1".playerId].assertProne()
+    }
+
+    @Test
+    fun preventDefensiveFoulAssists() {
+        val target = homeTeam["H1".playerId]
+        target.putProne()
+        homeTeam["H2".playerId].addStatusEffect(PlayerStatusEffect.eyeGouge())
+        awayTeam["A1".playerId].putProne()
+        awayTeam["A2".playerId].putProne()
+        awayTeam["A3".playerId].putProne()
+        assertEquals(9, target.armorValue)
+        controller.rollForward(
+            *activatePlayer("A6", PlayerStandardActionType.FOUL),
+            SmartMoveTo(11, 5),
+            PlayerSelected(target), // Start foul, H2 could have assisted if not for Eye Gouge.
+            DiceRollResults(5.d6, 4.d6),
+            DiceRollResults(1.d6, 2.d6),
+        )
+        assertNull(state.activePlayer)
+        homeTeam["H1".playerId].assertStunned()
     }
 
     @Test
