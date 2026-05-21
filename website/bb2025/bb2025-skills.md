@@ -172,19 +172,20 @@ Jervis has adopted the same interpretation.
     over in the target square.
 
 ## Page 128 - Grab
-Grab is split into two sections: 1) Moving the pushed player and 2) Disable
-Sidestep for pushed "players". It is unclear why the plural is used here.
+In the rulebook Grab is split into two sections: 1) Moving the pushed player 
+and 2) Disable Sidestep for pushed "players". It is unclear why the plural is 
+used here.
 
 It could either reference Multiple Block, chain-pushes, or both.
 
-NAF has ruled that Grab canceling Sidestep only works on the blocked player(s)
-and not on chain-pushed players. 
+The Designer's Commentary has clarified that Grab does not apply to 
+chain-pushes. Multiple Block is not mentioned, but Jervis assumes that Grab
+also works on both initial blocks, but not on either chain push.
 
-Jervis has adopted this interpretation as well.
+!!! bloodbowl "Designer's Commentary May 2026"
 
-!!! naf "NAF"
-
-    Only the immediate Block target cannot use Sidestep.
+    Does Grab prevent all players in the Chain Push from using Sidestep?
+    No. Only the target of the Block.
 
 ## Page 129 - Guard
 While this skill is optional, it only affects how many dice are rolled and not

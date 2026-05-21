@@ -122,6 +122,7 @@ class GrabTests: JervisGameBB2025Test() {
     // We cannot choose to use Grab if there are no adjacent squares. But having
     // squares would prevent a chain-push. So this just checks that we do not
     // ignore Sidestep due to the passive presence of Grab.
+    // This behavior was also clarified in Designer's Commentary May 2026.
     @Test
     fun doesNotPreventSidestepOnChainPush() {
         SetPlayerLocation(homeTeam[5.playerNo], PitchCoordinate(11, 4)).execute(state)
