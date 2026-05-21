@@ -1,6 +1,7 @@
 package com.jervisffb.test.bb2025.skills
 
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.rules.bb2025.skills.SecretWeapon
@@ -19,6 +20,7 @@ import com.jervisffb.test.utils.assertStanding
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
  * Class testing usage of the [SecretWeapon] skill.
@@ -125,6 +127,28 @@ class SecretWeaponTests: JervisGameBB2025Test() {
         )
         player1.assertBanned()
         player2.assertBanned()
+        assertEquals(SetupTeam.SelectPlayerOrEndSetup, controller.currentNode())
+    }
+
+    // Verify that we correctly handle rolling for a Secret Player, even if they are holding the ball
+    // at the end of a drive.
+    @Test
+    fun playerWithBallEndsDrive() {
+        val player = homeTeam["H1".playerId]
+        player.addSkill(SkillType.SECRET_WEAPON)
+        startDefaultGame()
+        SetBallState.carried(state.singleBall(), player).execute(state)
+        controller.rollForward(
+            *skipTurns(16),
+        )
+        player.assertStanding()
+        assertTrue(player.hasBall())
+        controller.rollForward(
+            PlayerSelected(player.id),
+            argueTheCall(true),
+            4.d6,
+        )
+        player.assertBanned()
         assertEquals(SetupTeam.SelectPlayerOrEndSetup, controller.currentNode())
     }
 }

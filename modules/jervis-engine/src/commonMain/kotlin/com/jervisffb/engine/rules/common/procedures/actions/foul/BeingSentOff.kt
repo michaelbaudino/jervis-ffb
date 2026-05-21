@@ -45,6 +45,7 @@ import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
+import com.jervisffb.engine.rules.common.procedures.EndOfDriveSequence
 import com.jervisffb.engine.rules.common.tables.ArgueTheCallResult
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -158,6 +159,7 @@ object BeingSentOff: Procedure() {
                 val bribeSuccess = (context.usedBribe && isBribeSuccess(context.bribeRoll!!.result))
                 val banPlayer = (!bribeSuccess && context.argueTheCallResult != ArgueTheCallResult.WELL_IF_YOU_PUT_IT_LIKE_THAT)
                 val banCoach = (context.argueTheCallResult == ArgueTheCallResult.YOURE_OUTTA_HERE)
+                val endOfDrive = state.stack.containsProcedure(EndOfDriveSequence)
 
                 if (context.isBribeAvailable && context.usedBribe) {
                     add(ReportBribeResult(context.player.team, bribeSuccess))
@@ -197,7 +199,7 @@ object BeingSentOff: Procedure() {
                     })
                 }
 
-                add(if (banPlayer && playerHadBall) GotoNode(BounceBallWhenBanned) else ExitProcedure())
+                add(if (banPlayer && playerHadBall && !endOfDrive) GotoNode(BounceBallWhenBanned) else ExitProcedure())
             }
         }
     }
