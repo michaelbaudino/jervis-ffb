@@ -198,6 +198,7 @@ object BlockAction : Procedure() {
                         StabContext(
                             attacker = context.attacker,
                             defender = context.defender,
+                            defenderOriginalPosition = context.defender.coordinates,
                         )
                     )
                 }

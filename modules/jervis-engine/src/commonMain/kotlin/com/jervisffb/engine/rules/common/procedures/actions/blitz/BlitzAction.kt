@@ -384,7 +384,8 @@ object BlitzAction : Procedure() {
                     AddContext(
                         StabContext(
                             attacker = context.attacker,
-                            defender = context.defender!!
+                            defender = context.defender!!,
+                            defenderOriginalPosition = context.defender.coordinates,
                         )
                     )
                 }
