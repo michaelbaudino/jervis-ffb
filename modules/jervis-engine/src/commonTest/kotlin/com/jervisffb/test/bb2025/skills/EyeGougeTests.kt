@@ -125,6 +125,7 @@ class EyeGougeTests: JervisGameBB2025Test() {
         assertTrue(defender.statusEffects.any { it.type == PlayerStatusEffectType.EYE_GOUGE })
     }
 
+    // This behavior was clarified in Designer's Commentary May 2026.
     @Test
     fun doesNotApplyWhenUsingStandFirm() {
         val attacker = state.getPlayerById("A1".playerId)

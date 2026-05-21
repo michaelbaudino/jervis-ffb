@@ -120,11 +120,19 @@ Back into will be themselves Pushed Back as if they had been Pushed Back by the
 player who is now occupying their square...".
 
 In the Designer's Commentary May 2026, this was clarified, so it is clear that
-Eye Gouge only works on the first block.
+Eye Gouge only works on the first block and only if a Pushed Back was actually
+applied. This e.g., means that Eye Gouge cannot be used if the opponent used
+Stand Firm.
 
 !!! bloodbowl "Designer's Commentary May 2026"
 
     No. Only the target of the Block gains the Eye Gouge condition.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Yes. As the player hasn't been Pushed Back, those Skills do not trigger, and
+    so have no effect.
+
 
 ## 128 - Fumblerooski
 From the rules, it is unclear how Fumblerooski interacts with other skills, as
@@ -671,15 +679,14 @@ Strip Ball requires that a player is "Pushed Back" (note, this is different
 from the Push Back result on the Block die). Since Stand Firm prevents a player
 from being Pushed Back, this also prevents the Strip Ball skill from being used.
 
-FUMBBL has a similar interpretation.
-
 When Strip Ball and Sure Hands interact, the order is unclear. But it shouldn't
 matter, so to simplify the rules engine, Jervis is asking the pushed player to
 use Sure Hands, before asking the attacker to use Strip Ball.
 
-!!! fumbbl "FUMBBL"
+!!! bloodbowl "Designer's Commentary May 2026"
 
-    Strip Ball requires the Push Back and will therefore not trigger
+    Yes. As the player hasn't been Pushed Back, those Skills do not trigger, and
+    so have no effect.
 
 ## Page 136 - Swoop
 It looks like it is a prerequisite for Swoop that the thrown player would 

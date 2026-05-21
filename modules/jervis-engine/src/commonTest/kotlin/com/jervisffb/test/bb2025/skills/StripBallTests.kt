@@ -87,6 +87,7 @@ class StripBallTests: JervisGameBB2025Test() {
         assertEquals(BallState.CARRIED, ball.state)
     }
 
+    // This behavior was clarified in Designer's Commentary May 2026.
     @Test
     fun doesNotWorkAgainstStandFirm() {
         val attacker = awayTeam["A1".playerId]
