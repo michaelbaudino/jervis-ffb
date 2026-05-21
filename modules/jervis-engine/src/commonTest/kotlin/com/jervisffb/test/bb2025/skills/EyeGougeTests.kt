@@ -172,6 +172,7 @@ class EyeGougeTests: JervisGameBB2025Test() {
         assertEquals(0, context.offensiveAssists)
     }
 
+    // This behavior was clarified in the Designer's Commentary May 2026
     @Test
     fun doesNotWorkOnChainPushes() {
         SetPlayerLocation(homeTeam[4.playerNo], PitchCoordinate(11, 4)).execute(state)

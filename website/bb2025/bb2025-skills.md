@@ -111,27 +111,20 @@ This has a few implications:
    section.
 
 ## Page 128 - Eye Gouge
-Eye Gouge says it can trigger when an opposition player is Pushed Back. From
-as strict RAW reading of the rulebook this would also apply to chain-pushes as :
+In the rulebook, Eye Gouge says it can trigger when an opposition player is 
+Pushed Back. From as strict RAW reading, this would also apply to chain-pushes 
+as:
 
 "...the player occupying the square the originally Pushed player has been Pushed
 Back into will be themselves Pushed Back as if they had been Pushed Back by the 
 player who is now occupying their square...".
 
-However, this makes chain-pushes quite awkward, and both NAF and FUMBBL have 
-ruled that Eye Gouge does not work during chain-pushes, only the first block.
+In the Designer's Commentary May 2026, this was clarified, so it is clear that
+Eye Gouge only works on the first block.
 
-Jervis has adopted a similar interpretation.
+!!! bloodbowl "Designer's Commentary May 2026"
 
-!!! naf "NAF"
-
-    When Chain Pushing a player B with the Eye Gouge skill into a third player 
-    C, Eye Gouge is not applied to player C.
-
-!!! fumbbl "FUMBBL"
-
-    House-rule that "Eye Gouge can only be used by the active player".
-
+    No. Only the target of the Block gains the Eye Gouge condition.
 
 ## 128 - Fumblerooski
 From the rules, it is unclear how Fumblerooski interacts with other skills, as
