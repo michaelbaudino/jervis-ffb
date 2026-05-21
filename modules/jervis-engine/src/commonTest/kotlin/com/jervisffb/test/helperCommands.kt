@@ -204,6 +204,11 @@ fun rushTo(x: Int, y: Int, rushRoll: D6Result = 6.d6) = arrayOf(
     NoRerollSelected()
 )
 
+fun shadowPlayer(player: Player, roll: D6Result = 6.d6) = arrayOf(
+    PlayerSelected(player),
+    roll
+)
+
 /**
  * Use the PathFinder to move the active player to the destined location. Only
  * moves that require no rolls are used.

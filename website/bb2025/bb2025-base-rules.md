@@ -172,7 +172,8 @@ movement, Jervis will adopt the same interpretation for BB2025.
 
 
 ## Page 59 - Secure the Ball
-It is unclear if modifiers like "Pouring Rain" apply to securing the ball.
+In the rulebook it is unclear if modifiers like "Pouring Rain" apply to securing
+the ball.
 
 Arguments for:
 * Secure the Ball counts as "Picking up the ball" as described on page 57. This
@@ -190,12 +191,13 @@ Arguments against:
   Ball. Since no modifiers explicitly mention Secure the Ball, it is always a
   unmodified 2+ roll
 
-Both NAF and FUMBBL are using the first interpretation, so Jervis has adopted
-the same.
+This was clarified in the Designer's Commentary, which means that the 
+"for"-camp has the correct interpretation.
 
-!!! naf "NAF"
+!!! bloodbowl "Designer's Commentary May 2026"
 
-    The -1 modifier from Pouring Rain applies to Secure the Ball.
+    Yes. The roll is to pick up the ball and so relevant modifiers apply
+
 
 ## Page 62 - Both Down
 If both players are Knocked Down, the rules do not specify the sequence of

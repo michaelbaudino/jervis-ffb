@@ -553,7 +553,7 @@ book.
   - [x] Not allowed if standing player with TZ's within 2 squares
   - [x] Action ends after pickup.
   - [x] Turnover if player does not have the ball when action ends.
-  - [ ] Marked modifiers when using Shadowing
+  - [x] Marked modifiers when using Shadowing
 
 ## Special Rules
 

@@ -1,26 +1,36 @@
 package com.jervisffb.test.bb2025.actions
 
+import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.NoRerollSelected
+import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayerAction
 import com.jervisffb.engine.commands.SetBallLocation
+import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.PlayerKeyword
+import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
+import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.tables.Weather
 import com.jervisffb.engine.utils.singleInstanceOf
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.SmartMoveTo
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.catch
+import com.jervisffb.test.defaultKickOffHomeTeam
+import com.jervisffb.test.defaultPregame
+import com.jervisffb.test.defaultSetup
+import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
+import com.jervisffb.test.shadowPlayer
 import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.makeDistracted
@@ -120,12 +130,42 @@ class SecureTheBallActionTests : JervisGameBB2025Test() {
         assertEquals(state.homeTeam, state.activeTeam)
     }
 
-    @Ignore // Need support for Shadowing
     @Test
     fun markedModifierApplies() {
-        // TODO
+        setupDefaultGame()
+        // Make ball land in [19, 7]
+        controller.rollForward(
+            *defaultPregame(),
+            *defaultSetup(),
+            *defaultKickOffHomeTeam(
+                placeKick = PitchSquareSelected(21, 7),
+            ),
+        )
+        val shadowingPlayer = state.homeTeam["H1".playerId]
+        shadowingPlayer.addSkill(SkillType.SHADOWING)
+        SetPlayerLocation(shadowingPlayer, PitchCoordinate(15, 7)).execute(state)
+        val player = state.getPlayerById("A10".playerId)
+        assertEquals(3, player.agility)
+        controller.rollForward(
+            *activatePlayer(player, PlayerStandardActionType.SECURE_THE_BALL),
+            *moveTo(17, 7),
+            *dodge(6.d6),
+            *shadowPlayer(shadowingPlayer, 6.d6),
+            *moveTo(18, 7),
+            *dodge(6.d6),
+            *shadowPlayer(shadowingPlayer, 6.d6),
+            *moveTo(19, 7),
+            *dodge(6.d6),
+            *shadowPlayer(shadowingPlayer, 6.d6),
+            2.d6, // Failed Secure the Ball
+            NoRerollSelected(),
+            2.d8 // Bounce
+        )
+        assertFalse(player.hasBall())
+        assertEquals(homeTeam, state.activeTeam)
     }
 
+    // Clarified in Designer's Commentary May 2026
     @Test
     fun pouringRainModifierApplies() {
         val player = state.getPlayerById("A8".playerId)
