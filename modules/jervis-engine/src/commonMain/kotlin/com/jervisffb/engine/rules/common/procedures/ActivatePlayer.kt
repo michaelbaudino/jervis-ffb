@@ -47,25 +47,29 @@ import com.jervisffb.engine.utils.INVALID_ACTION
  * Procedure for activating a player and declaring their action as described on
  * page 42 in the rulebook.
  *
- * The exact sequence for activating a player is not really clear in the rules.
- * This is, e.g., a problem with regard to regaining tackle zones (which affect
- * if Pro can be used for Bone Head).
+ * The exact sequence for activating a player is not really clear in the rules,
+ * but is clarified in this Developer's Commentary (May 2026).
  *
- * The following sequence is being used in this implementation.
+ * It still lacks some minor details though, so some freedom has been taken
+ * in determining the sequence. In Jervis, the sequence is as follows:
  *
  * 1. Select Player (which triggers this procedure).
- * 2. Mark them as Activate and clear any negative effect that last until the
- *    next activation (like missing tackle zones).
- * 3. Declare an Action to perform. For some actions, like Blitz or Foul, this
+ * 2. Mark the player as Active
+ * 3. Remove any negative effects that last until the next activation (like
+ *    Distracted).
+ * 4. Declare an Action to perform. For some actions, like Blitz or Foul, this
  *    includes selecting a target.
  * 5. Roll for all Nega-traits in order, stop at the first failure (no player
  *    normally has multiple of these).
  *    a. Take Root: They might become rooted, but are otherwise free to act.
- *    a. Bone Head / Really Stupid: They might end the activation here, loose tackle zones and the action is used.
- *    b. Unchannelled Fury: They might end the activation here and the action is used.
- *    c. Animal Savagery: They might hit a nearby player or end their activation and loose tackle zones.
+ *    a. Bone Head / Really Stupid: They might end the activation here, loose
+ *       tackle zones and the action is used.
+ *    b. Unchannelled Fury: They might end the activation here and the action is
+ *       used.
+ *    c. Animal Savagery: They might hit a nearby player or end their activation
+ *       and loose tackle zones.
  *    d. Blood Lust: If failed, they might change the declared action to Move.
- * 6. If action has a target, roll for all opponent skills like Foul Appearance and Dump Off.
+ * 6. If action has a target, roll for all opponent skills like Foul Appearance.
  * 7. Perform the action.
  * 8. End Action.
  * 9. End Activation.
@@ -73,10 +77,7 @@ import com.jervisffb.engine.utils.INVALID_ACTION
  * We allow a player to take back selecting an action as long as no side effects
  * have occurred. I.e., a Player is allowed to regret selecting an action as
  * long as no dice has been rolled, no moves have been taken, or no negative
- * state has been removed as part of Step 2.
- *
- * Note, this sequence is debatable and FUMBBL and BB3 doesn't agree on it.
- * See https://fumbbl.com/index.php?name=PNphpBB2&file=viewtopic&t=32167&postdays=0&postorder=asc&start=0
+ * state has been removed as part of Step 3.
  */
 object ActivatePlayer : Procedure() {
     override val initialNode: Node = MarkPlayerAsActive
