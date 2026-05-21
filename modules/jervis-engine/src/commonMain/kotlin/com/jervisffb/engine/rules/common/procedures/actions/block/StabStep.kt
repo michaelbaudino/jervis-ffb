@@ -7,6 +7,9 @@ import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.commands.Command
+import com.jervisffb.engine.commands.SetBallLocation
+import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.commands.SetCurrentBall
 import com.jervisffb.engine.commands.buildCompositeCommand
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
@@ -29,20 +32,24 @@ import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.isSkillAvailable
+import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BlockAction
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.HitAndRunStep
+import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryRoll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
+import com.jervisffb.engine.utils.INVALID_GAME_STATE
 
 data class StabContext(
     val attacker: Player,
     val defender: Player? = null,
+    val defenderOriginalPosition: PitchCoordinate? = null,
     val stabResult: RiskingInjuryContext? = null,
 ): ProcedureContext
 
@@ -108,7 +115,11 @@ object StabStep: Procedure() {
             return when (action) {
                 EndAction -> ExitProcedure()
                 is PlayerSelected -> {
-                    val context = state.getContext<StabContext>().copy(defender = action.getPlayer(state))
+                    val player = action.getPlayer(state)
+                    val context = state.getContext<StabContext>().copy(
+                        defender = player,
+                        defenderOriginalPosition = player.coordinates,
+                    )
                     compositeCommandOf(
                         UpdateContext(context),
                         GotoNode(CheckForFoulAppearance),
@@ -125,12 +136,12 @@ object StabStep: Procedure() {
             val hasFoulAppearance = context.defender?.isSkillAvailable(SkillType.FOUL_APPEARANCE) ?: error("Missing defender: $context")
             return when (hasFoulAppearance) {
                 true -> null
-                false -> RollForArmourAnInjury
+                false -> RollForArmourAndInjury
             }
         }
         override fun onEnterNode(state: Game, rules: Rules): Command {
-            val breatheContext = state.getContext<StabContext>()
-            val foulAppearanceContext = FoulAppearanceContext(breatheContext.attacker, breatheContext.defender!!)
+            val stabContext = state.getContext<StabContext>()
+            val foulAppearanceContext = FoulAppearanceContext(stabContext.attacker, stabContext.defender!!)
             return AddContext(foulAppearanceContext)
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = FoulAppearanceRoll
@@ -140,7 +151,7 @@ object StabStep: Procedure() {
             return buildCompositeCommand {
                 add(RemoveContext<FoulAppearanceContext>())
                 when (context.isSuccess) {
-                    true -> add(GotoNode(RollForArmourAnInjury))
+                    true -> add(GotoNode(RollForArmourAndInjury))
                     // Stab ends the Action immediately, regardless of a failed Foul Appearance roll or not.
                     false -> addAll(
                         UpdateContext(activePlayerContext.copy(activationEndsImmediately = true)),
@@ -151,7 +162,7 @@ object StabStep: Procedure() {
         }
     }
 
-    object RollForArmourAnInjury : ParentNode() {
+    object RollForArmourAndInjury : ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<StabContext>()
             val injuryContext = RiskingInjuryContext(
@@ -170,6 +181,30 @@ object StabStep: Procedure() {
                     stabResult = injuryContext
                 )),
                 RemoveContext<RiskingInjuryContext>(),
+                when (stabContext.defender?.hasBall() == true) {
+                    true -> GotoNode(BounceBall)
+                    false -> GotoNode(CheckForHitAndRun)
+                }
+            )
+        }
+    }
+
+    object BounceBall: ParentNode() {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<StabContext>()
+            val defender = context.defender ?: INVALID_GAME_STATE("Missing defender: $context")
+            val ball = defender.ball ?: INVALID_GAME_STATE("Defender did not have a ball: $context")
+            val ballCoordinates = context.defenderOriginalPosition ?: INVALID_GAME_STATE("Missing ball coordinates: $context")
+            return compositeCommandOf(
+                SetBallState.bouncing(ball),
+                SetBallLocation(ball, ballCoordinates),
+                SetCurrentBall(ball),
+            )
+        }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            return compositeCommandOf(
+                SetCurrentBall(null),
                 GotoNode(CheckForHitAndRun),
             )
         }

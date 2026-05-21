@@ -7,6 +7,9 @@ import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.commands.Command
+import com.jervisffb.engine.commands.SetBallLocation
+import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.commands.SetCurrentBall
 import com.jervisffb.engine.commands.buildCompositeCommand
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
@@ -29,20 +32,26 @@ import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.isSkillAvailable
+import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BlockAction
+import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
+import com.jervisffb.engine.rules.common.procedures.actions.block.StabStep.CheckForHitAndRun
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryRoll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
+import com.jervisffb.engine.utils.INVALID_GAME_STATE
 
 data class ProjectileVomitContext(
     val attacker: Player,
+    val attackerOriginalCoordinates: PitchCoordinate,
     val defender: Player? = null,
+    val defenderOriginalCoordinates: PitchCoordinate? = null,
     val vomitRoll: D6DieRoll? = null,
     val injuryResult: RiskingInjuryContext? = null,
     val isSuccess: Boolean = false,
@@ -109,8 +118,12 @@ object ProjectileVomitStep: Procedure() {
                 EndAction -> ExitProcedure()
                 is PlayerSelected -> {
                     val context = state.getContext<ProjectileVomitContext>()
+                    val player = action.getPlayer(state)
                     compositeCommandOf(
-                        UpdateContext(context.copy(defender = action.getPlayer(state))),
+                        UpdateContext(context.copy(
+                            defender = player,
+                            defenderOriginalCoordinates = player.coordinates
+                        )),
                         GotoNode(CheckForFoulAppearance),
                     )
                 }
@@ -178,12 +191,16 @@ object ProjectileVomitStep: Procedure() {
         override fun onExitNode(state: Game, rules: Rules): Command {
             val injuryContext = state.getContext<RiskingInjuryContext>()
             val vomitContext = state.getContext<ProjectileVomitContext>()
+            val attacker = vomitContext.attacker
+            val attackCoordinates = vomitContext.attackerOriginalCoordinates
+            val nextNode = calculateNextNodeAfterInjury(attacker, attackCoordinates)
+
             return compositeCommandOf(
                 UpdateContext(vomitContext.copy(
                     injuryResult = injuryContext
                 )),
                 RemoveContext<RiskingInjuryContext>(),
-                ExitProcedure()
+                nextNode
             )
         }
     }
@@ -202,13 +219,46 @@ object ProjectileVomitStep: Procedure() {
         override fun onExitNode(state: Game, rules: Rules): Command {
             val injuryContext = state.getContext<RiskingInjuryContext>()
             val vomitContext = state.getContext<ProjectileVomitContext>()
+            val defender = vomitContext.defender ?: INVALID_GAME_STATE("Missing defender: $vomitContext")
+            val defenderCoordinates = vomitContext.defenderOriginalCoordinates ?: INVALID_GAME_STATE("Missing defender coordinates: $vomitContext")
+            val nextNode = calculateNextNodeAfterInjury(defender, defenderCoordinates)
+
             return compositeCommandOf(
                 UpdateContext(vomitContext.copy(
                     injuryResult = injuryContext
                 )),
                 RemoveContext<RiskingInjuryContext>(),
-                ExitProcedure()
+                nextNode
             )
         }
+    }
+
+    object BounceBall: ParentNode() {
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            return compositeCommandOf(
+                SetCurrentBall(null),
+                GotoNode(CheckForHitAndRun),
+            )
+        }
+    }
+
+    // --- HELPER METHODS ---
+
+    private fun calculateNextNodeAfterInjury(player: Player, originalPlayerCoordinates: PitchCoordinate): Command {
+        val rules = player.team.game.rules
+        return if (player.hasBall() && (!player.location.isOnPitch(rules) || !rules.isStanding(player))) {
+            val ball = player.ball ?: INVALID_GAME_STATE("Missing ball: $player")
+            compositeCommandOf(
+                SetBallState.bouncing(ball),
+                SetBallLocation(ball, originalPlayerCoordinates),
+                SetCurrentBall(ball),
+                GotoNode(BounceBall)
+            )
+        } else {
+            ExitProcedure()
+        }
+
+
     }
 }

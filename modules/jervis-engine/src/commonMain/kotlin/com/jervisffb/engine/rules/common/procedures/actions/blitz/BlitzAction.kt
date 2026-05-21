@@ -374,7 +374,9 @@ object BlitzAction : Procedure() {
                     AddContext(
                         ProjectileVomitContext(
                             attacker = context.attacker,
-                            defender = context.defender!!
+                            attackerOriginalCoordinates = context.attacker.coordinates,
+                            defender = context.defender!!,
+                            defenderOriginalCoordinates = context.defender.coordinates,
                         )
                     )
                 }

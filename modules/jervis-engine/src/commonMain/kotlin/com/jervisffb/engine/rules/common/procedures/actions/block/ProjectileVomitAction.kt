@@ -52,7 +52,8 @@ object ProjectileVomitAction : Procedure() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val actionContext = state.getContext<ProjectileVomitActionContext>()
             val context = ProjectileVomitContext(
-                attacker = actionContext.attacker
+                attacker = actionContext.attacker,
+                attackerOriginalCoordinates = actionContext.attacker.coordinates,
             )
             return AddContext(context)
         }

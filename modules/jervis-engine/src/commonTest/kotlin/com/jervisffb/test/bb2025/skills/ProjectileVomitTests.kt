@@ -5,7 +5,9 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayerAction
+import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.ext.d6
+import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.PlayerState
@@ -18,6 +20,9 @@ import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.projectileVomitRoll
+import com.jervisffb.test.useApothecary
+import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertKnockedOut
 import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.putProne
@@ -211,5 +216,47 @@ class ProjectileVomitTests: JervisGameBB2025Test() {
         attacker.addSkill(SkillType.PROJECTILE_VOMIT)
         controller.rollForward(PlayerSelected(attacker))
         assertFalse(controller.getAvailableActions().get<SelectPlayerAction>().actions.any { it.type == PlayerSpecialActionType.PROJECTILE_VOMIT })
+    }
+
+    @Test
+    fun knockoutDefenderWithBall() {
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.PROJECTILE_VOMIT)
+        val defender = state.getPlayerById("H1".playerId)
+        SetBallState.carried(state.singleBall(), defender).execute(state)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.PROJECTILE_VOMIT),
+            PlayerSelected(defender),
+            *projectileVomitRoll(6.d6),
+            DiceRollResults(6.d6, 6.d6), // AV Roll
+            DiceRollResults(3.d6, 6.d6), // Injury Roll
+            useApothecary(false),
+            2.d8, // Bounce
+        )
+        assertNull(state.activePlayer)
+        defender.assertKnockedOut()
+        attacker.assertStanding()
+        state.singleBall().assertCoordinates(12, 4)
+    }
+
+    @Test
+    fun knockoutAttackerWithBall() {
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.PROJECTILE_VOMIT)
+        SetBallState.carried(state.singleBall(), attacker).execute(state)
+        val defender = state.getPlayerById("H1".playerId)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.PROJECTILE_VOMIT),
+            PlayerSelected(defender),
+            *projectileVomitRoll(1.d6),
+            DiceRollResults(6.d6, 6.d6), // AV Roll
+            DiceRollResults(3.d6, 6.d6), // Injury Roll
+            useApothecary(false),
+            2.d8, // Bounce
+        )
+        assertNull(state.activePlayer)
+        defender.assertStanding()
+        attacker.assertKnockedOut()
+        state.singleBall().assertCoordinates(13, 4)
     }
 }

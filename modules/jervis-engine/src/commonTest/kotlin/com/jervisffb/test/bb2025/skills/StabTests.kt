@@ -5,7 +5,9 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayerAction
+import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.ext.d6
+import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.rules.bb2025.skills.Stab
@@ -16,6 +18,9 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.useApothecary
+import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertKnockedOut
 import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.putProne
@@ -163,5 +168,24 @@ class StabTests: JervisGameBB2025Test() {
         attacker.addSkill(SkillType.STAB)
         controller.rollForward(PlayerSelected(attacker))
         assertFalse(controller.getAvailableActions().get<SelectPlayerAction>().actions.any { it.type == PlayerSpecialActionType.STAB })
+    }
+
+    @Test
+    fun knockoutPlayerWithBall() {
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.STAB)
+        val defender = state.getPlayerById("H1".playerId)
+        SetBallState.carried(state.singleBall(), defender).execute(state)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.STAB),
+            PlayerSelected(defender),
+            DiceRollResults(6.d6, 6.d6), // AV Roll
+            DiceRollResults(3.d6, 6.d6), // Injury Roll
+            useApothecary(false),
+            2.d8, // Bounce
+        )
+        assertNull(state.activePlayer)
+        defender.assertKnockedOut()
+        state.singleBall().assertCoordinates(12, 4)
     }
 }

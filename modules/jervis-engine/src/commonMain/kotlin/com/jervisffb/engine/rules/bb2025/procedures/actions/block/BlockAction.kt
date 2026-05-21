@@ -187,7 +187,9 @@ object BlockAction : Procedure() {
                     AddContext(
                         ProjectileVomitContext(
                             attacker = context.attacker,
+                            attackerOriginalCoordinates = context.attacker.coordinates,
                             defender = context.defender,
+                            defenderOriginalCoordinates = context.defender.coordinates,
                         )
                     )
                 }
