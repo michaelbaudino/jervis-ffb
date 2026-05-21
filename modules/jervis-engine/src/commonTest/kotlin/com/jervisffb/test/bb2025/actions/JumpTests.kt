@@ -1,5 +1,6 @@
 package com.jervisffb.test.bb2025.actions
 
+import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.MoveType
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.NoRerollSelected
@@ -29,6 +30,7 @@ import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertCoordinates
 import com.jervisffb.test.utils.assertFallenOver
 import com.jervisffb.test.utils.assertStanding
+import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -339,5 +341,21 @@ class JumpTests: JervisGameBB2025Test() {
             .first()
             .types
         assertFalse(moveTypes.contains(MoveType.JUMP))
+    }
+
+    @Test
+    fun canJumpMultipleTimes() {
+        state.homeTeam["H1".playerId].putProne()
+        val jumpingPlayer = state.getPlayerById("A1".playerId)
+        controller.rollForward(
+            *activatePlayer(jumpingPlayer, PlayerStandardActionType.MOVE),
+            *jumpTo(11, 5),
+            *jump(4.d6),
+            *jumpTo(13, 4),
+            *jump(4.d6),
+            EndAction
+        )
+        jumpingPlayer.assertStanding()
+        jumpingPlayer.assertCoordinates(13, 4)
     }
 }

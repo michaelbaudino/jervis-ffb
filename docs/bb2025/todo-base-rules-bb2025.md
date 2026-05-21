@@ -310,6 +310,7 @@ book.
     - [ ] Cannot jump over a Giant since the rules specify a "single square"
     - [x] Modifiers on leaving and entering
     - [x] Fail 1st/2nd Rush and fall over
+    - [x] Can Jump multiple times
 - [ ] Pickup Ball
     - [ ] Agility roll
     - [ ] -1 pr. mark in square
