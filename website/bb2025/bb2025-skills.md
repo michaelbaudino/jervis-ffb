@@ -619,8 +619,10 @@ However, the Designer's Commentary has changed that to only work on successful
 dodges. It is unclear if this is a mistake, since it is mentioned in the FAQ
 section and not in the Errata.
 
-For now, Jervis assumes it is intentional, and Shadowing will only work on
-successful dodges.
+For now, Jervis assumes it is a mistake, since the section in Designer's 
+Commentary is not about Shadowing specifically, but is trying to clarify the 
+order of skills. It is assumed the wording is used because it is considering 
+that Diving Tackle was used, which would prevent Shadowing.
 
 !!! bloodbowl "Designer's Commentary May 2026"
     

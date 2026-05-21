@@ -17,9 +17,12 @@ import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
+import com.jervisffb.test.shadowPlayer
 import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertCoordinates
 import com.jervisffb.test.utils.assertNoActivePlayer
+import com.jervisffb.test.utils.assertProne
+import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.makeDistracted
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -158,7 +161,7 @@ class ShadowingTests: JervisGameBB2025Test() {
     }
 
     @Test
-    fun doesNotWorkOnFailedDodge() {
+    fun worksOnFailedDodges() {
         val shadowingPlayer = homeTeam[1.playerNo]
         val activePlayer = awayTeam[1.playerNo]
         controller.rollForward(
@@ -166,10 +169,13 @@ class ShadowingTests: JervisGameBB2025Test() {
             *moveTo(14, 5),
             *dodge(1.d6),
             DiceRollResults(1.d6, 1.d6),
+            *shadowPlayer(shadowingPlayer, 6.d6)
         )
         state.homeTeam.assertActive()
         state.assertNoActivePlayer()
-        shadowingPlayer.assertCoordinates(12, 5)
+        shadowingPlayer.assertStanding()
+        shadowingPlayer.assertCoordinates(13, 5)
         activePlayer.assertCoordinates(14, 5)
+        activePlayer.assertProne()
     }
 }

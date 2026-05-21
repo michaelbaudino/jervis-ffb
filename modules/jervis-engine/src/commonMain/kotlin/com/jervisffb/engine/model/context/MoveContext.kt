@@ -25,6 +25,10 @@ data class MoveContext(
     // means the move was aborted for whatever reason. E.g. if no target square is selected or
     // Sprint isn't used.
     val hasMoved: Boolean = false,
+    // When Rush fails, the player does not gain +1 movement but is still moved. This means that we cannot
+    // update `Player.movesLeft` as we would otherwise after a move step. This property tracks this specific case
+    // to avoid crashing the engine in `StandardMoveStep.ResolveMove`.
+    val rushFailed: Boolean = false,
     val target: PitchCoordinate? = null,
     val startingSquare: PitchCoordinate = when (val location = player.location) {
         DogOut -> INVALID_GAME_STATE("Player in the dogout cannot move")

@@ -1,6 +1,5 @@
 package com.jervisffb.test.bb2025.actions
 
-import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
@@ -13,7 +12,6 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.PlayerKeyword
-import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
@@ -35,7 +33,6 @@ import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.makeDistracted
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

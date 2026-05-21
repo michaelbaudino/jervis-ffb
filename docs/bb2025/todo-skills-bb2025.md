@@ -185,7 +185,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Only works when a player dodges, not leaps or teleports
   - [x] Only one player can select shadowing 
   - [x] Can only use up to shadowing MA
-  - [x] Only works on successful dodges
+  - [x] Works on failed dodges
 - [x] Sneaky Git
   - [x] Works on double armour if not broken
   - [x] Does not work on double armour if broken

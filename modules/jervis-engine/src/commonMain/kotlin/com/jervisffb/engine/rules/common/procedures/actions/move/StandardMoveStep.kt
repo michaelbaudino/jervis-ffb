@@ -62,7 +62,6 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  * will be used, but the actual usage was then rejected, preventing the player
  * from moving.
  *
- *
  * Developer's Commentary
  * The order of checks during a Move is a bit unclear. It was clarified a bit
  * in the May 2026 Designer's Commentary, but some things are still unclear, so
@@ -80,7 +79,7 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  *   b. Break Tackle
  *   c. Prehensile Tail
  *   d. Diving Tackle
- * 5. Shadowing. Only works if Dodge is successful (FAQ May 2026).
+ * 5. Shadowing
  */
 object StandardMoveStep: Procedure() {
     override val initialNode: Node = CheckForSprint
@@ -227,6 +226,7 @@ object StandardMoveStep: Procedure() {
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = RushRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
+            val moveContext = state.getContext<MoveContext>()
             val rushContext = state.getContext<RushRollContext>()
             val player = rushContext.player
             return if (rushContext.isSuccess) {
@@ -237,9 +237,10 @@ object StandardMoveStep: Procedure() {
                     GotoNode(CheckIfDodgeIsNeeded)
                 )
             } else {
-                // Rush failed, player is Knocked Down in target square
+                // Rush failed, player Falls Over in target square
                 compositeCommandOf(
                     RemoveContext(rushContext),
+                    UpdateContext(moveContext.copy(rushFailed = true)),
                     GotoNode(ResolvePlayerFallingOver)
                 )
             }
@@ -253,7 +254,7 @@ object StandardMoveStep: Procedure() {
             return if (isMarked) {
                 GotoNode(ResolveDodge)
             } else {
-                GotoNode(ResolveMove) // Shadowing here
+                GotoNode(ResolveMove)
             }
         }
     }
@@ -286,12 +287,20 @@ object StandardMoveStep: Procedure() {
     }
 
     object CheckForShadowing: ParentNode() {
+
+        private fun getNextNode(state: Game): Node {
+            val context = state.getContext<MoveContext>()
+            return when (state.rules.isStanding(context.player)) {
+                true -> ResolveMove
+                false -> ExitProcedureNode
+            }
+        }
+
         override fun skipNodeFor(state: Game, rules: Rules): Node? {
             // For now, we only support Shadowing in BB2025
-            return if (rules.baseVersion != GameVersion.BB2025)  {
-                ResolveMove
-            } else {
-                null
+            return when (rules.baseVersion == GameVersion.BB2025)  {
+                true -> null
+                false -> getNextNode(state)
             }
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure {
@@ -300,9 +309,9 @@ object StandardMoveStep: Procedure() {
                 GameVersion.BB2025 -> UseShadowingStep
             }
         }
-
         override fun onExitNode(state: Game, rules: Rules): Command {
-            return GotoNode(ResolveMove)
+            val nextNode = getNextNode(state)
+            return GotoNode(nextNode)
         }
     }
 
@@ -322,10 +331,9 @@ object StandardMoveStep: Procedure() {
             }
         }
         override fun onExitNode(state: Game, rules: Rules): Command {
-            // Regardless of the outcome, the player's action ends in a turnover
             return compositeCommandOf(
                 RemoveContext<RiskingInjuryContext>(),
-                ExitProcedure()
+                GotoNode(CheckForShadowing),
             )
         }
     }
@@ -340,7 +348,7 @@ object StandardMoveStep: Procedure() {
             return compositeCommandOf(
                 // Player was already moved before rolling any dice, so here we just
                 // adjust stats.
-                SetPlayerMoveLeft(movingPlayer, movingPlayer.movesLeft - 1),
+                if (!context.rushFailed) SetPlayerMoveLeft(movingPlayer, movingPlayer.movesLeft - 1) else null,
                 ExitProcedure()
             )
         }
