@@ -11,6 +11,7 @@ import com.jervisffb.engine.model.Coach
 import com.jervisffb.engine.model.CoachId
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.PlayerId
+import com.jervisffb.engine.model.PlayerKeyword
 import com.jervisffb.engine.model.PlayerNo
 import com.jervisffb.engine.model.PlayerSize
 import com.jervisffb.engine.model.PlayerState
@@ -41,11 +42,11 @@ import com.jervisffb.utils.multiThreadDispatcher
 import com.jervisffb.utils.runBlocking
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.fail
 import kotlin.time.Clock
-import kotlin.time.Instant
 
 /**
  * This class can be used to fuzz-test the rule engine by running a lot of
@@ -171,6 +172,7 @@ class FuzzTester {
     private fun createRandomTeamBB2025(rules: Rules, random: Random, prefix: String): Team {
         val playerCount = random.nextInt(9, 17) // 9-16 inclusive
         val allSkills = SkillType.entries.toList()
+        val allKeywords = PlayerKeyword.entries.toList()
         val roster = Roster(
             id = RosterId("random-team-$prefix"),
             name = "Random Team $prefix",
@@ -188,13 +190,16 @@ class FuzzTester {
             name = "${prefix}Team"
             repeat(playerCount) { index ->
                 val playerNo = index + 1
-                val mv = random.nextInt(1, 10)   // MA: 1-9
-                val st = random.nextInt(1, 9)    // ST: 1-8
-                val ag = random.nextInt(1, 7)    // AG: 1-6
-                val pa: Int? = if (random.nextBoolean()) random.nextInt(1, 7) else null  // PA: 1-6 or null
-                val av = random.nextInt(3, 12)   // AV: 3-11
+                val mv = random.nextInt(rules.moveRange)
+                val st = random.nextInt(rules.strengthRange)
+                val ag = random.nextInt(rules.agilityRange)
+                val pa: Int? = if (random.nextBoolean()) random.nextInt(rules.passingRange) else null
+                val av = random.nextInt(rules.armorValueRange)
                 val skillCount = random.nextInt(0, 7) // up to 6 skills
                 val skills = allSkills.shuffled(random).take(skillCount).map { it.id() }
+                val keywordCount = random.nextInt(0, 3) // Up to 3 keywords
+                val keywords = allKeywords.shuffled(random).take(keywordCount)
+                val playerSize = if (random.nextInt(10) > 7) PlayerSize.BIG_GUY else PlayerSize.STANDARD
                 val position = RosterPosition(
                     id = PositionId("$prefix-player-$playerNo"),
                     quantity = 1,
@@ -211,8 +216,8 @@ class FuzzTester {
                     primary = emptyList(),
                     secondary = emptyList(),
                     specialRules = emptyList(),
-                    keywords = emptyList(),
-                    size = PlayerSize.STANDARD,
+                    keywords = keywords,
+                    size = playerSize,
                     icon = null,
                     portrait = null
                 )

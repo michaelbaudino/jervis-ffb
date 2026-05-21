@@ -221,7 +221,7 @@ fun createRandomAction(
         return randomList.removeAt(0)
     }
 
-    // 2% of the time, we will UNDO, rather than progress the game state.\
+    // 2% of the time, we will UNDO, rather than progress the game state.
     if (canUndo && controller.history.isNotEmpty() && random.nextInt(100) < 2) {
         return Undo
     }
