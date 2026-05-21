@@ -204,6 +204,16 @@ So since allowing Hit and Run twice would complicate the implementation on top
 of being an extremely generous interpretation, for now Jervis will only check
 for Hit and Run after both blocks in a Multiple Block have been fully resolved.
 
+Also, Designer's Commentary has clarified that Hit and Run are allowed to 
+trigger on Blitz Actions using Stab, even though Stab says the player's 
+activation ends immediately after.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Yes, the player can move one free square. The player cannot move any further
+    as they normally would as part of a Blitz Action, but the Hit and Run allows
+    you to move on esquare the activiation ends.
+
 ## Page 129 - Horns
 While Horns are technically an optional skill, similar to Guard, there doesn't
 seem to be any reason for _not_ using it.

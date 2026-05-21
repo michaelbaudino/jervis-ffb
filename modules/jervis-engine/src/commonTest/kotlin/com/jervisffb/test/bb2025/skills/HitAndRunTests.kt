@@ -98,6 +98,7 @@ class HitAndRunTests: JervisGameBB2025Test() {
         attacker.assertCoordinates(14, 5)
     }
 
+    // Clarified to work in Designer's Commentary May 2026
     @Test
     fun worksOnStabBlitz() {
         val attacker = awayTeam["A1".playerId]
