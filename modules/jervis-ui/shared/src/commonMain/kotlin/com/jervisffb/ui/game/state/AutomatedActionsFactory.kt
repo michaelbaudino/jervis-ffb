@@ -455,6 +455,12 @@ class AutomatedActionsFactory(
             }
         }
 
+        if (menuViewModel.isFeatureEnabled(Feature.USE_ALL_OFFENSIVE_FOUL_ASSISTS) && currentNode == FoulStep.SelectOffensiveAssists) {
+            actions.getOrNull<SelectPlayers>()?.let {
+                return PlayersSelected(it.players)
+            }
+        }
+
         if (
             currentNode == DealWithSecretWeaponsStep.KickingTeamSelectPlayerToSendOff
             || currentNode == DealWithSecretWeaponsStep.ReceivingTeamSelectPlayerToSendOff

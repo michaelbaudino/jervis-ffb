@@ -4,6 +4,7 @@ import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.PlayerState
@@ -73,6 +74,7 @@ class LoneFoulerTests: JervisGameBB2025Test() {
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
             PlayerSelected(target), // Start foul
+            PlayersSelected(listOf("A1".playerId)), // Assists
         )
         val context = state.getContext<RiskingInjuryContext>()
         assertTrue(context.armourModifiers.any { it is OffensiveAssistArmourModifier })

@@ -15,6 +15,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionSte
 import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
+import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.DodgeRoll
 import com.jervisffb.engine.rules.common.procedures.actions.move.JumpRoll
 import com.jervisffb.ui.game.UiSnapshotAccumulator
@@ -46,11 +47,12 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
     )
 
     // We track these here until we get a better API. These are actually handled elsewhere,
-    // but need to be swallowed here to avoid showing up up as an unhandled action.
+    // but need to be swallowed here to avoid showing up as an unhandled action.
     private val swallowNodes = setOf(
         Charge.SelectPlayersToActivate,
         ResolveBallLandingOnPitch.InactiveTeamChoosesDivingCatchPlayers,
-        ResolveBallLandingOnPitch.ActiveTeamChoosesDivingCatchPlayers
+        ResolveBallLandingOnPitch.ActiveTeamChoosesDivingCatchPlayers,
+        FoulStep.SelectOffensiveAssists,
     )
 
     override fun isApplicable(state: Game, request: ActionRequest): Boolean {

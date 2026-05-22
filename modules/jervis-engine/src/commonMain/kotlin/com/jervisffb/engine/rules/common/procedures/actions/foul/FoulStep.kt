@@ -1,11 +1,15 @@
 package com.jervisffb.engine.rules.common.procedures.actions.foul
 
+import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.ConfirmWhenReady
+import com.jervisffb.engine.actions.Continue
 import com.jervisffb.engine.actions.ContinueWhenReady
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
+import com.jervisffb.engine.actions.PlayersSelected
+import com.jervisffb.engine.actions.SelectPlayers
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetCurrentBall
 import com.jervisffb.engine.commands.buildCompositeCommand
@@ -38,6 +42,7 @@ import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryC
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryRoll
 import com.jervisffb.engine.rules.common.skills.SkillType
+import com.jervisffb.engine.utils.INVALID_ACTION
 
 /**
  * Procedure for handling the Foul part of a Foul Action.
@@ -46,7 +51,7 @@ import com.jervisffb.engine.rules.common.skills.SkillType
  * See [com.jervisffb.engine.rules.bb2025.procedures.actions.foul.FoulAction].
  */
 object FoulStep: Procedure() {
-    override val initialNode: Node = CalculateAssists
+    override val initialNode: Node = SelectOffensiveAssists
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
     override fun onExitProcedure(state: Game, rules: Rules): Command {
         val context = state.getContext<FoulContext>()
@@ -63,18 +68,50 @@ object FoulStep: Procedure() {
     }
     override fun isValid(state: Game, rules: Rules) = state.assertContext<FoulContext>()
 
-    object CalculateAssists: ComputationNode() {
-        // The rules for assists are a bit ambiguous written, but NAF has ruled that
-        // they are mandatory. Jervis has adopted a similar approach, so we just calculate
-        // them here.
+    object SelectOffensiveAssists: ActionNode() {
+        override fun actionOwner(state: Game, rules: Rules): Team {
+            val context = state.getContext<FoulContext>()
+            return context.fouler.team
+        }
+        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
+            val context = state.getContext<FoulContext>()
+            val fouler = context.fouler
+            val victim = context.victim!!
+            val offensiveAssists = victim.coordinates.getSurroundingCoordinates(rules)
+                .mapNotNull { state.pitch[it].player }
+                .filter { it != fouler && it.team == fouler.team }
+                .filter { player ->
+                    rules.canOfferAssist(player, victim)
+                }
+            return when (offensiveAssists.isEmpty()) {
+                true -> listOf(ContinueWhenReady)
+                false -> listOf(CancelWhenReady, SelectPlayers(offensiveAssists))
+            }
+        }
+        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
+            val assists = when (action) {
+                Cancel, Continue -> 0
+                is PlayersSelected -> action.players.count()
+                else -> INVALID_ACTION(action)
+            }
+            val context = state.getContext<FoulContext>()
+            return compositeCommandOf(
+                UpdateContext(context.copy(offensiveAssists = assists)),
+                GotoNode(CalculateDefensiveAssists)
+            )
+        }
+    }
+
+    // According to Designer's Commentary May 2026, defensive foul assists are mandatory,
+    // so we just calculate them here.
+    object CalculateDefensiveAssists: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             val context = state.getContext<FoulContext>()
             val fouler = context.fouler
             val victim = context.victim!!
-            val offensiveAssists = rules.calculateOffensiveAssists(fouler, victim)
             val defensiveAssists = rules.calculateDefensiveAssists(victim, fouler)
             return compositeCommandOf(
-                UpdateContext(context.copy(offensiveAssists = offensiveAssists, defensiveAssists = defensiveAssists)),
+                UpdateContext(context.copy(defensiveAssists = defensiveAssists)),
                 GotoNode(CalculatePutTheBootInAssists)
             )
         }

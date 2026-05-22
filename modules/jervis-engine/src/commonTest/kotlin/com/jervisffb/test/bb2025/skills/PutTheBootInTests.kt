@@ -2,6 +2,7 @@ package com.jervisffb.test.bb2025.skills
 
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.PlayerState
@@ -60,6 +61,7 @@ class PutTheBootInTests: JervisGameBB2025Test() {
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
+            PlayersSelected(listOf("A2".playerId)),
             DiceRollResults(2.d6, 5.d6), // With +1 from Assist, should only reach 8, thus not breaking armour
         )
         homeTeam["H1".playerId].assertProne()

@@ -615,6 +615,12 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                     isActiveClient -> "Reroll Selected Block Dice"
                     else -> "Waiting for Opponent to Reroll Block Dice"
                 }
+            },
+            FoulStep.SelectOffensiveAssists to { isActiveClient, _ , _ ->
+                when {
+                    isActiveClient -> "Select Offensive Assists to Foul"
+                    else -> "Waiting for Opponent to select Offensive Assists"
+                }
             }
         )
     }

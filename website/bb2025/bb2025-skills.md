@@ -361,25 +361,29 @@ returns to the pitch during the Half.
 Lone Fouler only works if there are no Offensive or Defensive assists. In 
 many cases it would be mathematically better to have a reroll than having +1.
 
-However, it is worth noting that following the NAF interpretation on assists,
-adding available Offensive or Defensive assists is not optional. This means
-that the active Coach does not get a chance to "disable" assists, because they
-want to use Lone Fouler instead.
+With the Designer's Commentary, Offensive Assists are optional, meaning it is 
+up to the Coach to figure out when to use Offensive Assists.
 
-Also, there has been arguments that rolling a failed double on the first 
-armour-roll will trigger being Sent Off, regardless of it being re-rolled with 
-Lone Fouler. The Designer's Commentary has clarified that this is not the case.
+Jervis could probably automate some (or all) of this, but it is unclear if that
+is something we want.
+
+So for now, Jervis has implemented the following semantics:
+
+- The Rules Engine requires Offensive Assists to be selected.
+- The UI has an Auto Actions settings for always choosing all Offensive Assists.
+- This setting is enabled by default.
 
 !!! bloodbowl "Designer's Commentary May 2026"
 
-    If I re-roll this, and the re-roll is not a double, does the player still
-    get sent off?
-    No. The double result has been re-rolled and therefore does not exist for
-    the purpose of the outcome.
-
-!!! naf "NAF"
+    Q: Can I choose not to add Offensive Assists to a Foul's Armour Roll? This 
+       could let me avoid a player with Sneaky Git being sent off if I roll a 
+       Double. (pg. 136)
     
-    Offensive and Defensive Assists are not optional.
+    A: You may choose not to add Offensive Assists to a Foul's Armour Roll, as 
+       they are a "may apply" but this choice is made as you are making the 
+       Armour Roll. You must declare which Assists are applying a +1 modifier 
+       before rolling and therefore before you know the result. Note, that 
+       Defensive Assists modifiers are not a "may" and so are always applied.
 
 ## Page 131 - Loner
 In BB2020, it was not allowed to re-roll a failed Loner roll using a Team 

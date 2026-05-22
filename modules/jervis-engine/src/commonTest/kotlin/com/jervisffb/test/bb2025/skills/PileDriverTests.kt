@@ -7,6 +7,7 @@ import com.jervisffb.engine.actions.DirectionSelected
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
@@ -175,6 +176,7 @@ class PileDriverTests: JervisGameBB2025Test() {
             DiceRollResults(4.d6, 6.d6), // AV Roll
             DiceRollResults(1.d6, 2.d6), // Injury Roll -> Stunned
             Confirm, // Use Pile Driver
+            PlayersSelected(listOf(assistant.id)),
             DiceRollResults(3.d6, 5.d6), // AV Roll: 8 + 1 breaks!
             DiceRollResults(5.d6, 4.d6), // Injury Roll -> KO,
             useApothecary(false),

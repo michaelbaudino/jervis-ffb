@@ -5,6 +5,7 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
@@ -130,7 +131,8 @@ class FoulActionTests: JervisGameBB2025Test() {
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
             SmartMoveTo(13, 4),
-            PlayerSelected("H1".playerId), // Start foul, A1 can assist
+            PlayerSelected("H1".playerId), // Start foul
+            PlayersSelected(listOf("A1".playerId)), // A1 can assist
             DiceRollResults(5.d6, 3.d6), // 8 + 1 = Armor break
             DiceRollResults(1.d6, 2.d6), // Stunned
         )

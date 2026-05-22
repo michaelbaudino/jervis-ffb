@@ -457,6 +457,39 @@ has changed the order to be:
 3. Roll for Negatraits, like Bone Head
 4. Resolve Blitz, including selecting the target as the first step.
 
+## Page 69 - Foul Action
+
+### Assists
+
+While the rulebook is pretty clear in its language, there has been some debate
+about the behavior around assists and e.g. NAF ruled that foul assists are 
+mandatory. 
+
+This affected Loner Fouler as it in some cases is better to have a re-roll,
+rather than a +1 assist.
+
+The Designer's Commentary has resolved this by clearly stating that offensive
+assists are optional and defensive assists are mandatory. But it also made it
+clear that assists are chosen before rolling any dice. 
+
+Jervis has implemented these semantics.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Q: Can I choose not to add Offensive Assists to a Foul's Armour Roll? This 
+       could let me avoid a player with Sneaky Git being sent off if I roll a 
+       Double. (pg. 136)
+    
+    A: You may choose not to add Offensive Assists to a Foul's Armour Roll, as 
+       they are a "may apply" but this choice is made as you are making the 
+       Armour Roll. You must declare which Assists are applying a +1 modifier 
+       before rolling and therefore before you know the result. Note, that 
+       Defensive Assists modifiers are not a "may" and so are always applied.
+
+!!! naf "NAF"
+    
+    Offensive and Defensive Assists are not optional.
+
 ## Page 69 - Foul Action and Lone Fouler
 Reading the rulebook, it is ambiguous what happens if you reroll a natural 
 double in a Foul Action with Lone Fouler.
