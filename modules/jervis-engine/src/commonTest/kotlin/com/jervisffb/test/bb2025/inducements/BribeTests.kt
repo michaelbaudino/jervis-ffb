@@ -19,6 +19,7 @@ import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertActiveTeam
 import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.assertReserves
+import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -172,5 +173,27 @@ class BribeTests: JervisGameBB2025Test() {
         )
         awayTeam["A1".playerId].assertReserves()
         assertEquals(SetupTeam.SelectPlayerOrEndSetup, controller.currentNode())
+    }
+
+    // Behavior clarified in Designer's Commentary May 2026
+    @Test
+    fun canBribeIfCoachIsBanned() {
+        val fouler = awayTeam["A6".playerId]
+        awayTeam.coachBanned = true
+        val target = homeTeam["H1".playerId]
+        target.putProne()
+        controller.rollForward(
+            *activatePlayer(fouler, PlayerStandardActionType.FOUL),
+            SmartMoveTo(13, 4),
+            PlayerSelected(target), // Start foul
+            DiceRollResults(2.d6, 2.d6), // Roll double -> Sent off
+            useBribe(true),
+            2.d6, // Bribe succeed
+        )
+        assertTrue(state.awayTeam.bribes.single().used)
+        assertTrue(awayTeam.coachBanned)
+        state.assertActiveTeam(awayTeam)
+        state.assertNoActivePlayer()
+        fouler.assertStanding()
     }
 }

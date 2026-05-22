@@ -626,6 +626,14 @@ For this reason, Jervis interprets Bribes the following way:
 If a 1 is rolled on the Argue the Call table and a 2+ on the Bribe, the player
 stays on the pitch, and there is no turnover, but the Coach is still banned.
 
+Also, Designer's Commentary has clarified that you can always choose to use a 
+Bribe, regardless of wether Argue 
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Yes. If you can't Argue the Call, you skip that step and go directly to 
+    using Bribes.
+
 ## Page 144 - Team Mascot
 
 ### Loner
