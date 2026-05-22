@@ -458,8 +458,8 @@ has changed the order to be:
 4. Resolve Blitz, including selecting the target as the first step.
 
 ## Page 69 - Foul Action and Lone Fouler
-It is ambiguous what happens if you reroll a natural double in a Foul Action
-with Lone Fouler.
+Reading the rulebook, it is ambiguous what happens if you reroll a natural 
+double in a Foul Action with Lone Fouler.
 
 Does the fouler still get sent off or not?
 
@@ -476,14 +476,14 @@ Arguments against:
 * In all other cases, e.g., Rush, you do not fall over if you re-roll a 1.
 * The word "re-reroll" implies that the first roll is not counted.
 
-Jervis has adopted the 2nd interpretation, as that is most in line with what
-people would assume a re-roll does (entirely replacing the first roll). This
-would also explain why it isn't described better in the rulebook. NAF
-has a similar interpretation,
+Since discussion was closed in the Designer's Commentary, where the question
+was answered. The second interpretation is the correct one, so the one used by
+Jervis.
 
-!!! naf "NAF"
+!!! bloodbowl "Designer's Commentary May 2026"
 
-    The player is not Sent-off for a double that is then rerolled.
+    No. The double result has been re-rolled and therefore does not exists
+    for the purposes of the outcome.
 
 
 ## Page 71 - Test for Accuracy
