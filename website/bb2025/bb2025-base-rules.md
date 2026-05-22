@@ -636,41 +636,58 @@ Bribe, regardless of wether Argue
 
 ## Page 144 - Team Mascot
 
+The exact timing between Loner, Team Mascot and Team Captain is not clear from
+the rulebook.
+
+Designer's Commentary has clarified some of this, but some things are still not
+clear, so we attempt to clarify the behavior more clearly in the following 
+sections.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Q: Can I use the Team Captain special rule in conjunction with the Team 
+       Re-roll given by a Team Mascot? (pg. 144)
+
+    A: Yes. If a 4+ is rolled, and the Team Mascot Re-roll is used as normal, 
+       you may then test to see if it is free via the Team Captain rule. If it 
+       is, you can then use th Team Mascot Re-roll again. Each time you use it, 
+       you must roll the D6 as described in the Team Mascot rule - it can be 
+       ineffective the second time.
+
 ### Loner
 Loner uses the wording "Whenever this player wishes to use a Team Re-roll...".
 Mascot uses the wording "...whenever the team wishes to use this Team
-re-roll ".
+re-roll...".
 
 Which makes it unclear which order you check, and how they impact each other.
+Based on the Designer's Commentary, Jervis assumes the following order:
 
-For now, Jervis uses the (somewhat arbitrary) order:
-
-1. First we check for Loner. If failed, the Mascot re-roll is marked as used,
-   without rolling for it as we treat the roll as par of the reroll.
-2. If Loner is passed, we then roll for Mascot.
+1. First we roll for Mascot. If it fails, the Mascot re-roll is removed and 
+   treated as not being there (until it comes back the next half) and we skip 
+   the next 2 steps.
+2. Only if the Mascot roll succeeds, we roll for Loner. 
+3. Team Captain works regardless of the outcome of the Loner roll.
 
 ### Reroll Mascot Roll
-Technically, it would be allowed to use a Team Reroll to re-roll the Mascot Roll,
-but since the rules specify that failing the mascot role will allow you to do
-that anyway. There doesn't seem to be any use case for this, except complicating
-the re-roll logic.
+Technically, it would be allowed to use a Team Reroll to re-roll the Mascot 
+Roll, but since the rules specify that failing the mascot role will allow you to
+do that anyway. There doesn't seem to be any use case for this, except 
+complicating the re-roll logic.
 
 For this reason, Jervis does not allow using team rerolls on the Mascot Roll,
-but any applicable skill (not Pro) can be used.
+but only applicable skills. None currently exists, though, as Pro is explicitly 
+prohibited.
 
 ### Team Captain
-It is slightly unclear how the Team Mascot reroll should be treated in 
+In the rulebook, it is unclear how the Team Mascot reroll should be treated in 
 combination with Team Captain.
 
-Jervis treats the "4+ to work" as part of the re-roll, so if Team Captain
-keeps the Mascot reroll. The Coach must still roll the next time it is used.
+The behavior was clarified in Designer's Commentary May 2026 to the following:
 
-This is consistent with the NAF interpretation.
-
-!!! naf "NAF"
-
-    If a Mascot reroll is free (independent of success) due to Team Captain, 
-    the 4+ roll has to be repeated next time the Mascot reroll is used.
+- Team Captain can be used, but only if 4+ is rolled on Team Mascot. 
+- If you roll 1-3, Team Mascot is lost and Team Captain cannot recover it.
+- If you recover Team Mascot, you must still roll for it the next time it is 
+  used.
 
 ## Page 155 - Team Captain
 

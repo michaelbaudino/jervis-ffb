@@ -3,6 +3,7 @@ package com.jervisffb.test.bb2025.inducements
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
+import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerActionSelected
 import com.jervisffb.engine.actions.PlayerSelected
@@ -32,6 +33,7 @@ import com.jervisffb.test.defaultKickOffHomeTeam
 import com.jervisffb.test.defaultPregame
 import com.jervisffb.test.defaultSetup
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.loner
 import com.jervisffb.test.moveTo
 import com.jervisffb.test.skipTurns
 import com.jervisffb.test.teamCaptainRoll
@@ -39,6 +41,8 @@ import com.jervisffb.test.teamMascotRoll
 import com.jervisffb.test.utils.SelectSkillReroll
 import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertActive
+import com.jervisffb.test.utils.assertNoActivePlayer
+import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.assertStanding
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -258,7 +262,7 @@ class TeamMascotTests: JervisGameBB2025Test() {
     }
 
     @Test
-    fun teamRerollCannotBeUsedToRerollFailure() {
+    fun teamRerollCanUsedInsteadOnFailure() {
         setupWithTeamMascot()
         val player = awayTeam["A1".playerId]
         controller.rollForward(
@@ -269,9 +273,32 @@ class TeamMascotTests: JervisGameBB2025Test() {
             *moveTo(14, 5),
             1.d6, // Fail dodge
             TeamRerollSelected<TeamMascotReroll>(),
-            *teamMascotRoll(4.d6),
+            *teamMascotRoll(3.d6),
+            TeamRerollSelected<RegularTeamReroll>(),
         )
         assertEquals(DodgeRoll.ReRollDie, controller.currentNode())
+    }
+
+    // This behavior was clarified in Designer's Commentary May 2026
+    @Test
+    fun teamCaptainDoesNotWorkOnFailedMascot() {
+        setupWithTeamMascot()
+        awayTeam.specialRules.add(TeamSpecialRule.TEAM_CAPTAIN)
+        val player = awayTeam["A1".playerId].apply {
+            extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
+        }
+        controller.rollForward(
+            *defaultKickOffHomeTeam(),
+            *activatePlayer(player, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            1.d6, // Fail dodge
+            TeamRerollSelected<TeamMascotReroll>(),
+            *teamMascotRoll(3.d6), // Fail mascot roll. Team Captain does not trigger.
+            NoRerollSelected(),
+            DiceRollResults(1.d6, 1.d6),
+        )
+        player.assertProne()
+        state.assertNoActivePlayer()
     }
 
     @Ignore
@@ -285,17 +312,57 @@ class TeamMascotTests: JervisGameBB2025Test() {
     // 2. Use Pro, but fail the 3+
     // 3. Use Mascot to reroll Pro Roll
     // 4. Fail Mascot Roll
-    // 5. Use Team Captain to save Mascot. It fails
-    // 6. Use Team Reroll to replace failed Mascot
+    // 5. Use Team Reroll to replace failed Mascot
+    // 6. Roll Loner for the Team Reroll.
     // 7. Use Team Captain to save Team Reroll
     // 8. Reroll Dodge Roll with Team Reroll and succeed.
     @Test
-    fun worksAcrossChainOfRolls() {
+    fun mascotFailAcrossRollTypes() {
         setupWithTeamMascot()
         awayTeam.specialRules.add(TeamSpecialRule.TEAM_CAPTAIN)
         val player = awayTeam["A1".playerId].apply {
             extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
             addSkill(SkillType.PRO)
+            addSkill(SkillType.LONER.id(4))
+        }
+        controller.rollForward(
+            *defaultKickOffHomeTeam(),
+            *activatePlayer(player, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            1.d6, // Fail dodge
+            SelectSkillReroll(SkillType.PRO),
+            2.d6, // Fail Pro roll
+            TeamRerollSelected<TeamMascotReroll>(),
+            *teamMascotRoll(4.d6), // Succeed mascot roll
+            *loner(4.d6), // Reroll allowed
+            *teamCaptainRoll(6.d6), // Save Mascot
+            4.d6, // Pro re-roll works
+            4.d6, // Dodge works
+        )
+        player.assertActive()
+        player.assertStanding()
+        assertTrue(player.getSkill<Pro>().used)
+        assertTrue(player.getSkill<Pro>().rerollUsed)
+        assertFalse(awayTeam.mascots.single().reroll.rerollUsed)
+        assertTrue(awayTeam.rerolls.filterIsInstance<RegularTeamReroll>().none { it.rerollUsed })
+    }
+
+    // Stress-testing the re-roll framework by the following sequence:
+    // 1. Player fails a Dodge Roll.
+    // 2. Use Pro, but fail the 3+
+    // 3. Use Mascot to reroll Pro Roll
+    // 4. Succeed Mascot Roll
+    // 7. Roll Loner for the Mascot Reroll.
+    // 7. Use Team Captain to save Team Reroll
+    // 8. Reroll Dodge Roll with Team Reroll and succeed.
+    @Test
+    fun mascotSucceedAcrossRollTypes() {
+        setupWithTeamMascot()
+        awayTeam.specialRules.add(TeamSpecialRule.TEAM_CAPTAIN)
+        val player = awayTeam["A1".playerId].apply {
+            extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
+            addSkill(SkillType.PRO)
+            addSkill(SkillType.LONER.id(4))
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(),
@@ -307,8 +374,8 @@ class TeamMascotTests: JervisGameBB2025Test() {
             TeamRerollSelected<TeamMascotReroll>(),
             *teamMascotRoll(3.d6), // Fail mascot roll
             TeamRerollSelected<RegularTeamReroll>(), // Use normal reroll instead of Mascot that failed
+            *loner(4.d6), // Reroll allowed
             *teamCaptainRoll(6.d6), // Save Team Reroll replacing Mascot
-            *teamCaptainRoll(5.d6), // Fail to save Mascot
             4.d6, // Pro re-roll works
             4.d6, // Dodge works
         )

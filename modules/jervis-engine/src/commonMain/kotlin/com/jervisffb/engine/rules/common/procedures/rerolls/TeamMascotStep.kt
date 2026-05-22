@@ -106,7 +106,7 @@ object TeamMascotStep: Procedure() {
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             return when (action) {
                 Continue -> ExitProcedure() // No rerolls are available, keep original Mascot roll
-                NoRerollSelected -> ExitProcedure() // Coach decides to keep original Mascot roll
+                is NoRerollSelected -> ExitProcedure() // Coach decides to keep original Mascot roll
                 is RerollOptionSelected -> { // Another reroll was used
                     val context = state.getContext<MascotContext>()
                     compositeCommandOf(
@@ -130,6 +130,7 @@ object TeamMascotStep: Procedure() {
                 type = originalReroll.type,
                 originalRoll = originalReroll.originalRoll,
                 team = context.team,
+                player = originalReroll.player,
                 source = context.alternativeRerollSelected?.getRerollSource(state)
             )
             return compositeCommandOf(
