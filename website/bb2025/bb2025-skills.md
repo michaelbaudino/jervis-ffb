@@ -180,20 +180,51 @@ Jervis has adopted the same interpretation.
     over in the target square.
 
 ## Page 128 - Grab
-In the rulebook Grab is split into two sections: 1) Moving the pushed player 
-and 2) Disable Sidestep for pushed "players". It is unclear why the plural is 
-used here.
+In the rulebook Grab is split into two sections:
 
-It could either reference Multiple Block, chain-pushes, or both.
+1) On a declared Block, the player with this skill chooses the pushback 
+   direction.
+2) On a performed block, opposition player(s) cannot use the Sidestep Skill.
 
-The Designer's Commentary has clarified that Grab does not apply to 
-chain-pushes. Multiple Block is not mentioned, but Jervis assumes that Grab
-also works on both initial blocks, but not on either chain push.
+The wording in the rulebook raises two questions:
+
+1) How does Grab work during a Blitz, since you still perform a Block there?
+2) How does Grab work during a Chain Push? Does Grab also cancel sidestep for 
+   chain-pushed players?
+
+The interpretation of the rulebook has so far been that you could use Grab on a 
+Blitz, but it would only cancel Sidestep. It wouldn't allow you to also choose 
+the direction. Both NAF and FUMBBL also ruled that Sidestep would only be 
+canceled on the first player.
+
+The Designer's Commentary changed this, so now it is clearer that the entire 
+Grab skill does not work during a Blitz. 
+
+While some still argue that Grab has two different parts and the FAQ only 
+addresses the first, Jervis is using the semantics that seem most likely from 
+the wording in the FAQ.
+
+This means the following semantics:
+
+1. During a declared Blitz, Grab cannot be used, at all. This means the target 
+   of the Blitz can use Sidestep.
+2. During a declared Block, Grab can be used and cancels Sidestep on the target
+   of the block.
+3. Grab does not cancel Sidestep for chain-pushed players (ever).
 
 !!! bloodbowl "Designer's Commentary May 2026"
 
-    Does Grab prevent all players in the Chain Push from using Sidestep?
-    No. Only the target of the Block.
+    A: Does Grab prevent all players in the Chain Push from using Sidestep?
+    
+    Q: No. Only the target of the Block.
+
+!!! bloodbowl "Designer's Commentary May 2026"
+
+    Q: Can I use Brawler or Grab during a Blitz? (pg. 126 & pg. 128)
+
+    A: No. Both Skills come into effect upon declaring a Block Action. For a 
+       Blitz you declare a Blitz Action and perform a Block Action as part of
+       it.
 
 ## Page 129 - Guard
 While this skill is optional, it only affects how many dice are rolled and not

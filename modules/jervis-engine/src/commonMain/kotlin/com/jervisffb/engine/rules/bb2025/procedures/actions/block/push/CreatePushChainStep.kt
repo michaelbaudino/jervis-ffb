@@ -45,8 +45,7 @@ import com.jervisffb.engine.utils.INVALID_ACTION
 /**
  * Procedure for creating the first part of a Push Chain, i.e., the part where
  * we define the skills used at each step and the direction pushed back. No
- * players must be moved, nor any dice rolled (that are not a direct result
- * of any skills used).
+ * players must be moved, nor any dice rolled.
  *
  * A Pushback is split into multiple phases to support both normal blocks and
  * Multiple Block as their order of resolution differs.

@@ -173,16 +173,42 @@ class GrabTests: JervisGameBB2025Test() {
             PlayerSelected(defender),
             *blitzBlock("H1", 3.dblock),
         )
+        // Grab cannot be used, so we only see the 3 default pushback options
         val actions = controller.getAvailableActions()
         assertEquals(3, actions.get<SelectDirection>().directions.size)
         assertEquals(awayTeam, actions.team)
-        // Grab cannot be used
         controller.rollForward(
             DirectionSelected(Direction.UP_LEFT),
             Cancel, // Do not follow up
             EndAction
         )
         defender.assertCoordinates(11, 4)
+        defender.assertStanding()
+        assertNull(state.activePlayer)
+    }
+
+    @Test
+    fun doesNotCancelSidestepOnBlitz() {
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.GRAB)
+        val defender = state.getPlayerById("H1".playerId)
+        defender.addSkill(SkillType.SIDESTEP)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerStandardActionType.BLITZ),
+            PlayerSelected(defender),
+            *blitzBlock("H1", 3.dblock),
+            Confirm, // Use Sidestep
+        )
+        val actions = controller.getAvailableActions()
+        assertEquals(homeTeam, actions.team)
+        assertEquals(5, actions.get<SelectDirection>().directions.size)
+
+        controller.rollForward(
+            DirectionSelected(Direction.UP_RIGHT),
+            Cancel, // Do not follow up
+            EndAction
+        )
+        defender.assertCoordinates(13, 4)
         defender.assertStanding()
         assertNull(state.activePlayer)
     }
