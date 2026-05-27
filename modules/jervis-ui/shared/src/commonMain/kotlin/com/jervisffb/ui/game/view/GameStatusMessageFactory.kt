@@ -34,6 +34,9 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopD
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowPlayerStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowTeammateAccuracyRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDirectionRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.SafePairOfHandsStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
@@ -218,6 +221,10 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             ProjectileVomitRoll.ReRollDie to "Re-roll D6 for Projectile Vomit",
             ProjectileVomitRoll.RollDie to "Roll D6 for Projectile Vomit",
             QuickSnap.RollDie to "Roll D3 + 3 for Number of Players to Move during Quick Snap",
+            PuntDirectionRoll.RollDie to "Roll D6 for Punt Direction",
+            PuntDirectionRoll.ReRollDie to "Re-roll D3 for Punt Direction",
+            PuntDistanceRoll.RollDie to "Roll D3 for Punt Distance",
+            PuntDistanceRoll.ReRollDie to "Re-roll D6 for Punt Distance",
             ReallyStupidRoll.ReRollDie to "Re-roll D6 to avoid Really Stupid",
             ReallyStupidRoll.RollDie to "Roll D6 for Really Stupid",
             RecoverPlayerRoll.RollDie to "Roll D6 to Recover Player",
@@ -620,6 +627,12 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                 when {
                     isActiveClient -> "Select Offensive Assists to Foul"
                     else -> "Waiting for Opponent to select Offensive Assists"
+                }
+            },
+            PuntStep.SelectTemplateOrientation to { isActiveClient, _, _ ->
+                when {
+                    isActiveClient -> "Select Direction to Punt"
+                    else -> "Waiting for Opponent to select Punt Direction"
                 }
             }
         )

@@ -24,7 +24,6 @@ data class ActivatePlayerContext(
 
     /**
      * Returns a copy of this context, where the action is marked as used.
-     * This takes into account
      */
     fun copyWithMarkedAction(used: Boolean): ActivatePlayerContext {
         return this.copy(markActionAsUsed = used || this.markActionAsUsed)

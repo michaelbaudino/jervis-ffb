@@ -15,6 +15,7 @@ import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.SelectDirection
 import com.jervisffb.engine.actions.SelectDogout
 import com.jervisffb.engine.actions.SelectMoveType
+import com.jervisffb.engine.actions.SelectPassType
 import com.jervisffb.engine.actions.SelectPitchLocation
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.actions.SelectPlayers
@@ -39,6 +40,7 @@ import com.jervisffb.ui.game.state.decorators.PitchActionDecorator
 import com.jervisffb.ui.game.state.decorators.SelectDirectionDecorator
 import com.jervisffb.ui.game.state.decorators.SelectDogoutDecorator
 import com.jervisffb.ui.game.state.decorators.SelectMoveTypeDecorator
+import com.jervisffb.ui.game.state.decorators.SelectPassTypeDecorator
 import com.jervisffb.ui.game.state.decorators.SelectPitchLocationDecorator
 import com.jervisffb.ui.game.state.decorators.SelectPlayerDecorator
 import com.jervisffb.ui.game.state.decorators.SelectPlayersDecorator
@@ -108,8 +110,9 @@ open class ManualActionProvider(
         EndTurnWhenReady::class to EndTurnDecorator,
         SelectDirection::class to SelectDirectionDecorator,
         SelectDogout::class to SelectDogoutDecorator,
-        SelectPitchLocation::class to SelectPitchLocationDecorator,
         SelectMoveType::class to SelectMoveTypeDecorator,
+        SelectPassType::class to SelectPassTypeDecorator,
+        SelectPitchLocation::class to SelectPitchLocationDecorator,
         SelectPlayer::class to SelectPlayerDecorator,
         SelectPlayers::class to SelectPlayersDecorator,
         SelectRandomPlayers::class to SelectRandomPlayersDecorator,

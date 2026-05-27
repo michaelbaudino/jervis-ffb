@@ -159,6 +159,7 @@ object PassAction : Procedure() {
                             ReportSkillUsed(context.thrower, SkillType.HAIL_MARY_PASS),
                             GotoNode(ResolveHailMaryThrow)
                         )
+                        PassType.PUNT -> INVALID_ACTION(action, "Unsupported pass type: ${action.type}")
                     }
                 }
                 Continue, EndAction -> ExitProcedure()

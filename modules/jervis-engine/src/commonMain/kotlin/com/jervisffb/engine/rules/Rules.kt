@@ -710,6 +710,8 @@ abstract class Rules(
             DiceRollType.LONER,
             DiceRollType.PASS,
             DiceRollType.PICKUP,
+            DiceRollType.PUNT_DIRECTION,
+            DiceRollType.PUNT_DISTANCE,
             DiceRollType.POGO,
             DiceRollType.PRO,
             DiceRollType.PROJECTILE_VOMIT,

@@ -262,3 +262,7 @@ fun Game.assertActiveTeam(team: Team) {
 fun Game.assertNoActivePlayer() {
     assertNull(activePlayer)
 }
+
+fun Game.assertNoTurnOver() {
+    assertFalse(isTurnOver())
+}

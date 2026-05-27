@@ -3,11 +3,13 @@ package com.jervisffb.ui.game.state.actionwheel
 import com.jervisffb.engine.actions.D3Result
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
+import com.jervisffb.engine.model.context.PuntContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopContext
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDirectionRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDirectionRoll
 
 
 /**
@@ -32,6 +34,23 @@ object SwoopDirectionWheelController : D3WithRerollWheelController() {
 
     override fun getOriginalRoll(state: Game): D3Result {
         val context = state.getContext<SwoopContext>()
+        return context.directionRoll!!.originalRoll
+    }
+}
+
+object PuntDirectionWheelController : D3WithRerollWheelController() {
+    override val buttonIdPrefix: String = "punt-direction"
+    override val diceRollType: DiceRollType = DiceRollType.PUNT_DIRECTION
+    override val rollDiceNode: Node = PuntDirectionRoll.RollDie
+    override val chooseRerollSourceNode: Node = PuntDirectionRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = PuntDirectionRoll.ReRollDie
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<PuntContext>().punter.coordinates
+    }
+
+    override fun getOriginalRoll(state: Game): D3Result {
+        val context = state.getContext<PuntContext>()
         return context.directionRoll!!.originalRoll
     }
 }

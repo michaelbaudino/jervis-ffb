@@ -15,6 +15,7 @@ import com.jervisffb.engine.rules.common.procedures.actions.block.StabAction
 import com.jervisffb.engine.rules.common.procedures.actions.handoff.HandOffAction
 import com.jervisffb.engine.rules.common.procedures.actions.move.MoveAction
 import com.jervisffb.engine.rules.common.procedures.actions.pass.PassAction
+import com.jervisffb.engine.rules.common.procedures.actions.punt.PuntAction
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateAction
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 import kotlinx.serialization.Serializable
@@ -153,10 +154,21 @@ class BB2025TeamActions : TeamActions() {
                     PlayerAction(
                         name = "Stab",
                         type = PlayerSpecialActionType.STAB,
-                        countsAs = PlayerStandardActionType.BLOCK,
+                        countsAs = null,
                         availablePrTurn = Int.MAX_VALUE,
                         procedure = StabAction,
                         worksDuringBlitz = true,
+                        compulsory = false,
+                    )
+                }
+                PlayerSpecialActionType.PUNT -> {
+                    PlayerAction(
+                        name = "Punt",
+                        type = PlayerSpecialActionType.PUNT,
+                        countsAs = PlayerStandardActionType.PASS,
+                        availablePrTurn = 1,
+                        procedure = PuntAction,
+                        worksDuringBlitz = false,
                         compulsory = false,
                     )
                 }

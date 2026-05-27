@@ -11,7 +11,10 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoStep
+import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.HailMaryPassStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionStep
+import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
@@ -37,13 +40,16 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
         JumpRoll.ChooseToUseDivingTackleAfterReRoll,
         LeapRoll.ChooseToUseDivingTackleAfterReRoll,
         PogoRoll.ChooseToUseDivingTackleAfterReRoll,
-        HitAndRunStep.SelectTargetSquareOrCancel
+        HitAndRunStep.SelectTargetSquareOrCancel,
     )
 
     private val nodesForContextMenu = setOf(
         JumpStep.SelectTargetSquareOrCancel,
         LeapStep.SelectTargetSquareOrCancel,
         PogoStep.SelectTargetSquareOrCancel,
+        PuntStep.SelectTemplateOrientation,
+        PassStep.DeclareTargetSquare,
+        HailMaryPassStep.DeclareTargetSquare,
     )
 
     // We track these here until we get a better API. These are actually handled elsewhere,
@@ -102,6 +108,9 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
                 JumpStep.SelectTargetSquareOrCancel -> "Cancel Jump"
                 LeapStep.SelectTargetSquareOrCancel -> "Cancel Leap"
                 PogoStep.SelectTargetSquareOrCancel -> "Cancel Pogo"
+                PuntStep.SelectTemplateOrientation -> "Cancel Punt"
+                PassStep.DeclareTargetSquare -> "Cancel Throw"
+                HailMaryPassStep.DeclareTargetSquare -> "Cancel Hail Mary"
                 else -> error("Unsupported node: ${state.stack.currentNode()}")
             }
             val coordinates = state.activePlayer?.coordinates ?: error("Missing active player")

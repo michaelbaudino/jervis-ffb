@@ -9,6 +9,7 @@ import com.jervisffb.engine.actions.RollDice
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetBallLocation
 import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.commands.SetTurnOver
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
 import com.jervisffb.engine.commands.context.RemoveContext
@@ -25,9 +26,12 @@ import com.jervisffb.engine.model.Ball
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ProcedureContext
+import com.jervisffb.engine.model.context.PuntContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.rules.DiceRollType
@@ -48,17 +52,42 @@ data class ThrowInContext(
  * Resolve a Throw In after a ball went out of bounds, up until the ball is caught
  * or lands on an empty square. This includes checking for touchdowns.
  *
+ * If a Throw-int triggers a turnover, this should be handled by the caller of
+ * this procedure.
+ *
  * See page 51 in the BB2020 rulebook.
  * See page 73 in the BB2025 rulebook.
  *
  * Developer's Commentary:
- * In BB2025, it is unspecified what happens when you throw in to an empty
- * square. For now, Jervis assumes this is an oversight and that the ball will
- * bounce like in BB2020.
+ * In BB2025, Bouncing Balls (page 34 in the BB2025 rulebook says that:
+ * "...When the ball hits the pitch, it will Bounce. When the rules tell you to
+ * Bounce the ball..."
+ *
+ * Throw-in (page 73) does not say anything about bouncing, which would indicate
+ * that the ball does indeed not bounce. However, this is a change from BB2020,
+ * and also the only place when a ball no longer bounce, catches, being knocked
+ * down and kick-off all still bounce.
+ *
+ * As the rules also prefix Bouncing with "When the ball hits the pitch...",
+ * this could indicate that removing the sentence from Throw-in was an editing
+ * mistake, and not intended. At least NAF things so, as they have ruled that
+ * the ball does indeed bounce after a Throw-in.
+ *
+ * This probably needs to be addressed in a FAQ, but until it does, Jervis
+ * follows the NAF interpretation of this and will bounce the
+ * ball after a throw-in.
  */
 object ThrowIn : Procedure() {
     override val initialNode: Node = RollDirection
-    override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
+    override fun onEnterProcedure(state: Game, rules: Rules): Command? {
+        // When punting, if the ball leaves the pitch for any reason, it is a turnover.
+        // For now, we just mark it here, so we can respond later
+        val puntContext = state.getContextOrNull<PuntContext>()
+        return when (puntContext != null) {
+            true -> SetTurnOver(TurnOver.STANDARD)
+            false -> null
+        }
+    }
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null
     override fun isValid(state: Game, rules: Rules) {
         state.assertContext<ThrowInContext>()

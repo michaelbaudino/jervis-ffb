@@ -16,5 +16,6 @@ enum class PlayerSpecialActionType: ActionType {
     KICK_TEAM_MATE,
     MULTIPLE_BLOCK,
     PROJECTILE_VOMIT,
+    PUNT,
     STAB,
 }

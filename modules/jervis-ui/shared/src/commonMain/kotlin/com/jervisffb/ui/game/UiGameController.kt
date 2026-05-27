@@ -81,6 +81,8 @@ import com.jervisffb.ui.game.state.actionwheel.PitchInvasionReceivingTeamRollWhe
 import com.jervisffb.ui.game.state.actionwheel.PogoWheelController
 import com.jervisffb.ui.game.state.actionwheel.ProWheelController
 import com.jervisffb.ui.game.state.actionwheel.ProjectileVomitWheelController
+import com.jervisffb.ui.game.state.actionwheel.PuntDirectionWheelController
+import com.jervisffb.ui.game.state.actionwheel.PuntDistanceWheelController
 import com.jervisffb.ui.game.state.actionwheel.QuickSnapRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ReallyStupidWheelController
 import com.jervisffb.ui.game.state.actionwheel.RecoverPlayerRollWheelController
@@ -102,6 +104,7 @@ import com.jervisffb.ui.game.state.actionwheel.SwoopDistanceWheelController
 import com.jervisffb.ui.game.state.actionwheel.TakeRootWheelController
 import com.jervisffb.ui.game.state.actionwheel.TeamCaptainWheelController
 import com.jervisffb.ui.game.state.actionwheel.TeamMascotWheelController
+import com.jervisffb.ui.game.state.actionwheel.ThrowInWheelController
 import com.jervisffb.ui.game.state.actionwheel.UnchannelledFuryWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseApothecaryWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBigHandWheelController
@@ -246,6 +249,8 @@ class UiGameController(
         PogoWheelController,
         ProWheelController,
         ProjectileVomitWheelController,
+        PuntDirectionWheelController,
+        PuntDistanceWheelController,
         ReallyStupidWheelController,
         UnchannelledFuryWheelController,
         RushWheelController,
@@ -329,6 +334,7 @@ class UiGameController(
         PitchInvasionReceivingTeamRollWheelController,
         PitchInvasionKickingTeamPlayersAffectedRollWheelController,
         PitchInvasionReceivingTeamPlayersAffectedRollWheelController,
+        ThrowInWheelController,
 
         // Coin
         SelectCoinSideWheelController,

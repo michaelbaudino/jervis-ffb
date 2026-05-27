@@ -6,6 +6,9 @@ The TODO list is by no means exhaustive, it is just a place to dump things as
 they come up.
 
 ## Todo List
+- [ ] Punt Action Icon
+- [ ] Hail Mary Pass Icon
+- [ ] When canceling a Pass, Hail Mary you see the actions flicker slightly. This is because closing the action wheel is instant, but processing the action takes slightly longer. We should hide all pitch overlays in this case.
 - [ ] Mark Coach as Banned somehow on the Team Badge
 - [ ] Team Feature Icon for Bribe
 - [ ] Add Action Wheel Icon for Mascot Team Reroll

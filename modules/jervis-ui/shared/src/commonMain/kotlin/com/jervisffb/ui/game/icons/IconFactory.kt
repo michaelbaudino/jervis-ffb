@@ -164,7 +164,9 @@ enum class ActionIcon(val path: String) {
     KICK_TEAM_MATE("jervis/actions/jervis_action_pass.png"),
     MULTIPLE_BLOCK("jervis/actions/jervis_action_block.png"),
     PROJECTILE_VOMIT("jervis/actions/jervis_action_block.png"),
-    STAB("jervis/actions/jervis_action_block.png");
+    STAB("jervis/actions/jervis_action_block.png"),
+    PUNT("jervis/actions/jervis_action_pass.png"),
+    HAIL_MARY_PASS("jervis/actions/jervis_action_pass.png"),
 }
 
 

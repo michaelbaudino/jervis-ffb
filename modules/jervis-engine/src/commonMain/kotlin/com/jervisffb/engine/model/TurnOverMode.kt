@@ -11,8 +11,9 @@ enum class TurnOver {
     ACTIVE_TEAM_TOUCHDOWN,
     // The inactive team scored a touch
     INACTIVE_TEAM_TOUCHDOWN,
-    // Active players turn timing out is not strictly a turn-over, but in some
-    // cases we want to treat it as one.
+    // While a time-out was a concept defined in earlier versions of the rules,
+    // the concept doesn't exist in BB20205. However, in some cases, we still
+    // want to treat it as one.
     TIME_OUT,
 }
 

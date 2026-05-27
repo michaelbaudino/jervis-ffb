@@ -52,6 +52,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Pogo
 import com.jervisffb.engine.rules.bb2025.skills.PrehensileTail
 import com.jervisffb.engine.rules.bb2025.skills.Pro
 import com.jervisffb.engine.rules.bb2025.skills.ProjectileVomit
+import com.jervisffb.engine.rules.bb2025.skills.Punt
 import com.jervisffb.engine.rules.bb2025.skills.PutTheBootIn
 import com.jervisffb.engine.rules.bb2025.skills.QuickFoul
 import com.jervisffb.engine.rules.bb2025.skills.ReallyStupid
@@ -416,9 +417,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.PUNT -> {
-                    // addEntry(type, SkillCategory.PASSING) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Punt", type, SkillCategory.PASSING) { player, category, expiresAt ->
+                        Punt(player, category, expiresAt)
+                    }
                 }
                 SkillType.SAFE_PASS -> {
                     addNoValueEntry("Safe Pass", type, SkillCategory.PASSING) { player, category,expiresAt ->

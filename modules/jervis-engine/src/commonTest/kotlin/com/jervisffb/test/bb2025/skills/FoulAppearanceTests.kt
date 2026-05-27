@@ -74,6 +74,7 @@ class FoulAppearanceTests: JervisGameBB2025Test() {
                 PlayerSpecialActionType.MULTIPLE_BLOCK -> affectedActions.add(it)
                 PlayerSpecialActionType.PROJECTILE_VOMIT -> affectedActions.add(it)
                 PlayerSpecialActionType.STAB -> affectedActions.add(it)
+                PlayerSpecialActionType.PUNT -> unaffectedActions.add(it)
             }
         }
         val totalActions = PlayerStandardActionType.entries.size + PlayerSpecialActionType.entries.size

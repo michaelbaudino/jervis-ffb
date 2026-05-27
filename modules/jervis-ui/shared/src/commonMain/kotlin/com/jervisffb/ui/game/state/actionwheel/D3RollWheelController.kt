@@ -9,11 +9,14 @@ import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.safeCast
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
+import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.builder.DiceRollOwner
 import com.jervisffb.engine.rules.common.procedures.FanFactorRolls
+import com.jervisffb.engine.rules.common.procedures.ThrowIn
+import com.jervisffb.engine.rules.common.procedures.ThrowInContext
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.PitchInvasion
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.QuickSnap
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.SolidDefense
@@ -197,5 +200,17 @@ object PitchInvasionReceivingTeamPlayersAffectedRollWheelController: D3RollWheel
         }
     }
 }
+
+object ThrowInWheelController: D3RollWheelController() {
+    override val buttonIdPrefix: String = "throwin-direction"
+    override val rollDiceNode: Node = ThrowIn.RollDirection
+    override val diceRollType: DiceRollType = DiceRollType.THROWIN_DIRECTION
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val context = state.getContext<ThrowInContext>()
+        return context.outOfBoundsAt
+    }
+}
+
 
 

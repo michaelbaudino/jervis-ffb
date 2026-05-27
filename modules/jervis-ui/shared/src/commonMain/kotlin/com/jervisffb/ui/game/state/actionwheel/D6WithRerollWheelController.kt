@@ -14,6 +14,7 @@ import com.jervisffb.engine.model.context.LeapRollContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.PickupRollContext
 import com.jervisffb.engine.model.context.PogoRollContext
+import com.jervisffb.engine.model.context.PuntContext
 import com.jervisffb.engine.model.context.RushRollContext
 import com.jervisffb.engine.model.context.SecureTheBallRollContext
 import com.jervisffb.engine.model.context.ShadowingRollContext
@@ -32,6 +33,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionRol
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopContext
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDistanceRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRollContext
@@ -627,6 +629,23 @@ object TeamMascotWheelController : D6WithRerollWheelController() {
         return context.roll?.originalRoll!!
     }
 }
+
+object PuntDistanceWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "punt-distance"
+    override val diceRollType: DiceRollType = DiceRollType.PUNT_DISTANCE
+    override val rollDiceNode: Node = PuntDistanceRoll.RollDie
+    override val chooseRerollSourceNode: Node = PuntDistanceRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = PuntDistanceRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val context = state.getContext<PuntContext>()
+        return context.punter.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<PuntContext>()
+        return context.distanceRoll?.originalRoll!!
+    }
+}
+
 
 
 

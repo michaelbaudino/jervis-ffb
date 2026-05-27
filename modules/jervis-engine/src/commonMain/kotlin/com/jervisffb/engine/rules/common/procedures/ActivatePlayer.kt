@@ -136,6 +136,12 @@ object ActivatePlayer : Procedure() {
                             SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.STAB)
                         )
                     }
+                    PlayerSpecialActionType.PUNT -> {
+                        compositeCommandOf(
+                            SetSpecialActionSkillUsed(player, player.getSkill(SkillType.PUNT), true),
+                            SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.PUNT)
+                        )
+                    }
                 }
                 if (markActionAsUsedCommand != null) add(markActionAsUsedCommand)
                 add(ReportActionEnded(state.activePlayer!!, context.declaredAction))
@@ -194,6 +200,7 @@ object ActivatePlayer : Procedure() {
 //         Stab (Replace block action or block part of Blitz, no limit)
 //         Hypnotic Gaze (Its own action)
 //         Breathe Fire (replace block or block part of blitz, once pr. activation)
+//         Punt (Its own action)
 
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val allActions = SelectPlayerAction(actions = rules.getAvailableActions(state, state.activePlayer!!))

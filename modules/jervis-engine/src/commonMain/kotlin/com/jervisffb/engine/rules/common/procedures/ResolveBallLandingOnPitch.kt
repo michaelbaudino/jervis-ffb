@@ -36,6 +36,8 @@ import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
+import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -54,12 +56,13 @@ data class DivingCatchContext(
  * Procedure handling a ball landing on a square on the pitch, either occupied
  * or not.
  *
- * This unifies handling the ball landing from the Pass Action, Throw-In, or
- * Kick-off.
+ * This unifies handling the ball landing from a Pass Action, Throw-In,
+ * Kick-off, and Punt Special Action.
  *
- * See [com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep.ResolveBounceOrCatch]
+ * See [PassStep.ResolveBounceOrCatch]
  * See [ThrowIn.ResolveLandOnPitch]
  * See [TheKickOffEvent.ResolveBallLanding]
+ * See [PuntStep.ResolveLandingOnPitch]
  */
 object ResolveBallLandingOnPitch: Procedure() {
     override val initialNode: Node = DetermineIfCatchIsPossible

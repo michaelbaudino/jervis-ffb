@@ -129,6 +129,7 @@ object SelectPlayerActionWheelController : ActionWheelDialogController() {
                 PlayerSpecialActionType.MULTIPLE_BLOCK -> "Multiple Block" to ActionIcon.MULTIPLE_BLOCK
                 PlayerSpecialActionType.PROJECTILE_VOMIT -> "Projectile Vomit" to ActionIcon.PROJECTILE_VOMIT
                 PlayerSpecialActionType.STAB -> "Stab" to ActionIcon.STAB
+                PlayerSpecialActionType.PUNT -> "Punt" to ActionIcon.PUNT
             }
             ActionButtonData(
                 id = id,

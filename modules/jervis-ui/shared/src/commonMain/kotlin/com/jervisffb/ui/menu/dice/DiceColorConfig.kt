@@ -109,6 +109,8 @@ object BB2025DiceColorConfig : DiceColorConfig() {
             DiceRollType.PRAYERS_TO_NUFFLE -> DiceRollTypeConfig(rollType, "Prayers to Nuffle", d16, singleColor, DiceColor.DEFAULT)
             DiceRollType.PRO -> DiceRollTypeConfig(rollType, "Pro", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.PROJECTILE_VOMIT -> DiceRollTypeConfig(rollType, "Projectile Vomit", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.PUNT_DIRECTION -> DiceRollTypeConfig(rollType, "Unchannelled Fury", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.PUNT_DISTANCE -> DiceRollTypeConfig(rollType, "Unchannelled Fury", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.QUALITY -> DiceRollTypeConfig(rollType, "Quality", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.QUICK_SNAP -> DiceRollTypeConfig(rollType, "Quick Snap", d3, d6Colors, DiceColor.WHITE)
             DiceRollType.REALLY_STUPID -> DiceRollTypeConfig(rollType, "Really Stupid", d6, d6Colors, DiceColor.DEFAULT)

@@ -21,6 +21,8 @@ import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerActionSelected
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.ext.d3
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
@@ -384,6 +386,16 @@ fun projectileVomitRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSel
     reroll,
 )
 
+fun puntDirection(roll: D3Result, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
+fun puntDistance(roll: D6Result, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
 fun standingUpRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
     roll,
     reroll,
@@ -421,5 +433,19 @@ fun throwBall(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) =
     roll,
     reroll
 )
+
+fun throwIn(roll: D3Result) = roll
+
+fun bounce(roll: D8Result) = roll
+
+fun movePlayerTo(player: Player, coordinate: PitchCoordinate) {
+    SetPlayerLocation(player, coordinate).execute(player.team.game)
+}
+
+fun giveBallToPlayer(player: Player) {
+    val state = player.team.game
+    val ball = state.singleBall()
+    SetBallState.carried(ball, player).execute(state)
+}
 
 

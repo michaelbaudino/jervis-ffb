@@ -74,7 +74,10 @@ book.
     - [x] Bounce into another player must catch if possible
     - [x] Bounce into prone/missing tz/stunned player will bounce again
     - [x] Keep bouncing until coming to rest
-    - [ ] Throw-in (unclear how this works in BB2025)
+    - [ ] Bounce on failed Catch
+    - [ ] Bounce if a punted ball lands in an empty square
+    - [ ] Throw-in does not bounce (strictly RAW, but NAF says it does)
+    - [ ] What goes up.. (Landing after Kick-off) bounce.
 - [ ] Standing Players
     - [x] Open
     - [x] Marking with Tackle Zones

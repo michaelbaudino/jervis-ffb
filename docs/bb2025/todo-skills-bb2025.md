@@ -389,7 +389,16 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [ ] Works for Bombs
   - [x] Works for normal passes
   - [x] Works for hail mary passes
-- [ ] Punt
+- [x] Punt
+  - [x] Can declare from Prone
+  - [x] End after ball is thrown
+  - [x] Throw-in template is placed either Left, Right, Up or Down
+  - [x] First roll direction, then distance. Both can be re-rolled
+  - [x] Kick skill allow a re-roll of either
+  - [x] No turnover if ball ends up on the ground
+  - [x] Turnover if caught by opposition
+  - [x] Turnover if going into the crowd (anywhere in the sequence).
+  - [x] Only one Punt per team turn
 - [ ] Safe Pass
   - [x] Works on Pass
   - [x] Works on Hail Mary Pass
