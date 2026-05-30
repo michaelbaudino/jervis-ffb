@@ -1,0 +1,26 @@
+name: Pull Request
+
+on:
+  pull_request:
+    paths-ignore:
+      - "*.md"
+      - "**/*.md"
+      - "screenshots/*.png"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
+    permissions:
+      contents: read
+
+  test:
+    needs: [ setup ]
+    uses: ./.github/workflows/test.yml
+    with:
+      commit_count: ${{ needs.setup.outputs.commit_count }}
+    permissions:
+      contents: read

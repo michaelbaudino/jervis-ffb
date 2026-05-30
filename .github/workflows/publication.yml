@@ -1,79 +1,23 @@
-name: Main Build and Publish Dev Build
+name: Publish Dev Builds
+
 on:
-  workflow_dispatch:  # Add this line to enable manual triggering
-  pull_request:
-    paths-ignore:
-      - "*.md"
-      - "**/*.md"
-      - "screenshots/*.png"
-  push:
-    paths-ignore:
-      - "*.md"
-      - "**/*.md"
-      - "screenshots/*.png"
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      commit_count:
+        required: true
+        type: string
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+permissions:
+  contents: read
 
-# For now, just run all rules tests. Mostly as a proof-of-concept.
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      commit_count: ${{ steps.commit_count.outputs.count }}
-    steps:
-      - name: Get commit count
-        id: commit_count
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          COUNT=$(gh api "repos/${{ github.repository }}/commits?sha=${{ github.sha }}&per_page=1" \
-            --include 2>/dev/null \
-            | grep -oP 'page=\K[0-9]+(?=>; rel="last")' \
-            || echo "1")
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
-
-  run-tests:
-    runs-on: ubuntu-latest
-    needs: [ setup ]
-    if: always() && !cancelled()
-    env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '21'
-
-      - name: Setup Gradle and task/dependency caching
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-read-only: false
-
-      - name: Build Distribution for Linux
-        run: ./gradlew jvmTest --info
-
   build-windows-desktop:
     runs-on: windows-latest
-    needs: [ setup, run-tests ]
+    permissions:
+      contents: read
     env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
       JERVIS_WINDOWS_PACKAGE_GUID: ${{ secrets.JERVIS_WINDOWS_PACKAGE_GUID }}
-    if: |
-      always() && 
-      !cancelled() && 
-      !contains(needs.*.result, 'failure') && 
-      !contains(needs.*.result, 'cancelled')
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -107,9 +51,10 @@ jobs:
   # See https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-native-distribution.html#macos-specific-configuration
   build-macos-desktop:
     runs-on: macos-latest
-    needs: [ setup, run-tests ]
+    permissions:
+      contents: read
     env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
       JERVIS_MACOS_BUILD_CERTIFICATE_BASE64: ${{ secrets.JERVIS_MACOS_BUILD_CERTIFICATE_BASE64 }}
       JERVIS_MACOS_BUILD_CERTIFICATE_PASSWORD: ${{ secrets.JERVIS_MACOS_BUILD_CERTIFICATE_PASSWORD }}
       JERVIS_MACOS_TEMP_KEYCHAIN_PASSWORD: ${{ secrets.JERVIS_MACOS_TEMP_KEYCHAIN_PASSWORD }}
@@ -117,12 +62,6 @@ jobs:
       JERVIS_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.JERVIS_MACOS_NOTARIZATION_APPLE_ID }}
       JERVIS_MACOS_NOTARIZATION_PASSWORD: ${{ secrets.JERVIS_MACOS_NOTARIZATION_PASSWORD }}
       JERVIS_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.JERVIS_MACOS_NOTARIZATION_TEAM_ID }}
-    if: |
-      always() && 
-      !cancelled() && 
-      !contains(needs.*.result, 'failure') && 
-      !contains(needs.*.result, 'cancelled')
-
     steps:
       - name: Import code-signing certificate
         run: |
@@ -172,15 +111,10 @@ jobs:
 
   build-linux-desktop:
     runs-on: ubuntu-latest
-    needs: [ setup, run-tests ]
-    if: |
-      always() &&
-      !cancelled() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+    permissions:
+      contents: read
     env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
-
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -212,15 +146,10 @@ jobs:
 
   build-wasm:
     runs-on: ubuntu-latest
-    needs: [ setup, run-tests ]
-    if: |
-      always() &&
-      !cancelled() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+    permissions:
+      contents: read
     env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
-
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -253,12 +182,8 @@ jobs:
   upload-dev-version:
     runs-on: ubuntu-latest
     needs: [ build-linux-desktop, build-macos-desktop, build-windows-desktop, build-wasm ]
-    if: |
-      always() && 
-      !cancelled() && 
-      !contains(needs.*.result, 'failure') && 
-      !contains(needs.*.result, 'cancelled')
-
+    permissions:
+      contents: read
     steps:
       - name: Restore release packages - Wasm
         uses: actions/download-artifact@v4
@@ -298,7 +223,6 @@ jobs:
           rm -rf windows
           rm -rf wasm
           zip -r ../devbuilds.zip .
-          
 
       - name: Upload package
         uses: appleboy/scp-action@v0.1.7
@@ -336,25 +260,18 @@ jobs:
   # Release JVM app via Conveyor, but only from main branch
   release-via-conveyor:
     runs-on: ubuntu-latest
-    needs: [ setup, upload-dev-version ]
-    if: |
-      always() &&
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      !cancelled() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+    needs: [ upload-dev-version ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write  # Required to create GitHub Releases
     env:
-      JERVIS_COMMIT_COUNT: ${{ needs.setup.outputs.commit_count }}
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
       JERVIS_CONVEYOR_GITHUB_TOKEN: ${{ secrets.JERVIS_CONVEYOR_GITHUB_TOKEN }}
       JERVIS_MACOS_BUILD_CERTIFICATE_BASE64: ${{ secrets.JERVIS_MACOS_BUILD_CERTIFICATE_BASE64 }}
       JERVIS_MACOS_BUILD_CERTIFICATE_PASSWORD: ${{ secrets.JERVIS_MACOS_BUILD_CERTIFICATE_PASSWORD }}
       JERVIS_MACOS_NOTARIZATION_PASSWORD: ${{ secrets.JERVIS_MACOS_NOTARIZATION_PASSWORD }}
       JERVIS_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.JERVIS_MACOS_NOTARIZATION_TEAM_ID }}
       JERVIS_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.JERVIS_MACOS_NOTARIZATION_APPLE_ID }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -409,8 +326,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: [ setup, release-via-conveyor ]
+    needs: [ release-via-conveyor ]
     permissions:
+      contents: read
       pages: write
       id-token: write
     steps:

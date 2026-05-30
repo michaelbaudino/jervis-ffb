@@ -1,0 +1,37 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      commit_count:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    if: always() && !cancelled()
+    env:
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Gradle and task/dependency caching
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false
+
+      - name: Build Distribution for Linux
+        run: ./gradlew jvmTest --info

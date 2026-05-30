@@ -1,0 +1,28 @@
+name: Setup
+
+on:
+  workflow_call:
+    outputs:
+      commit_count:
+        description: Number of commits reachable from the workflow SHA.
+        value: ${{ jobs.setup.outputs.commit_count }}
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      commit_count: ${{ steps.commit_count.outputs.count }}
+    steps:
+      - name: Get commit count
+        id: commit_count
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          COUNT=$(gh api "repos/${{ github.repository }}/commits?sha=${{ github.sha }}&per_page=1" \
+            --include 2>/dev/null \
+            | grep -oP 'page=\K[0-9]+(?=>; rel="last")' \
+            || echo "1")
+          echo "count=$COUNT" >> $GITHUB_OUTPUT

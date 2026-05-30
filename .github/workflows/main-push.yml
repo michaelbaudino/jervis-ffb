@@ -1,0 +1,40 @@
+name: Test and publication from `main` branch
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - "*.md"
+      - "**/*.md"
+      - "screenshots/*.png"
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    uses: ./.github/workflows/setup.yml
+    permissions:
+      contents: read
+
+  test:
+    needs: [ setup ]
+    uses: ./.github/workflows/test.yml
+    with:
+      commit_count: ${{ needs.setup.outputs.commit_count }}
+    permissions:
+      contents: read
+
+  publication:
+    needs: [ setup, test ]
+    uses: ./.github/workflows/publication.yml
+    with:
+      commit_count: ${{ needs.setup.outputs.commit_count }}
+    secrets: inherit
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
