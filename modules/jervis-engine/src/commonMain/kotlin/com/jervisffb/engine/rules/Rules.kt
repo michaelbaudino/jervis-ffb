@@ -293,9 +293,7 @@ abstract class Rules(
      * Returns `true` if the player is considered "Distracted" as described on
      * page 38 in the BB2025 rulebook.
      */
-    fun isDistracted(player: Player): Boolean {
-        return isStanding(player) && !player.hasTackleZones
-    }
+    abstract fun isDistracted(player: Player): Boolean
 
     /**
      * Returns `true` if this player has a state that is considered an "Injury"

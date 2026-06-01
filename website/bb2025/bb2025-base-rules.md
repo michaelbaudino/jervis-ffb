@@ -58,6 +58,22 @@ the pitch when rolling High Kick.
 So when interpreting the rules, Jervis will always assume that these statuses
 also imply that the player is on the pitch.
 
+## Page 39 - Distracted
+Gaining Distracted is defined as "...there may be situations where a Standing
+player becomes Distracted".
+
+Loosing Distracted is defined as "...they will remain Distracted, until they are
+next activated...".
+
+These two definitions have the following consequences for Jervis:
+
+1. A player can only get Distracted while Standing on the pitch, but remain 
+   Distracted if Knocked Down during the opponent's turn.
+
+2. A player that is Distracted by End of Drive, remains Distracted during
+   setting up for the next Drive as they have not been activated yet. This can 
+   impact Kick, which cannot be used.
+
 ## Page 48 - High Kick
 
 ## No available players

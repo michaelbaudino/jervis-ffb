@@ -40,6 +40,11 @@ abstract class BB2020Rules(
     private val bb2020RuleParameters: RulesParametersHolder
 ) : Rules(bb2020RuleParameters) {
 
+    override fun isDistracted(player: Player): Boolean {
+        // Distracted is not a concept in BB2020, so we always return false.
+        return false
+    }
+
     override fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean {
         // It is only allowed to reroll a die a single time. So if a rerollSource
         // exists, it cannot be rerolled again, but if some reroll can reroll some

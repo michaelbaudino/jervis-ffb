@@ -484,6 +484,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 ## Traits
 
 - [ ] Animal Savagery*
+  - [ ] Becomes Distracted on a failure
   - [ ] Must use Mighty Blow on Armour 
   - [ ] Must use Claw
   - [ ] Can continue action if not distracted or a turnover happend (FAQ May 2026)
@@ -501,12 +502,14 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [ ] Hail Mary Pass works
   - [ ] Balls never bounce, but blow up in the square they would otherwise bounce from (FAQ May 2026)
 - [x] Bone Head*
+  - [x] Becomes Distracted on failure 
   - [x] Clear after activating
   - [x] Roll after selecting action
   - [x] Does not clear if you forgo activation
   - [x] Use action if failing roll
   - [x] Can use skills to reroll Bone Head (Pro)
 - [ ] Blood Lust (X+)*
+  - [ ] Becomes Distracted if cannot bite player on failure
 - [x] Breathe Fire
     - [x] Replace Block
     - [x] Mighty Blow does not work on Breathe Fire
@@ -524,6 +527,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] +1 to Casualty Roll
   - [x] +1 to re-rolled casualty roll (apothecary)
 - [ ] Hypnotic Gaze
+  - [ ] Becomes Distracted 
 - [x] Insignificant*
 - [ ] Kick Team-mate
 - [x] Loner (X+)*
@@ -573,6 +577,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Adjacent player can offer help
   - [x] Adjacent player with Really Stupid cannot offer help
   - [x] Distracted adjacent player cannot offer help
+  - [x] Becomes distracted if failure
 - [ ] Regeneration
 - [x] Right Stuff*
   - [x] Can be thrown using Throw Team-mate

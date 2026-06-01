@@ -9,6 +9,7 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.OnPitchLocation
+import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.rules.bb2025.BB2025SkillSettings
 import com.jervisffb.engine.rules.bb2025.BB2025TeamActions
 import com.jervisffb.engine.rules.bb2025.tables.BB2025ArgueTheCallTable
@@ -39,6 +40,13 @@ import kotlinx.serialization.Serializable
 abstract class BB2025Rules(
     private val bb2025RuleParameters: RulesParametersHolder
 ) : Rules(bb2025RuleParameters) {
+
+    override fun isDistracted(player: Player): Boolean {
+        // In BB2025, Distracted is modeled as a condition on a player.
+        // Note that the status effect and lack of tackle zones are modeled
+        // independently.
+        return player.statusEffects.any { it.type == PlayerStatusEffectType.DISTRACTED }
+    }
 
     override fun isRerollAllowed(dicePool: List<DieRoll<*>>): Boolean {
         // In BB2025, as soon as a single die in a dice pool has been rerolled,

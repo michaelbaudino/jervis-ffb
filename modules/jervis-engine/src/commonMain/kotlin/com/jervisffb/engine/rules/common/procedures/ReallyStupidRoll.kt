@@ -18,6 +18,7 @@ import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffect
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
+import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.D6WithRerollProcedure
 import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.RerollData
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -55,7 +56,10 @@ object ReallyStupidRoll: D6WithRerollProcedure() {
         return buildCompositeCommand {
             add(RemoveContext<ReallyStupidRollContext>())
             if (!context.isSuccess) {
-                add(AddPlayerStatusEffect(context.player, PlayerStatusEffect.reallyStupid()))
+                when (rules.baseVersion) {
+                    GameVersion.BB2020 -> add(AddPlayerStatusEffect(context.player, PlayerStatusEffect.boneHead()))
+                    GameVersion.BB2025 -> add(AddPlayerStatusEffect(context.player, PlayerStatusEffect.distracted()))
+                }
                 add(SetHasTackleZones(context.player, false))
                 add(
                     UpdateContext(
