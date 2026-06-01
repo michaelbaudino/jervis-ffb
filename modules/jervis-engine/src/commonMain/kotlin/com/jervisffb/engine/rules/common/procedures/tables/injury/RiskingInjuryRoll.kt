@@ -24,6 +24,7 @@ import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.inducements.Apothecary
 import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
@@ -64,16 +65,22 @@ data class RiskingInjuryContext(
     // This boolean allow callers to respond to that.
     val isKnockedDown: Boolean = false,
 
+    // When rolling for Armour and Injury and using Arm Bar, we need to know the starting
+    // coordinates, as that determines which players can participate.
+    val startingCoordinatesForArmBar: PitchCoordinate? = null,
+
     // Armour roll
-    val armourRoll: List<D6DieRoll> = listOf(),
-    val armourModifiers: List<DiceModifier> = listOf(),
+    val armourRoll: PersistentList<D6DieRoll> = persistentListOf(),
+    val armourModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val useClawsOnArmourRoll: Boolean = false,
+    // val usedArmBarOnArmourRoll: Player? = null,
 
     // Injury roll
-    val injuryRoll: List<D6Result> = emptyList(),
+    val injuryRoll: PersistentList<D6Result> = persistentListOf(),
     val injuryModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val injuryResult: InjuryResult? = null,
     val useThickSkullOnInjuryRoll: Boolean = false,
+    // val usedArmBarOnInjuryRoll: Player? = null,
 
     // Casualty roll
     val casualtyRoll: D16Result? = null,
@@ -139,7 +146,7 @@ data class RiskingInjuryContext(
 object RiskingInjuryRoll: Procedure() {
     override val initialNode: Node = DetermineStartingRoll
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
-    override fun onExitProcedure(state: Game, rules: Rules): Command? {
+    override fun onExitProcedure(state: Game, rules: Rules): Command {
         val context = state.getContext<RiskingInjuryContext>()
         val commands = mutableListOf<Command?>()
 

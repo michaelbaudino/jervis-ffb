@@ -21,6 +21,25 @@ rolled, not the final result, so Dauntless is always used.
 
 These cases will be spelled out for the relevant skills below.
 
+## Page 123 - Arm Bar
+Similar to Tentacles, Arm Bar does not specifically mention Pogo, so Jervis
+assumes that Arm Bar does not work when a player uses Pogo either. NAF is 
+currently ruling this otherwise.
+
+The skill describes activating when "...attempting to Dodge, Leap or Jump away 
+from a square...". This makes it unclear what happens if you attempt to move, 
+but need to Rush to do so. 
+
+If the Rush fails, and you Fall Over because of it, does Arm Bar trigger in that
+case?
+
+For now, Jervis assumes "Yes" as the Rush happened because you declared the 
+intent to Dodge, Jump, or Leap first.
+
+!!! naf "NAF"
+
+    Arm Bar applies to players with the Pogo skill.
+
 ## Page 124 - Big Hand
 The rules are unclear if Secure the Ball is a "pickup" or not. By extension,
 this affects Big Hand that works on pickup.

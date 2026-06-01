@@ -144,7 +144,6 @@ sealed interface RulesParameters {
     // Configure skills available, their behaviour and which category they belong to.
     val skillSettings: SkillSettings
     // If `true`, coaches are allowed to edit their own team while the game is in progress.
-    // (For now, this is just a local setting that doesn't work in networked games)
     val allowPlayerEditsDuringGame: Boolean
     // If `true`, multiple reroll sources can be used on a dice pool as long as they
     // do not reroll the same die. E.g., Brawler and Pro can be used to reroll two different

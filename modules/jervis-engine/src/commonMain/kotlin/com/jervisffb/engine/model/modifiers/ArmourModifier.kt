@@ -1,6 +1,7 @@
 package com.jervisffb.engine.model.modifiers
 
 enum class ArmourModifier(override val modifier: Int, override val description: String) : DiceModifier {
+    ARM_BAR(1, "Arm Bar"),
     DIRTY_PLAYER(1, "Dirty Player"),
     MARKED(1, "Marked"),
     LETHAL_FLIGHT(1, "Lethal Flight"),

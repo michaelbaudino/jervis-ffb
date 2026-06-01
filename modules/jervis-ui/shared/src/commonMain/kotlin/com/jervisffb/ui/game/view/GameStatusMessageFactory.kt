@@ -634,7 +634,19 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                     isActiveClient -> "Select Direction to Punt"
                     else -> "Waiting for Opponent to select Punt Direction"
                 }
-            }
+            },
+            ArmourRoll.ChooseToUseArmBar to { isActiveClient, _, _ ->
+                when (isActiveClient) {
+                    true -> "Select a player to use Arm Bar"
+                    false -> "Waiting for opponent to use Arm Bar"
+                }
+            },
+            InjuryRoll.ChooseToUseArmBar to { isActiveClient, _, _ ->
+                when (isActiveClient) {
+                    true -> "Select a player to use Arm Bar"
+                    false -> "Waiting for opponent to use Arm Bar"
+                }
+            },
         )
     }
 

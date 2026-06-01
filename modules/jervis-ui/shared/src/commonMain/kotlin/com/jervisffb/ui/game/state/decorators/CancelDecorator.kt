@@ -21,6 +21,8 @@ import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.DodgeRoll
 import com.jervisffb.engine.rules.common.procedures.actions.move.JumpRoll
+import com.jervisffb.engine.rules.common.procedures.tables.injury.ArmourRoll
+import com.jervisffb.engine.rules.common.procedures.tables.injury.InjuryRoll
 import com.jervisffb.ui.game.UiSnapshotAccumulator
 import com.jervisffb.ui.game.icons.ActionIcon
 import com.jervisffb.ui.game.state.ManualActionProvider
@@ -41,6 +43,8 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
         LeapRoll.ChooseToUseDivingTackleAfterReRoll,
         PogoRoll.ChooseToUseDivingTackleAfterReRoll,
         HitAndRunStep.SelectTargetSquareOrCancel,
+        ArmourRoll.ChooseToUseArmBar,
+        InjuryRoll.ChooseToUseArmBar
     )
 
     private val nodesForContextMenu = setOf(
@@ -93,6 +97,8 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
                 LeapRoll.ChooseToUseDivingTackleAfterReRoll,
                 PogoRoll.ChooseToUseDivingTackleAfterReRoll -> "Do not use Diving Tackle"
                 HitAndRunStep.SelectTargetSquareOrCancel -> "Do not use Hit and Run"
+                ArmourRoll.ChooseToUseArmBar -> "Do not use Arm Bar"
+                InjuryRoll.ChooseToUseArmBar -> "Do not use Arm Bar"
                 else -> error("Unsupported node: ${state.stack.currentNode()}")
             }
             acc.updateGameStatus {

@@ -494,6 +494,21 @@ class AutomatedActionsFactory(
             }
         }
 
+        if (menuViewModel.isFeatureEnabled(Feature.USE_ARM_BAR_ON_ARMOUR) && currentNode == ArmourRoll.ChooseToUseArmBar) {
+            actions.getOrNull<SelectPlayer>()?.let {
+                if (it.players.size == 1) {
+                    return PlayerSelected(it.players.first())
+                }
+            }
+        }
+        if (menuViewModel.isFeatureEnabled(Feature.USE_ARM_BAR_ON_INJURY) && currentNode == InjuryRoll.ChooseToUseArmBar) {
+            actions.getOrNull<SelectPlayer>()?.let {
+                if (it.players.size == 1) {
+                    return PlayerSelected(it.players.first())
+                }
+            }
+        }
+
         return null
     }
 

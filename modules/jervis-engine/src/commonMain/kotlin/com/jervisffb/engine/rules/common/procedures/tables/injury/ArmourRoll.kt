@@ -1,14 +1,18 @@
 package com.jervisffb.engine.rules.common.procedures.tables.injury
 
+import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.ConfirmWhenReady
+import com.jervisffb.engine.actions.Continue
 import com.jervisffb.engine.actions.ContinueWhenReady
 import com.jervisffb.engine.actions.D6Result
 import com.jervisffb.engine.actions.Dice
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
+import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.RollDice
+import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetSkillRerollUsed
 import com.jervisffb.engine.commands.SetSkillUsed
@@ -46,8 +50,11 @@ import com.jervisffb.engine.rules.bb2025.skills.LoneFouler
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
 import com.jervisffb.engine.rules.common.skills.SkillType
+import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 import com.jervisffb.engine.utils.sum
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 /**
  * Implement the armour roll.
@@ -80,6 +87,9 @@ import com.jervisffb.engine.utils.sum
  *
  * Throw Team-mate:
  * 1. Lethal Flight (Knocked Down)
+ *
+ * Fall Over:
+ * 1. Arm Bar (If in the middle of a Dodge, Jump or Leap)
  */
 object ArmourRoll: Procedure() {
     override val initialNode: Node = RollDice
@@ -115,14 +125,12 @@ object ArmourRoll: Procedure() {
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> = listOf(RollDice(Dice.D6, Dice.D6))
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             return castDiceRoll<D6Result, D6Result>(action) { die1, die2 ->
-                val context = state.getContext<RiskingInjuryContext>()
-
                 // Determine result of armour roll
                 // All skills that can modify an armour roll can be used both before and after the roll,
                 // but since there is no advantage to using them before, we will only apply them after.
                 val roll = listOf(die1, die2)
                 val updatedContext = state.getContext<RiskingInjuryContext>().copy(
-                    armourRoll = listOf(
+                    armourRoll = persistentListOf(
                         D6DieRoll.create(state, die1),
                         D6DieRoll.create(state, die2),
                     ),
@@ -158,7 +166,7 @@ object ArmourRoll: Procedure() {
                     die2
                 )
                 val updatedContext = context.copy(
-                    armourRoll = listOf(updatedD1, updatedD2)
+                    armourRoll = persistentListOf(updatedD1, updatedD2)
                 )
                 val roll = listOf(die1, die2)
                 compositeCommandOf(
@@ -184,9 +192,9 @@ object ArmourRoll: Procedure() {
                     }
                 }
                 RiskingInjuryMode.FOUL -> GotoNode(ChooseToUseDirtyPlayer)
+                RiskingInjuryMode.FALLING_OVER -> GotoNode(CheckIfArmBarIsApplicable)
                 // None of these have skills that can affect the armour roll
                 RiskingInjuryMode.BAD_LANDING,
-                RiskingInjuryMode.FALLING_OVER,
                 RiskingInjuryMode.HIT_BY_ROCK,
                 RiskingInjuryMode.PLACED_PRONE,
                 RiskingInjuryMode.PROJECTILE_VOMIT,
@@ -271,7 +279,7 @@ object ArmourRoll: Procedure() {
                     SetSkillUsed(mbPlayer, mbSkill, true),
                     UpdateContext(
                         context.copy(
-                            armourModifiers = context.armourModifiers + listOf(MightyBlowArmourModifier(mbSkill.value as Int))
+                            armourModifiers = context.armourModifiers.add(MightyBlowArmourModifier(mbSkill.value as Int))
                         )
                     ),
                     ExitProcedure()
@@ -310,7 +318,7 @@ object ArmourRoll: Procedure() {
                 if (usedDirtyPlayer) {
                     val fouler = state.getContext<FoulContext>().fouler
                     val updatedContext = context.copy(
-                        armourModifiers = context.armourModifiers + ArmourModifier.DIRTY_PLAYER,
+                        armourModifiers = context.armourModifiers.add(ArmourModifier.DIRTY_PLAYER),
                     )
                     add(UpdateContext(updatedContext))
                     add(SetSkillUsed(fouler, fouler.getSkill(SkillType.DIRTY_PLAYER), true))
@@ -360,7 +368,7 @@ object ArmourRoll: Procedure() {
                         ReportSkillUsed(fouler, SkillType.LONE_FOULER),
                         SetSkillRerollUsed(fouler.getSkill<LoneFouler>(), true),
                         UpdateContext(rerollContext),
-                        UpdateContext(context.copy(armourModifiers = context.armourModifiers.filter { it != ArmourModifier.DIRTY_PLAYER })),
+                        UpdateContext(context.copy(armourModifiers = context.armourModifiers.filter { it != ArmourModifier.DIRTY_PLAYER }.toPersistentList())),
                         GotoNode(ReRollDice)
                     )
                 }
@@ -426,13 +434,70 @@ object ArmourRoll: Procedure() {
                     SetSkillUsed(thrownPlayer, skill, true),
                     UpdateContext(
                         context.copy(
-                            armourModifiers = context.armourModifiers + listOf(ArmourModifier.LETHAL_FLIGHT)
+                            armourModifiers = context.armourModifiers.add(ArmourModifier.LETHAL_FLIGHT)
                         )
                     ),
                     ExitProcedure()
                 )
             } else {
                 ExitProcedure()
+            }
+        }
+    }
+
+    object CheckIfArmBarIsApplicable: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+            val downedPlayer = context.player
+            val modifiersAfterArmBar = context.armourModifiers.sum() + ArmourModifier.ARM_BAR.modifier
+            val resultBeforeArmBar = context.armourResult
+            val resultAfterArmBar = resultBeforeArmBar + modifiersAfterArmBar
+            val doNotBreakBeforeArmBar = downedPlayer.armorValue > resultBeforeArmBar
+            val breakAfterArmBar = downedPlayer.armorValue <= resultAfterArmBar
+            val willBreakArmour = doNotBreakBeforeArmBar && breakAfterArmBar
+            return when (context.startingCoordinatesForArmBar != null && willBreakArmour) {
+                true -> GotoNode(ChooseToUseArmBar)
+                false -> ExitProcedure()
+            }
+        }
+    }
+
+    object ChooseToUseArmBar: ActionNode() {
+        override fun actionOwner(state: Game, rules: Rules): Team {
+            val context = state.getContext<RiskingInjuryContext>()
+            return context.player.team.otherTeam()
+        }
+
+        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
+            val context = state.getContext<RiskingInjuryContext>()
+            val team = context.player.team
+            val coordinates = context.startingCoordinatesForArmBar ?: INVALID_GAME_STATE("Missing starting coordinates: $context")
+            val players = rules
+                .getMarkingPlayers(state, team, coordinates)
+                .filter { it.isSkillAvailable(SkillType.ARM_BAR) }
+
+            return when (players.isNotEmpty()) {
+                true -> listOf(CancelWhenReady, SelectPlayer.fromPlayers(players))
+                false -> listOf(ContinueWhenReady)
+            }
+        }
+
+        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
+            return when (action) {
+                Cancel, Continue -> ExitProcedure()
+                is PlayerSelected -> {
+                    val context = state.getContext<RiskingInjuryContext>()
+                    val player = action.getPlayer(state)
+                    compositeCommandOf(
+                        ReportSkillUsed(player, SkillType.ARM_BAR),
+                        SetSkillUsed(player, player.getSkill(SkillType.ARM_BAR), used = true),
+                        UpdateContext(context.copy(
+                            armourModifiers = context.armourModifiers.add(ArmourModifier.ARM_BAR)
+                        )),
+                        ExitProcedure()
+                    )
+                }
+                else -> INVALID_ACTION(action)
             }
         }
     }

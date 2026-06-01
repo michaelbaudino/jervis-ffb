@@ -2,6 +2,7 @@ package com.jervisffb.engine.rules.bb2025
 
 import com.jervisffb.engine.rules.bb2025.skills.Accurate
 import com.jervisffb.engine.rules.bb2025.skills.AnimalSavagery
+import com.jervisffb.engine.rules.bb2025.skills.ArmBar
 import com.jervisffb.engine.rules.bb2025.skills.BigHand
 import com.jervisffb.engine.rules.bb2025.skills.Block
 import com.jervisffb.engine.rules.bb2025.skills.BloodLust
@@ -431,9 +432,9 @@ class BB2025SkillSettings: SkillSettings() {
                 // Strength Category
                 //
                 SkillType.ARM_BAR -> {
-                    // addEntry(type, SkillCategory.STRENGTH) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Arm Bar", type, SkillCategory.STRENGTH) { player, category,expiresAt ->
+                        ArmBar(player, category, expiresAt)
+                    }
                 }
                 SkillType.BRAWLER -> {
                     addNoValueEntry("Brawler", type, SkillCategory.STRENGTH) { player, category,expiresAt ->

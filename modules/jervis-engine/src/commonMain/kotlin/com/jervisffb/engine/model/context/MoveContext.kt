@@ -29,6 +29,8 @@ data class MoveContext(
     // update `Player.movesLeft` as we would otherwise after a move step. This property tracks this specific case
     // to avoid crashing the engine in `StandardMoveStep.ResolveMove`.
     val rushFailed: Boolean = false,
+    // Tracks whether the player failed to Dodge an is about to fall over.
+    val dodgeFailed: Boolean = false,
     val target: PitchCoordinate? = null,
     val startingSquare: PitchCoordinate = when (val location = player.location) {
         DogOut -> INVALID_GAME_STATE("Player in the dogout cannot move")

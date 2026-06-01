@@ -43,6 +43,7 @@ import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryM
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryRoll
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
+import kotlinx.collections.immutable.toPersistentList
 
 /**
  * Procedure for handling the Foul part of a Foul Action.
@@ -174,7 +175,7 @@ object FoulStep: Procedure() {
                         false -> null
                     },
                     if (foulContext.defensiveAssists > 0) DefensiveAssistsArmourModifier(foulContext.defensiveAssists) else null
-                )
+                ).toPersistentList()
             )
             return AddContext(injuryContext)
         }

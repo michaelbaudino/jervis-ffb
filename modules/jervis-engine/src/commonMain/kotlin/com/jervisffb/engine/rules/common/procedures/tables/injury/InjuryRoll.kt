@@ -1,14 +1,18 @@
 package com.jervisffb.engine.rules.common.procedures.tables.injury
 
+import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.ConfirmWhenReady
+import com.jervisffb.engine.actions.Continue
 import com.jervisffb.engine.actions.ContinueWhenReady
 import com.jervisffb.engine.actions.D6Result
 import com.jervisffb.engine.actions.Dice
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
+import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.RollDice
+import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetSkillUsed
 import com.jervisffb.engine.commands.buildCompositeCommand
@@ -31,6 +35,7 @@ import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
+import com.jervisffb.engine.model.modifiers.ArmourModifier
 import com.jervisffb.engine.model.modifiers.InjuryModifier
 import com.jervisffb.engine.model.modifiers.MightyBlowInjuryModifier
 import com.jervisffb.engine.reports.ReportDiceRoll
@@ -40,8 +45,10 @@ import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.tables.InjuryResult
+import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 import com.jervisffb.engine.utils.sum
+import kotlinx.collections.immutable.persistentListOf
 
 /**
  * Implement the injury roll.
@@ -74,6 +81,9 @@ import com.jervisffb.engine.utils.sum
  *
  * Throw Team-mate:
  * 1. Lethal Flight (Knocked Down)
+ *
+ * Fall Over:
+ * 1. Arm Bar
  */
 object InjuryRoll: Procedure() {
     override val initialNode: Node = RollDice
@@ -97,7 +107,7 @@ object InjuryRoll: Procedure() {
 
                 // Determine result of injury roll
                 // TODO This logic needs to be expanded to support things like Mighty Blow and others.
-                val roll = listOf(die1, die2)
+                val roll = persistentListOf(die1, die2)
                 val result = rules.injuryTable.roll(die1, die2, context.injuryModifiers.sum())
                 val updatedContext = context.copy(
                     injuryRoll = roll,
@@ -259,7 +269,55 @@ object InjuryRoll: Procedure() {
                     add(SetSkillUsed(thrownPlayer, thrownPlayer.getSkill(SkillType.LETHAL_FLIGHT), true))
                     add(ReportSkillUsed(thrownPlayer, SkillType.LETHAL_FLIGHT))
                 }
-                add(GotoNode(ChooseToUseThickSkull))
+                add(GotoNode(ChooseToUseArmBar))
+            }
+        }
+    }
+
+    object ChooseToUseArmBar: ActionNode() {
+        override fun actionOwner(state: Game, rules: Rules): Team {
+            val context = state.getContext<RiskingInjuryContext>()
+            return context.player.team.otherTeam()
+        }
+
+        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
+            val context = state.getContext<RiskingInjuryContext>()
+            return if (context.startingCoordinatesForArmBar != null) {
+                // Player B cannot use Arm Bar on the Injury Roll if Player A used it on the
+                // Armour Roll.
+                val usedOnArmourRoll = context.armourModifiers.contains(ArmourModifier.ARM_BAR)
+                val team = context.player.team
+                val coordinates = context.startingCoordinatesForArmBar
+                val players = rules
+                    .getMarkingPlayers(state, team, coordinates)
+                    .filter { it.isSkillAvailable(SkillType.ARM_BAR) }
+                when (!usedOnArmourRoll && players.isNotEmpty()) {
+                    true -> listOf(CancelWhenReady, SelectPlayer.fromPlayers(players))
+                    false -> listOf(ContinueWhenReady)
+                }
+            } else {
+                listOf(ContinueWhenReady)
+            }
+        }
+
+        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
+            return when (action) {
+                Continue, Cancel -> GotoNode(ChooseToUseThickSkull)
+                is PlayerSelected -> {
+                    val context = state.getContext<RiskingInjuryContext>()
+                    val player = action.getPlayer(state)
+                    val updatedModifiers = context.injuryModifiers.add(InjuryModifier.ARM_BAR)
+                    compositeCommandOf(
+                        ReportSkillUsed(player, SkillType.ARM_BAR),
+                        SetSkillUsed(player, player.getSkill(SkillType.ARM_BAR), used = true),
+                        UpdateContext(context.copy(
+                            injuryModifiers = updatedModifiers,
+                            injuryResult =  rules.injuryTable.roll(context.injuryRoll[0], context.injuryRoll[1], updatedModifiers.sum())
+                        )),
+                        GotoNode(ChooseToUseThickSkull)
+                    )
+                }
+                else -> INVALID_ACTION(action)
             }
         }
     }

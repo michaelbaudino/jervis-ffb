@@ -406,7 +406,16 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 
 ## Strength Skills
 
-- [ ] Arm Bar
+- [x] Arm Bar
+  - [x] Only one player can use it
+  - [x] Jump: Failing a Rush to Jump does not trigger Arm Bar
+  - [x] Jump: Falling over target square, we still count players from the starting square
+  - [x] Pogo (RAW): Does not work
+  - [x] Dodge: Check from starting square
+  - [x] Leap: Check from starting square
+  - [x] Does not work if player used Diving Tackle
+  - [x] Rushing to Jump or Leap 
+  - [ ] Gets SPP
 - [x] Brawler
   - [x] Only works on Declaring a block, not performing it.
   - [x] Can only re-roll one dice

@@ -366,11 +366,15 @@ object JumpStep : Procedure() {
     object ResolvePlayerFallingOver: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<MoveContext>()
-            return AddContext(RiskingInjuryContext(context.player, mode = RiskingInjuryMode.FALLING_OVER))
+            val injuryContext = RiskingInjuryContext(
+                player = context.player,
+                mode = RiskingInjuryMode.FALLING_OVER,
+                startingCoordinatesForArmBar = context.startingSquare,
+            )
+            return AddContext(injuryContext)
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = BB2025FallingOver
         override fun onExitNode(state: Game, rules: Rules): Command {
-            // Regardless of the outcome, the player's action ends in a turnover
             return compositeCommandOf(
                 RemoveContext<RiskingInjuryContext>(),
                 ExitProcedure()

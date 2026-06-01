@@ -72,21 +72,23 @@ sealed interface GameActionDescriptor {
     fun createAll(): List<GameAction>
 }
 
-// "internal event" for continuing the game state
+// Game Action that is only used internally. It is used when an [ActionNode]
+// only have one outcome and thus can progress without involving
+// the user.
 data object ContinueWhenReady : GameActionDescriptor {
     override val size: Int = 1
     override fun createRandom(random: Random): GameAction = Continue
     override fun createAll(): List<GameAction> = listOf(Continue)
 }
 
-// An generic action representing "Accept" or "Yes"
+// A generic action representing "Accept" or "Yes".
 data object ConfirmWhenReady : GameActionDescriptor {
     override val size: Int = 1
     override fun createRandom(random: Random): GameAction = Confirm
     override fun createAll(): List<GameAction> = listOf(Confirm)
 }
 
-// An generic action representing "Cancel" or "No"
+// A generic action representing "Cancel" or "No"
 data object CancelWhenReady : GameActionDescriptor {
     override val size: Int = 1
     override fun createRandom(random: Random): GameAction = Cancel

@@ -270,6 +270,7 @@ object StandardMoveStep: Procedure() {
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = DodgeRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
+            val moveContext = state.getContext<MoveContext>()
             val dodgeContext = state.getContext<DodgeRollContext>()
             return if (dodgeContext.isSuccess) {
                 // FAQ May 2026: Shadowing only works if Dodge is successful
@@ -280,6 +281,7 @@ object StandardMoveStep: Procedure() {
             } else {
                 compositeCommandOf(
                     RemoveContext<DodgeRollContext>(),
+                    UpdateContext(moveContext.copy(dodgeFailed = true)),
                     GotoNode(ResolvePlayerFallingOver)
                 )
             }
@@ -322,7 +324,12 @@ object StandardMoveStep: Procedure() {
     object ResolvePlayerFallingOver: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<MoveContext>()
-            return AddContext(RiskingInjuryContext(context.player, mode = RiskingInjuryMode.FALLING_OVER))
+            val injuryContext = RiskingInjuryContext(
+                player = context.player,
+                mode = RiskingInjuryMode.FALLING_OVER,
+                startingCoordinatesForArmBar = if (context.dodgeFailed) context.startingSquare else null,
+            )
+            return AddContext(injuryContext)
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure {
             return when (rules.baseVersion) {
