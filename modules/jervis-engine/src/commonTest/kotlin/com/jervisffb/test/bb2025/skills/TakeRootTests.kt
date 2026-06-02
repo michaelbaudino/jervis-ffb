@@ -100,7 +100,7 @@ class TakeRootTests: JervisGameBB2025Test() {
         )
         assertNull(state.activePlayer)
         assertTrue(player.hasStatusEffect(PlayerStatusEffectType.ROOTED))
-        assertTrue(player.hasStatusEffect(PlayerStatusEffectType.BONE_HEAD))
+        assertTrue(player.hasStatusEffect(PlayerStatusEffectType.DISTRACTED))
         assertTrue(rules.isDistracted(player))
     }
 
