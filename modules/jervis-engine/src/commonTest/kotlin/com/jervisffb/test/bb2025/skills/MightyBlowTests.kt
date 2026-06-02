@@ -20,6 +20,7 @@ import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.standardBlock
+import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.makeDistracted
@@ -32,7 +33,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * Class testing usage of the [MightyBlow] skill
+ * Class testing usage of the [MightyBlow] skill.
  */
 class MightyBlowTests: JervisGameBB2025Test() {
 
@@ -45,10 +46,9 @@ class MightyBlowTests: JervisGameBB2025Test() {
     @Test
     fun worksOnBothDown_attacker() {
         val attacker = state.getPlayerById("A1".playerId)
-        attacker.apply {
-            addSkill(SkillType.MIGHTY_BLOW)
-        }
+        attacker.addSkill(SkillType.MIGHTY_BLOW)
         val defender = state.getPlayerById("H1".playerId)
+        assertEquals(9, defender.armorValue)
         controller.rollForward(
             *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
             *standardBlock(defender, 2.dblock),
@@ -58,38 +58,38 @@ class MightyBlowTests: JervisGameBB2025Test() {
         assertNotNull(state.getContext<RiskingInjuryContext>().armourModifiers.single { it is MightyBlowArmourModifier })
         controller.rollForward(
             DiceRollResults(1.d6, 1.d6), // Defender Injury
+            DiceRollResults(1.d6, 1.d6), // Attacker Armour
         )
         defender.assertStunned()
+        attacker.assertProne()
+        state.assertNoActivePlayer()
     }
 
     @Test
     fun worksOnBothDown_defender() {
         val attacker = state.getPlayerById("A1".playerId)
-        val defender = state.getPlayerById("H1".playerId)
-        defender.apply {
-            addSkill(SkillType.BLOCK)
+        val defender = state.getPlayerById("H1".playerId).apply {
             addSkill(SkillType.MIGHTY_BLOW)
         }
         controller.rollForward(
             *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
             *standardBlock(defender, 2.dblock),
-            Confirm, // Defender uses block
-            DiceRollResults(2.d6, 6.d6), // Armour
-            Confirm // Use Mighty Blow
+            DiceRollResults(2.d6, 6.d6), // Armour on Defender
+            DiceRollResults(2.d6, 6.d6), // Armour on Attacker
+            Confirm, // Use Mighty Blow
         )
         assertNotNull(state.getContext<RiskingInjuryContext>().armourModifiers.single { it is MightyBlowArmourModifier })
         controller.rollForward(
             DiceRollResults(1.d6, 1.d6), // Defender Injury
         )
+        state.assertNoActivePlayer()
         attacker.assertStunned()
     }
 
     @Test
     fun doesNotUseIfItDoesNotBreakArmour() {
         val attacker = state.getPlayerById("A1".playerId)
-        attacker.apply {
-            addSkill(SkillType.MIGHTY_BLOW)
-        }
+        attacker.addSkill(SkillType.MIGHTY_BLOW)
         val defender = state.getPlayerById("H1".playerId)
         controller.rollForward(
             *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
@@ -98,18 +98,17 @@ class MightyBlowTests: JervisGameBB2025Test() {
             Confirm, // Follow up
             DiceRollResults(2.d6, 5.d6), // Does not break armour
         )
-        assertNull(state.activePlayer)
+        state.assertNoActivePlayer()
         defender.assertProne()
     }
 
     @Test
     fun doesNotWorkOnInjuryIfUsedOnArmour() {
-        val attacker = state.getPlayerById("A1".playerId)
-        val defender = state.getPlayerById("H1".playerId)
-        attacker.apply {
+        val attacker = state.getPlayerById("A1".playerId).apply {
             addSkill(SkillType.BLOCK)
             addSkill(SkillType.MIGHTY_BLOW)
         }
+        val defender = state.getPlayerById("H1".playerId)
         controller.rollForward(
             *activatePlayer(attacker, PlayerStandardActionType.BLOCK),
             *standardBlock(defender, 2.dblock),
@@ -122,7 +121,7 @@ class MightyBlowTests: JervisGameBB2025Test() {
             Confirm, // Use Mighty Blow
             Cancel, // Do not use apothecary
         )
-        assertNull(state.activePlayer)
+        state.assertNoActivePlayer()
         assertEquals(PlayerState.KNOCKED_OUT, defender.state)
     }
 
@@ -147,7 +146,7 @@ class MightyBlowTests: JervisGameBB2025Test() {
         controller.rollForward(
             Cancel, // Do not use apothecary
         )
-        assertNull(state.activePlayer)
+        state.assertNoActivePlayer()
         assertEquals(PlayerState.KNOCKED_OUT, defender.state)
     }
 
@@ -156,7 +155,6 @@ class MightyBlowTests: JervisGameBB2025Test() {
         val attacker = state.getPlayerById("A1".playerId)
         val defender = state.getPlayerById("H1".playerId)
         defender.apply {
-            addSkill(SkillType.BLOCK)
             addSkill(SkillType.MIGHTY_BLOW)
             makeDistracted()
         }
@@ -169,7 +167,6 @@ class MightyBlowTests: JervisGameBB2025Test() {
             DiceRollResults(2.d6, 6.d6), // Attacker armour roll
         )
         assertNull(state.activePlayer)
-        defender.assertProne()
         defender.assertProne()
     }
 }

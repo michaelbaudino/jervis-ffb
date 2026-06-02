@@ -38,7 +38,6 @@ import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.getSkill
-import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.ArmourModifier
 import com.jervisffb.engine.model.modifiers.MightyBlowArmourModifier
@@ -76,16 +75,16 @@ import kotlinx.collections.immutable.toPersistentList
  * This also allows us to skip skills like Claw (when rolling 7 or less) or
  * Mighty Blow (if they don't make a difference)
  *
- * Block:
+ * Knocked Down (during Block Action):
  * 1. Claw (Knocked Down)
  * 2. Mighty Blow (Knocked Down)
- * 4. TBD: Chainsaw, Arm Bar, Others?
+ * 4. TBD: Chainsaw, Others?
  *
  * Foul:
  * 1. Dirty Player (AV Roll - Modifier)
  * 2. Lone Fouler (AV Roll - Reroll)
  *
- * Throw Team-mate:
+ * Knocked Down (Throw Team-mate):
  * 1. Lethal Flight (Knocked Down)
  *
  * Fall Over:
@@ -188,7 +187,7 @@ object ArmourRoll: Procedure() {
                     if (thrownPlayer != null && thrownPlayer == context.causedBy && context.mode == RiskingInjuryMode.KNOCKED_DOWN) {
                         GotoNode(CheckIfLethalFlightIsApplicable)
                     } else {
-                        GotoNode(CheckIfMightyBlowIsApplicable)
+                        GotoNode(CheckIfClawsIsApplicable)
                     }
                 }
                 RiskingInjuryMode.FOUL -> GotoNode(ChooseToUseDirtyPlayer)
@@ -204,6 +203,62 @@ object ArmourRoll: Procedure() {
         }
     }
 
+    // Claws only works on Knocked Down players during Block Actions (Animal Savagery TBD)
+    // Also, to clean up the action flow, we skip Claws if using it doesn't matter, i.e.
+    // We only use it on AV 9+.
+    object CheckIfClawsIsApplicable: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+            // This should be safe as there is no way a Player can be Knocked Down during a Block unless
+            // they are either the attacker or the defender. All other injuries will be crowd-surfs.
+            val isBlock = state.hasContext<BlockContext>()
+            val isKnockedDown = (context.mode == RiskingInjuryMode.KNOCKED_DOWN)
+            val opponentHasClaws = (context.causedBy?.isSkillAvailable(SkillType.CLAWS) == true)
+
+            // We only want to use Claws if it makes a difference, i.e., Armour Roll should be
+            // 8+ and Armour Value should be 9+.
+            val avTarget = context.player.armorValue
+            val roll = context.armourRoll.sum() + context.armourModifiers.sum()
+            val clawsWillMatter = avTarget >= 9 && roll >= 8
+
+            return when (isBlock && isKnockedDown && opponentHasClaws && clawsWillMatter) {
+                true -> GotoNode(ChooseToUseClaws)
+                false -> GotoNode(CheckIfMightyBlowIsApplicable)
+            }
+        }
+    }
+
+    object ChooseToUseClaws: ActionNode() {
+        override fun actionOwner(state: Game, rules: Rules): Team {
+            return state.getContext<RiskingInjuryContext>().causedBy?.team ?: INVALID_GAME_STATE("Missing causedBy")
+        }
+        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
+            val context = state.getContext<RiskingInjuryContext>()
+            val hasClaws = (context.causedBy?.isSkillAvailable(SkillType.CLAWS) == true)
+            return when (hasClaws) {
+                true -> listOf(ConfirmWhenReady, CancelWhenReady)
+                false -> listOf(ContinueWhenReady)
+            }
+        }
+        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
+            val useClaws = (action is Confirm)
+            return when (useClaws) {
+                true -> {
+                    val context = state.getContext<RiskingInjuryContext>()
+                    val player = context.causedBy ?: INVALID_GAME_STATE("Missing causedBy")
+                    compositeCommandOf(
+                        ReportSkillUsed(player, SkillType.CLAWS),
+                        SetSkillUsed(player, player.getSkill(SkillType.CLAWS), used = true),
+                        UpdateContext(context.copy(useClawsOnArmourRoll = true)),
+                        GotoNode(CheckIfMightyBlowIsApplicable)
+                    )
+                }
+                false -> GotoNode(CheckIfMightyBlowIsApplicable)
+            }
+        }
+    }
+
+
     // Mighty Blow only works on Knocked Down players during Blocks (Animal Savagery TBD)
     // Also, to clean up the action flow, we skip Mighty Blow if using it wouldn't matter.
     object CheckIfMightyBlowIsApplicable: ComputationNode() {
@@ -214,10 +269,8 @@ object ArmourRoll: Procedure() {
             val isBlock = state.hasContext<BlockContext>()
             val isKnockedDown = (context.mode == RiskingInjuryMode.KNOCKED_DOWN)
 
-            // Since the opponent using Mighty Blow, might already be prone, we cannot rely on
-            // normal checks.
-            val opponentCanUseSkills = context.canOpponentUseSkills
-            val opponentHasMightyBlow = (context.causedBy?.hasSkill(SkillType.MIGHTY_BLOW) == true)
+            val opponentHasMightyBlow = (context.causedBy?.isSkillAvailable(SkillType.MIGHTY_BLOW) == true)
+            val opponentUsedClaws = context.useClawsOnArmourRoll
 
             // We only want to use Mighty Blow if it makes a difference, i.e. Armour Roll should be
             // Target AV - 1.
@@ -240,8 +293,8 @@ object ArmourRoll: Procedure() {
             return if (
                 isBlock
                 && isKnockedDown
-                && opponentCanUseSkills
                 && opponentHasMightyBlow
+                && !opponentUsedClaws
                 && mbWillMatter
             ) {
                 GotoNode(ChooseToUseMightyBlow)
@@ -260,7 +313,7 @@ object ArmourRoll: Procedure() {
 
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
-            val hasMightyBlow = (context.causedBy?.hasSkill(SkillType.MIGHTY_BLOW) == true)
+            val hasMightyBlow = (context.causedBy?.isSkillAvailable(SkillType.MIGHTY_BLOW) == true)
             return if (hasMightyBlow) {
                 listOf(ConfirmWhenReady, CancelWhenReady)
             } else {
@@ -382,9 +435,6 @@ object ArmourRoll: Procedure() {
     object CheckIfLethalFlightIsApplicable: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             val context = state.getContext<RiskingInjuryContext>()
-            // Since the opponent using Mighty Blow, might already be prone, we cannot rely on
-            // normal checks.
-            val opponentCanUseSkills = context.canOpponentUseSkills
             val opponentHasLethalFlight = (context.causedBy?.isSkillAvailable(SkillType.LETHAL_FLIGHT) == true)
 
             // We only want to use Lethal Flight if it makes a difference, i.e. Armour Roll should be
@@ -399,7 +449,7 @@ object ArmourRoll: Procedure() {
                 && avModifier > 0
                 && (roll + avModifier) >= target
 
-            return if (opponentCanUseSkills && opponentHasLethalFlight && lethalFlightWillMatter) {
+            return if (opponentHasLethalFlight && lethalFlightWillMatter) {
                 GotoNode(ChooseToUseLethalFlight)
             } else {
                 ExitProcedure()
@@ -412,7 +462,6 @@ object ArmourRoll: Procedure() {
             val injuryContext = state.getContext<RiskingInjuryContext>()
             return injuryContext.causedBy?.team ?: error("Missing team: $injuryContext")
         }
-
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
             val hasLethalFlight = (context.causedBy?.isSkillAvailable(SkillType.LETHAL_FLIGHT) == true)
@@ -422,7 +471,6 @@ object ArmourRoll: Procedure() {
                 listOf(ContinueWhenReady)
             }
         }
-
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             val context = state.getContext<RiskingInjuryContext>()
             val thrownPlayer = context.causedBy!!
@@ -467,7 +515,6 @@ object ArmourRoll: Procedure() {
             val context = state.getContext<RiskingInjuryContext>()
             return context.player.team.otherTeam()
         }
-
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
             val team = context.player.team
@@ -481,7 +528,6 @@ object ArmourRoll: Procedure() {
                 false -> listOf(ContinueWhenReady)
             }
         }
-
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             return when (action) {
                 Cancel, Continue -> ExitProcedure()

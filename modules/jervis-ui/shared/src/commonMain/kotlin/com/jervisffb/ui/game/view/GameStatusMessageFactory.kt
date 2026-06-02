@@ -154,6 +154,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             PileDriverStep.ChooseToUsePileDriver to SkillType.PILE_DRIVER,
             ThrowPlayerStep.ChooseToUseBullseye to SkillType.BULLSEYE,
             SwoopStep.ChooseToUseSwoop to SkillType.SWOOP,
+            ArmourRoll.ChooseToUseClaws to SkillType.CLAWS,
         )
 
         return skills.toList().associate {

@@ -132,10 +132,7 @@ object InjuryRoll: Procedure() {
             val isBlock = state.hasContext<BlockContext>()
             val isKnockedDown = (context.mode == RiskingInjuryMode.KNOCKED_DOWN)
 
-            // Since the opponent using Mighty Blow, might already be prone, we cannot rely on
-            // normal checks.
-            val opponentCanUseSkills = context.canOpponentUseSkills
-            val opponentHasMightyBlow = (context.causedBy?.hasSkill(SkillType.MIGHTY_BLOW) == true)
+            val opponentHasMightyBlow = (context.causedBy?.isSkillAvailable(SkillType.MIGHTY_BLOW) == true)
             val isMightyBlowAvailable = if (opponentHasMightyBlow) {
                 val skill = context.causedBy.getSkill(SkillType.MIGHTY_BLOW)
                 !skill.used
@@ -146,7 +143,6 @@ object InjuryRoll: Procedure() {
             return if (
                 isBlock
                 && isKnockedDown
-                && opponentCanUseSkills
                 && isMightyBlowAvailable
             ) {
                 GotoNode(ChooseToUseMightyBlow)

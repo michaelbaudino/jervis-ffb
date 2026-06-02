@@ -509,6 +509,10 @@ class AutomatedActionsFactory(
             }
         }
 
+        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_CLAWS) && currentNode == ArmourRoll.ChooseToUseClaws) {
+            return Confirm
+        }
+
         return null
     }
 

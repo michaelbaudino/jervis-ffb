@@ -35,7 +35,8 @@ interface Skill<T> {
     var used: Boolean
     // When the `used` state reset back to `false`?
     val resetAt: Duration
-    // Whether this skill works when the player has lost its tackle zones
+    // Whether this skill works when the player has lost its tackle zones.
+    // This property is only used when the player is Standing.
     // If `true`, in BB2025 this means the skills should also have the `Passive` keyword.
     val workWithoutTackleZones: Boolean
     // Whether this skill works when the player is prone or stunned

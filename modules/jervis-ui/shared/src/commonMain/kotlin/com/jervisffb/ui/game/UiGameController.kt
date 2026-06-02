@@ -111,6 +111,7 @@ import com.jervisffb.ui.game.state.actionwheel.UseBigHandWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBlockWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBribeWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBullseyeWheelController
+import com.jervisffb.ui.game.state.actionwheel.UseClawsWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDirtyPlayerWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDivingCatchWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDodgeWheelController
@@ -275,6 +276,7 @@ class UiGameController(
         UseBigHandWheelController,
         UseBlockWheelController,
         UseBullseyeWheelController,
+        UseClawsWheelController,
         UseDirtyPlayerWheelController,
         UseDivingCatchWheelController,
         UseDodgeWheelController,

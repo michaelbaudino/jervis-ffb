@@ -73,14 +73,12 @@ data class RiskingInjuryContext(
     val armourRoll: PersistentList<D6DieRoll> = persistentListOf(),
     val armourModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val useClawsOnArmourRoll: Boolean = false,
-    // val usedArmBarOnArmourRoll: Player? = null,
 
     // Injury roll
     val injuryRoll: PersistentList<D6Result> = persistentListOf(),
     val injuryModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val injuryResult: InjuryResult? = null,
     val useThickSkullOnInjuryRoll: Boolean = false,
-    // val usedArmBarOnInjuryRoll: Player? = null,
 
     // Casualty roll
     val casualtyRoll: D16Result? = null,
@@ -114,7 +112,7 @@ data class RiskingInjuryContext(
     val regenerationSuccess: Boolean = false
 ): ProcedureContext {
 
-    private fun checkIfOpponentCanUseSkills(): Boolean {
+    private fun checkIfOpponentCanUseActiveSkills(): Boolean {
         if (causedBy == null) return false
         val rules = causedBy.team.game.rules
         return rules.isStanding(causedBy) && !rules.isDistracted(causedBy)
@@ -122,7 +120,7 @@ data class RiskingInjuryContext(
 
     // Returns `true` if this injury is caused by another player that is able to use
     // their skills to modify the armour/injury roll
-    val canOpponentUseSkills = checkIfOpponentCanUseSkills()
+    val canOpponentUseSkills = checkIfOpponentCanUseActiveSkills()
 
     val injuryRollResult: Int
         get() = injuryRoll.sum() + injuryModifiers.sum()
@@ -184,7 +182,8 @@ object RiskingInjuryRoll: Procedure() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = ArmourRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
             val context = state.getContext<RiskingInjuryContext>()
-            return if (context.armourBroken) {
+            val clawsWorked = (context.useClawsOnArmourRoll && context.armourRoll.sum() >= 8)
+            return if (context.armourBroken || clawsWorked) {
                 GotoNode(RollForInjury)
             } else {
                 // If Amour isn't broken, we have to consider a few special cases:

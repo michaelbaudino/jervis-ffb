@@ -19,6 +19,7 @@ import com.jervisffb.engine.model.context.SecureTheBallContext
 import com.jervisffb.engine.model.context.SteadyFootingRollContext
 import com.jervisffb.engine.model.context.StumbleContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.isOnHomeTeam
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -78,6 +79,7 @@ import kotlin.time.ExperimentalTime
  * During Block action:
  * - Block (skill usage)
  * - Bullseye (skill usage)
+ * - Claws (skill usage)
  * - Diving Catch (ball on target)
  * - Dodge (skill usage)
  * - Eye Gouge (skill usage)
@@ -534,7 +536,17 @@ object UseMightyBlowController: UseSkillWheelController(SkillType.MIGHTY_BLOW) {
     override fun getActionWheelCenter(state: Game): PitchCoordinate {
         val context = state.getContext<RiskingInjuryContext>()
         val player = context.causedBy ?: error("Missing causedBy: $state")
-        return player.coordinates
+        return when (player.location) {
+            // A player with Mighty Blow might have left the Pitch when the skill is used.
+            // For now, just place the action wheel on the team half until we find
+            // a way to show them in the Dogout.
+            DogOut -> when (player.isOnHomeTeam()) {
+                true -> getHomeCenterCoordinates(state)
+                false -> getAwayCenterCoordinates(state)
+            }
+            is GiantLocation -> TODO("Not supported yet")
+            is PitchCoordinate -> player.coordinates
+        }
     }
 }
 
@@ -559,9 +571,7 @@ object UseApothecaryWheelController: YesNoAnswerWheelController() {
     override fun getActionWheelCenter(state: Game): PitchCoordinate? {
         val player = state.getContext<RiskingInjuryContext>().player
         return when (player.location) {
-            DogOut -> {
-                state.getContext<PushContext>().pushChain.last().from
-            }
+            DogOut -> state.getContext<PushContext>().pushChain.last().from
             is PitchCoordinate -> {
                 // TODO Figure out a better player to show the Action Wheel for players out-of-bounds
                 when (player.coordinates.isOutOfBounds(state.rules)) {
@@ -599,5 +609,26 @@ object UseBribeWheelController: YesNoAnswerWheelController() {
         val context = state.getContext<BeingSentOffContext>()
         val player = context.player
         return player.coordinates
+    }
+}
+
+object UseClawsWheelController: UseSkillWheelController(SkillType.CLAWS) {
+    override val nodes: Set<Node> = setOf(
+        ArmourRoll.ChooseToUseClaws,
+    )
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val context = state.getContext<RiskingInjuryContext>()
+        val player = context.causedBy ?: error("Missing causedBy: $context")
+        return when (player.location) {
+            // A player with Claws might have left the Pitch when the skill is used.
+            // For now, just place the action wheel on the team half until we find
+            // a way to show them in the Dogout.
+            DogOut -> when (player.isOnHomeTeam()) {
+                true -> getHomeCenterCoordinates(state)
+                false -> getAwayCenterCoordinates(state)
+            }
+            is GiantLocation -> TODO("Not supported yet")
+            is PitchCoordinate -> player.coordinates
+        }
     }
 }

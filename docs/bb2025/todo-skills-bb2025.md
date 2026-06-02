@@ -16,7 +16,7 @@ before being shown as a dialog to players.
 Skills should only be marked as completed here if they are implemented and have
 a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2025/skills`.
 
-## Agility Skills
+## Agility Skills (DONE)
 
 - [x] Catch
     - [x] Reroll catching the landing after kickoff
@@ -296,7 +296,14 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Works on Secure the Ball
   - [x] Ignores Pouring Rain
   - [x] Ignores Marks
-- [ ] Claws
+- [x] Claws
+  - [x] Work during Blitz Action
+  - [x] Work during Block Action
+  - [x] Work if blocked while Distracted
+  - [x] Works if both down
+  - [x] Works on Pow
+  - [x] Does not work on Special Actions (like Stab)
+  - [x] Does not work with Mighty Blow
 - [ ] Disturbing Presence*
 - [x] Extra Arms
   - [x] Is optional

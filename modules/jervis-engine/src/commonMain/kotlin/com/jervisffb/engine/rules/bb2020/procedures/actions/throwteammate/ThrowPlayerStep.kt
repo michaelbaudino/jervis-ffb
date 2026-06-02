@@ -66,6 +66,7 @@ import com.jervisffb.engine.rules.common.procedures.actions.move.MovePlayerIntoS
 import com.jervisffb.engine.rules.common.procedures.actions.move.ScoringATouchdown
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.LandingRoll
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowPlayerResult
+import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateAction
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
@@ -74,7 +75,7 @@ import com.jervisffb.engine.rules.common.tables.Range
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 
 /**
- * Procedure for handling the throwing the player part of a [com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateAction].
+ * Procedure for handling the throwing the player part of a [ThrowTeamMateAction].
  * This procedure assumes that the player being thrown has already been selected.
  *
  * See page 53 in the rulebook.

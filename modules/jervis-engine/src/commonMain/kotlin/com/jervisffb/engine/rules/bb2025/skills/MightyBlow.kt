@@ -28,7 +28,7 @@ class MightyBlow(
     override val resetAt: Duration = Duration.END_OF_ACTION
     override var used: Boolean = false
     override val workWithoutTackleZones: Boolean = false
-    override val workWhenProne: Boolean = false
+    override val workWhenProne: Boolean = true // Even though an Active skill, it still works when prone.
     override val keywords: List<SkillKeyword> = listOf(
         SkillKeyword.ACTIVE,
         SkillKeyword.ELITE

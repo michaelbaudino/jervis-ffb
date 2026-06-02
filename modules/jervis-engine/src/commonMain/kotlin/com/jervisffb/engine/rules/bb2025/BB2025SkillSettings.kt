@@ -13,6 +13,7 @@ import com.jervisffb.engine.rules.bb2025.skills.BreatheFire
 import com.jervisffb.engine.rules.bb2025.skills.Bullseye
 import com.jervisffb.engine.rules.bb2025.skills.Cannoneer
 import com.jervisffb.engine.rules.bb2025.skills.CatchSkill
+import com.jervisffb.engine.rules.bb2025.skills.Claws
 import com.jervisffb.engine.rules.bb2025.skills.CloudBurster
 import com.jervisffb.engine.rules.bb2025.skills.Dauntless
 import com.jervisffb.engine.rules.bb2025.skills.Decay
@@ -309,9 +310,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.CLAWS -> {
-                    // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Claws", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
+                        Claws(player, category, expiresAt)
+                    }
                 }
                 SkillType.DISTURBING_PRESENCE -> {
                     // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
