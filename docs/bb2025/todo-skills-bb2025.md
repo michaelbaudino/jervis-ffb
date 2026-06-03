@@ -304,7 +304,16 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Works on Pow
   - [x] Does not work on Special Actions (like Stab)
   - [x] Does not work with Mighty Blow
-- [ ] Disturbing Presence*
+- [x] Disturbing Presence*
+  - [x] Work when distracted
+  - [x] Work when prone
+  - [x] Pass Action
+  - [x] Throw Team-mate Action
+  - [ ] Throw Bomb Special Action
+  - [ ] Does not work on Kick Team-mate
+  - [x] Intercept Roll
+  - [x] Catch Roll
+  - [x] Only works within 3 squares
 - [x] Extra Arms
   - [x] Is optional
   - [x] Works on Catch

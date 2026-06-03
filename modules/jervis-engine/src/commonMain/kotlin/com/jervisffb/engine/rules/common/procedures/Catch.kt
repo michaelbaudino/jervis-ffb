@@ -34,6 +34,7 @@ import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.CatchModifier
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.model.modifiers.DisturbingPresenceModifier
 import com.jervisffb.engine.reports.ReportCatch
 import com.jervisffb.engine.reports.ReportInterception
 import com.jervisffb.engine.reports.ReportNoBallAffectingAction
@@ -217,7 +218,17 @@ object Catch : Procedure() {
                 modifiers.add(CatchModifier.DIVING_CATCH)
             }
 
-            // TODO Check for disturbing presence.
+            // Disturbing Presence
+            val catcher = context.catchingPlayer
+            val playersWithDisturbingPresence = catcher.coordinates
+                .getSurroundingCoordinates(rules, distance = 3, includeOutOfBounds = false)
+                .mapNotNull { state.pitch[it].player }
+                .filter { it.team != catcher.team }
+                .count { it.isSkillAvailable(SkillType.DISTURBING_PRESENCE) }
+            if (playersWithDisturbingPresence > 0) {
+                modifiers.add(DisturbingPresenceModifier(playersWithDisturbingPresence, CatchModifier.DISTURBING_PRESENCE))
+            }
+
             return compositeCommandOf(
                 UpdateContext(context.copy(modifiers = modifiers)),
                 GotoNode(RollToCatch)

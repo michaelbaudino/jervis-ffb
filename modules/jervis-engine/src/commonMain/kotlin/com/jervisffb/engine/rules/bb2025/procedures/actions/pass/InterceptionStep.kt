@@ -35,6 +35,7 @@ import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.model.modifiers.DisturbingPresenceModifier
 import com.jervisffb.engine.model.modifiers.InterceptionModifier
 import com.jervisffb.engine.reports.ReportInterception
 import com.jervisffb.engine.reports.ReportSkillUsed
@@ -221,6 +222,17 @@ object InterceptionStep: Procedure() {
             if (player.isSkillAvailable(SkillType.VERY_LONG_LEGS)) {
                 modifiers.add(InterceptionModifier.VERY_LONG_LEGS)
             }
+
+            // Disturbing Presence
+            val playersWithDisturbingPresence = player.coordinates
+                .getSurroundingCoordinates(rules, distance = 3, includeOutOfBounds = false)
+                .mapNotNull { state.pitch[it].player }
+                .filter { it.team != player.team }
+                .count { it.isSkillAvailable(SkillType.DISTURBING_PRESENCE) }
+            if (playersWithDisturbingPresence > 0) {
+                modifiers.add(DisturbingPresenceModifier(playersWithDisturbingPresence, InterceptionModifier.DISTURBING__PRESENCE))
+            }
+
             if (player.isSkillAvailable(SkillType.STUNTY)) {
                 modifiers.add(InterceptionModifier.STUNTY)
             }

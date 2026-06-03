@@ -8,7 +8,9 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.model.modifiers.DisturbingPresenceModifier
 import com.jervisffb.engine.model.modifiers.QualityModifier
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
@@ -17,6 +19,7 @@ import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.D6WithRero
 import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.RerollData
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowPlayerResult
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
+import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.tables.Range
 import com.jervisffb.engine.rules.common.tables.Weather
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -83,8 +86,16 @@ object QualityRoll: D6WithRerollProcedure() {
             modifiers.add(QualityModifier.VERY_SUNNY)
         }
 
-        // Are there other quality roll modifiers? (Like disturbing presence)
-        // TODO
+        // Disturbing Presence
+        val thrower = context.thrower
+        val playersWithDisturbingPresence = thrower.coordinates
+            .getSurroundingCoordinates(rules, distance = 3, includeOutOfBounds = false)
+            .mapNotNull { state.pitch[it].player }
+            .filter { it.team != thrower.team }
+            .count { it.isSkillAvailable(SkillType.DISTURBING_PRESENCE) }
+        if (playersWithDisturbingPresence > 0) {
+            modifiers.add(DisturbingPresenceModifier(playersWithDisturbingPresence, QualityModifier.DISTURBING_PRESENCE))
+        }
 
         // Calculate throw result.
         val passingStat = context.thrower.passing ?: Int.MAX_VALUE

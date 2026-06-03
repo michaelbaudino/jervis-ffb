@@ -20,7 +20,9 @@ import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
+import com.jervisffb.engine.model.modifiers.AccuracyModifier
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.model.modifiers.DisturbingPresenceModifier
 import com.jervisffb.engine.model.modifiers.QualityModifier
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.DiceRollType
@@ -129,8 +131,14 @@ object ThrowTeammateAccuracyRoll: D6WithRerollProcedure() {
             modifiers.add(QualityModifier.VERY_SUNNY)
         }
 
-        // Are there other quality roll modifiers? (Like disturbing presence)
-        // TODO
+        // Disturbing Presence
+        val thrower = context.thrower
+        val playersWithDisturbingPresence = thrower.coordinates
+            .getSurroundingCoordinates(rules, distance = 3, includeOutOfBounds = false)
+            .mapNotNull { state.pitch[it].player }
+            .filter { it.team != thrower.team }
+            .count { it.isSkillAvailable(SkillType.DISTURBING_PRESENCE) }
+        modifiers.add(DisturbingPresenceModifier(playersWithDisturbingPresence, AccuracyModifier.DISTURBING_PRESENCE))
 
         return context.copy(
             qualityRollModifiers = modifiers.toPersistentList()

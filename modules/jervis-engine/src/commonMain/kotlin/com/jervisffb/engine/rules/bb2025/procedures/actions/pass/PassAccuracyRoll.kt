@@ -24,6 +24,7 @@ import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.AccuracyModifier
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.model.modifiers.DisturbingPresenceModifier
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
@@ -233,8 +234,16 @@ object PassAccuracyRoll: D6WithRerollProcedure() {
             modifiers.add(AccuracyModifier.VERY_SUNNY)
         }
 
-        // Are there other accuracy modifiers? (Like disturbing presence)
-        // TODO
+        // Disturbing Presence
+        val thrower = context.thrower
+        val playersWithDisturbingPresence = thrower.coordinates
+            .getSurroundingCoordinates(rules, distance = 3, includeOutOfBounds = false)
+            .mapNotNull { state.pitch[it].player }
+            .filter { it.team != thrower.team }
+            .count { it.isSkillAvailable(SkillType.DISTURBING_PRESENCE) }
+        if (playersWithDisturbingPresence > 0) {
+            modifiers.add(DisturbingPresenceModifier(playersWithDisturbingPresence, AccuracyModifier.DISTURBING_PRESENCE))
+        }
 
         return context.copy(
             passingModifiers = modifiers.toPersistentList()

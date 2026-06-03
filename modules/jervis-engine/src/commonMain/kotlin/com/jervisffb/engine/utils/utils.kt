@@ -94,6 +94,7 @@ import com.jervisffb.engine.rules.common.rerolls.DiceRerollOption
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.skills.Skill
 import com.jervisffb.engine.rules.common.skills.SkillType
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.collections.plus
@@ -253,6 +254,8 @@ inline fun assert(condition: Boolean, lazyMessage: () -> String = { "A invariant
 @JvmName("sumOfDieResults")
 fun List<DieResult>.sum(): Int = this.sumOf { it.value }
 fun List<DiceModifier>.sum(): Int = this.sumOf { it.modifier }
+fun PersistentList<DiceModifier>.sum(): Int = this.sumOf { it.modifier }
+
 @JvmName("sumOfD6DieRolls")
 fun List<D6DieRoll>.sum(): Int = this.sumOf { it.result.value }
 

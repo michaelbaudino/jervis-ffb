@@ -19,6 +19,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Dauntless
 import com.jervisffb.engine.rules.bb2025.skills.Decay
 import com.jervisffb.engine.rules.bb2025.skills.Defensive
 import com.jervisffb.engine.rules.bb2025.skills.DirtyPlayer
+import com.jervisffb.engine.rules.bb2025.skills.DisturbingPresence
 import com.jervisffb.engine.rules.bb2025.skills.DivingCatch
 import com.jervisffb.engine.rules.bb2025.skills.DivingTackle
 import com.jervisffb.engine.rules.bb2025.skills.Dodge
@@ -315,9 +316,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.DISTURBING_PRESENCE -> {
-                    // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Disturbing Presence", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
+                        DisturbingPresence(player, category, expiresAt)
+                    }
                 }
                 SkillType.EXTRA_ARMS -> {
                     addNoValueEntry("Extra Arms", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
