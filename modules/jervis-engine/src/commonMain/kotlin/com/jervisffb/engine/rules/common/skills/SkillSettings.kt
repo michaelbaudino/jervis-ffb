@@ -103,9 +103,11 @@ abstract class SkillSettings {
      * Converts a string to the appropriate [SkillId], or return `null` if the skill name could not be mapped
      * to a supported skill in this ruleset.
      *
-     * The format is expected to be "nice", this can probably vary between APIs but it looks something like this:
+     * The format is expected to be "nice", this can probably vary between APIs, but it looks something like this:
      * - "Mighty Blow (+1)"
      * - "Mighty Blow(-1)"
+     *
+     * This function should be used when importing skills from TourPlay and FUMBBL.s
      */
     fun getSkillIdFromNiceDescription(niceSkillName: String): SkillId? {
         return niceRegex.matchEntire(niceSkillName)?.let { match ->
@@ -134,9 +136,12 @@ abstract class SkillSettings {
     fun getSkillId(serializedSkillId: String): SkillId? {
         // Split name into name and a value
         return skillIdRegex.matchEntire(serializedSkillId)?.let { match ->
+            // Should be equal to the enum name for the SkillType, e.g. "BLOCK" for SkillType.BLOCK
             val name = match.groups[1]?.value?.trim() ?: error("Failed to find skill name in string: $serializedSkillId")
+            // The "int" value for a skill. e.g. 1 for "MIGHTY_BLOW(1)"
             val value = match.groups[3]?.value
             val intValue = value?.toIntOrNull()
+            // The string value for a skill that uses keywords, e.g. "Human" for "HATRED(Human)"
             // TODO: It is not clear how Tourplay and Fumbble represent Hatred and Animosity
             val keywordValue = PlayerKeyword.entries.firstOrNull { it.description.equals(value, ignoreCase = true) }
             val skillValue = when {
@@ -144,7 +149,7 @@ abstract class SkillSettings {
                 keywordValue != null -> SkillValue.Keyword(keywordValue)
                 else -> SkillValue.None
             }
-            skillCache.keys.firstOrNull { type -> type.description == name }?.let { skillType ->
+            skillCache.keys.firstOrNull { type -> type.name == name }?.let { skillType ->
                 SkillId(skillType, skillValue)
             }
         }

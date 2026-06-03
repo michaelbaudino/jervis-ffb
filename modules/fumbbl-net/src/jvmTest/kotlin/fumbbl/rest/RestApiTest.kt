@@ -1,7 +1,10 @@
 package fumbbl.rest
 
+import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Coach
 import com.jervisffb.engine.rules.FumbblBB2020Rules
+import com.jervisffb.engine.rules.StandardBB2025Rules
+import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.serialize.SerializedTeam
 import com.jervisffb.fumbbl.web.FumbblApi
 import kotlinx.coroutines.runBlocking
@@ -27,6 +30,26 @@ class RestApiTest {
         val file = api.loadTeam(1187712, rules)
         val team = SerializedTeam.deserialize(rules, file.getOrThrow().team, Coach.UNKNOWN)
         assertEquals(team.name, "Just Human Nothing More")
+    }
+
+    // Test for https://github.com/cmelchior/jervis-ffb/issues/47
+    @Test
+    fun loadBB2025Team() = runBlocking {
+        val rules = StandardBB2025Rules()
+        val file = api.loadTeam(1261198, rules)
+        val team = SerializedTeam.deserialize(rules, file.getOrThrow().team, Coach.UNKNOWN)
+        assertEquals(team.name, "Plane of Tuskars Sandstorm")
+
+        val player = team[3.playerNo]
+        val position = player.position
+        assertEquals("Niu", player.name)
+        assertEquals("Tomb Guardian", position.title)
+        assertEquals(3, position.skills.size)
+        assertEquals(1, player.extraSkills.size)
+        assertTrue(position.skills.any { it.type == SkillType.BRAWLER })
+        assertTrue(position.skills.any { it.type == SkillType.DECAY })
+        assertTrue(position.skills.any { it.type == SkillType.REGENERATION })
+        assertTrue(player.extraSkills.any { it.type == SkillType.BREAK_TACKLE })
     }
 
     @Test

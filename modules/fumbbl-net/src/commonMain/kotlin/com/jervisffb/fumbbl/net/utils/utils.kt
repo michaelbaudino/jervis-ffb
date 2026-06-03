@@ -126,16 +126,16 @@ private fun extractField(field: FumbblField): Pitch {
 /**
  * Map FUMBBL Skill Names to Jervis [SkillId]s.
  * Return `null` if the name could not be mapped or if the skill isn't supported
- * by the ruletset.
+ * by the ruleset.
  */
-fun convertFumbblSkillToSkillId(rules: Rules, skillName: String): SkillId? {
+fun convertFumbblSkillToSkillId(rules: Rules, fumbblSkillName: String): SkillId? {
     // We should probably hard code all the FUMBBL titles instead of hoping the names are the same.
     // But for now, we just do it in the few places with known problems and hope for the best.
-    val normalizedSkillName = when (skillName) {
+    val normalizedSkillName = when (fumbblSkillName) {
         "Side Step" -> SkillType.SIDESTEP.description
-        else -> skillName
+        else -> fumbblSkillName
     }
-    return rules.skillSettings.getSkillId(normalizedSkillName)
+    return rules.skillSettings.getSkillIdFromNiceDescription(normalizedSkillName)
 }
 
 

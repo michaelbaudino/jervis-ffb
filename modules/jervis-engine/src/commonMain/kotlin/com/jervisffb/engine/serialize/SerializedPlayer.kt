@@ -34,7 +34,7 @@ class SerializedPlayer(
     val type: PlayerType,
     val statModifiers: List<StatModifier>,
     // Extra skills on top of positional skills.
-    // String = SkillId.toPrettyString()
+    // String = SkillId.serialize()
     val extraSkills: List<String>,
     val nigglingInjuries: Int,
     val missNextGame: Boolean,

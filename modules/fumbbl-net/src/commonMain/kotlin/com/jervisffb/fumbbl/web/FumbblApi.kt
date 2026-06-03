@@ -10,7 +10,6 @@ import com.jervisffb.engine.model.RosterId
 import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.TeamId
 import com.jervisffb.engine.rules.Rules
-import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.roster.Position
 import com.jervisffb.engine.rules.common.roster.RegionalSpecialRule
 import com.jervisffb.engine.rules.common.roster.Roster
@@ -141,8 +140,8 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
             // Unclear if we need exact player details. I assume it could be possible to override
             // the portrait, but seems fine to just use the one from the position for now
             // val players: Set<PlayerDetails> = loadTeamPlayers(team)
-            val jervisRoster = convertToBB2020JervisRoster(rules, roster)
-            val jervisTeam = convertToBB2020JervisTeam(rules, jervisRoster, team)
+            val jervisRoster = convertToJervisRoster(rules, roster)
+            val jervisTeam = convertToJervisTeam(rules, jervisRoster, team)
             return Result.success(JervisTeamFile(
                 metadata = JervisMetaData(fileFormat = FILE_FORMAT_VERSION),
                 team = jervisTeam,
@@ -190,19 +189,20 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
                 "S" -> SkillCategory.STRENGTH
                 "M" -> SkillCategory.MUTATIONS
                 "T" -> SkillCategory.TRAITS
+                "D" -> SkillCategory.DEVIOUS
                 else -> throw IllegalStateException("Unsupported skill category: $it")
             }
         }
     }
 
-    private fun convertToBB2020JervisRoster(rules: Rules, roster: FumbbleRosterDetails): Roster {
+    private fun convertToJervisRoster(rules: Rules, roster: FumbbleRosterDetails): Roster {
         val positions: List<RosterPosition> = roster.positions.map { position ->
             val iconRef = SpriteSheet.fumbbl(position.icon)
             val portraitRef = SingleSprite.fumbbl(position.portrait)
             RosterPosition(
                 id = PositionId(position.id),
                 quantity = position.quantity,
-                title = position.type, // API doesn't return the "group" title, only the singular title
+                title = position.title, // API doesn't return the "group" title, only the singular title
                 titleSingular = position.title,
                 shortHand = position.iconLetter,
                 cost = position.cost,
@@ -276,9 +276,11 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
         TODO("Parsing Team special rules is not yet implemented")
     }
 
-    // In FUMBBL, all skills are listed in the same array, so we need to seperate them into 3 buckets:
-    // 1) Positional Skills, 2) Extra Skills, 3) Unknown Skills (or other things)
-    // Until we know better, we also ignore everything in the 3rd bucket.
+    // In FUMBBL, all skills are listed in the same array, so we need to separate them into 3 buckets:
+    //   1) Positional Skills
+    //   2) Extra Skills
+    //   3) Unknown Skills (or other things)
+    // Until we know better, we ignore everything in the 3rd bucket.
     private fun extractExtraSkills(rules: Rules, skills: List<String?>, jervisPosition: Position): List<SkillId> {
         return skills
             .mapNotNull { skillName ->
@@ -287,7 +289,7 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
             .filter { !jervisPosition.skills.contains(it) }
     }
 
-    private fun convertToBB2020JervisTeam(rules: Rules, jervisRoster: Roster, team: FumbbleTeamDetails): SerializedTeam {
+    private fun convertToJervisTeam(rules: Rules, jervisRoster: Roster, team: FumbbleTeamDetails): SerializedTeam {
         // Unclear if we want to check for rulesets. Many rulesets will probably have compatible rosters, so it would
         // be unclear how to do that. For now, we will just accept any, and then let it be up to the deserializser
         // to throw an exception if it finds something that isn't supported.
@@ -301,9 +303,7 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
         return SerializedTeam(
             id = TeamId(team.id.toString()),
             name = team.name,
-            // Unclear how we can tell BB2025 and BB2020 rosters apart in the FUMBBL API, for now
-            // just assume it is BB2020.
-            version = GameVersion.BB2020,
+            version = rules.baseVersion,
             // Right now we just assume that the FUMBBL team matches the given game type
             // We probably need to refine this later.
             type = rules.gameType,
@@ -316,7 +316,7 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
                     position = position.id,
                     type = PlayerType.STANDARD, // Unclear if this is always true?
                     statModifiers = emptyList(), // How are these defined?
-                    extraSkills = extractExtraSkills(rules,player.skills, position).map { it.serialize() },
+                    extraSkills = extractExtraSkills(rules, player.skills, position).map { it.serialize() },
                     nigglingInjuries = 0, // Unclear how these are defined
                     missNextGame = false, // Unclear how these are defined
                     starPlayerPoints = player.record.spp,
@@ -340,15 +340,6 @@ class FumbblApi(private val coachName: String? = null, private var oauthToken: S
             specialRules = jervisRoster.specialRules,
             teamLogo = jervisRoster.logo,
         )
-    }
-
-    private fun getBB2020Position(
-        jervisRoster: Roster,
-        position: PositionId,
-    ): RosterPosition {
-        return jervisRoster.positions.firstOrNull {
-            it.id  == position
-        } ?: error("Unsupported position $position in ${jervisRoster.name}")
     }
 
     fun close() {
