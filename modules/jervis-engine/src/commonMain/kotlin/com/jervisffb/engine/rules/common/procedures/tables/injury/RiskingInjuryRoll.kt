@@ -70,6 +70,7 @@ data class RiskingInjuryContext(
     val startingCoordinatesForArmBar: PitchCoordinate? = null,
 
     // Armour roll
+    val usedIronHardSkin: Boolean = false,
     val armourRoll: PersistentList<D6DieRoll> = persistentListOf(),
     val armourModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val useClawsOnArmourRoll: Boolean = false,

@@ -155,6 +155,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             ThrowPlayerStep.ChooseToUseBullseye to SkillType.BULLSEYE,
             SwoopStep.ChooseToUseSwoop to SkillType.SWOOP,
             ArmourRoll.ChooseToUseClaws to SkillType.CLAWS,
+            ArmourRoll.ChooseToUseIronHardSkin to SkillType.IRON_HARD_SKIN,
         )
 
         return skills.toList().associate {

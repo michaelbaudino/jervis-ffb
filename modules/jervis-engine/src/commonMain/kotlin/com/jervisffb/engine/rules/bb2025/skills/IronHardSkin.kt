@@ -8,20 +8,20 @@ import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
 
 /**
- * Representation of the "Disturbing Presence* (Passive)" skill.
+ * Representation of the "Iron Hard Skin" skill.
  *
- * See page 127 in the BB2025 rulebook.
+ * See page 129 in the BB2025 rulebook.
  */
-class DisturbingPresence(
+class IronHardSkin(
     override val player: Player,
     override val category: SkillCategory = SkillCategory.MUTATIONS,
     override val expiresAt: Duration = Duration.PERMANENT,
 ) : BB2025Skill {
-    override val type: SkillType = SkillType.DISTURBING_PRESENCE
+    override val type: SkillType = SkillType.IRON_HARD_SKIN
     override val value: Unit? = null
     override val skillId: SkillId = type.id(value)
     override val name: String = type.description
-    override val compulsory: Boolean = true
+    override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.PERMANENT
     override var used: Boolean = false
     override val workWithoutTackleZones: Boolean = true

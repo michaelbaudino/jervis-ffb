@@ -632,3 +632,13 @@ object UseClawsWheelController: UseSkillWheelController(SkillType.CLAWS) {
         }
     }
 }
+
+object UseIronHardSkinWheelController: UseSkillWheelController(SkillType.IRON_HARD_SKIN) {
+    override val nodes: Set<Node> = setOf(
+        ArmourRoll.ChooseToUseIronHardSkin,
+    )
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val context = state.getContext<RiskingInjuryContext>()
+        return context.player.coordinates
+    }
+}

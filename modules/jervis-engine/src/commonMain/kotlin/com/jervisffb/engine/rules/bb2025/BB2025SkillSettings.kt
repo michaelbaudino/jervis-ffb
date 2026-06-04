@@ -37,6 +37,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Hatred
 import com.jervisffb.engine.rules.bb2025.skills.HitAndRun
 import com.jervisffb.engine.rules.bb2025.skills.Horns
 import com.jervisffb.engine.rules.bb2025.skills.Insignificant
+import com.jervisffb.engine.rules.bb2025.skills.IronHardSkin
 import com.jervisffb.engine.rules.bb2025.skills.Juggernaut
 import com.jervisffb.engine.rules.bb2025.skills.JumpUp
 import com.jervisffb.engine.rules.bb2025.skills.Kick
@@ -336,9 +337,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.IRON_HARD_SKIN -> {
-                    // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Iron Hard Skin", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
+                        IronHardSkin(player, category, expiresAt)
+                    }
                 }
                 SkillType.MONSTROUS_MOUTH -> {
                     // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->

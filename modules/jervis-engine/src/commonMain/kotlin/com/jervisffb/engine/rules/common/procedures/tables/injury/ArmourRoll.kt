@@ -137,7 +137,7 @@ object ArmourRoll: Procedure() {
                 compositeCommandOf(
                     ReportDiceRoll(DiceRollType.ARMOUR, roll),
                     UpdateContext(updatedContext),
-                    GotoNode(DecideOnModifierPath)
+                    GotoNode(ChooseToUseIronHardSkin)
                 )
             }
         }
@@ -171,8 +171,65 @@ object ArmourRoll: Procedure() {
                 compositeCommandOf(
                     ReportDiceRoll(DiceRollType.ARMOUR, roll),
                     UpdateContext(updatedContext),
+                    GotoNode(ChooseToUseIronHardSkin)
+                )
+            }
+        }
+    }
+
+
+    object ChooseToUseIronHardSkin: ActionNode() {
+        override fun actionOwner(state: Game, rules: Rules): Team {
+            return state.getContext<RiskingInjuryContext>().player.team
+        }
+        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
+            // We should only ask for Iron Hard Skin if there is a chance that the opponent has a skill
+            // that could affect it
+            val context = state.getContext<RiskingInjuryContext>()
+
+            val hasSkill = context.player.isSkillAvailable(SkillType.IRON_HARD_SKIN)
+            val alreadyUsedIhs = context.usedIronHardSkin
+            val ihsIsUseful = when (context.mode) {
+                RiskingInjuryMode.KNOCKED_DOWN -> {
+                    val throwPlayerContext = state.getContextOrNull<ThrowTeamMateContext>()
+                    val thrownPlayer = throwPlayerContext?.thrownPlayer
+                    if (thrownPlayer != null && thrownPlayer == context.causedBy && context.mode == RiskingInjuryMode.KNOCKED_DOWN) {
+                        thrownPlayer.isSkillAvailable(SkillType.LETHAL_FLIGHT)
+                    } else {
+                        context.causedBy?.let { player ->
+                            val skills = listOf(
+                                SkillType.MIGHTY_BLOW,
+                                SkillType.CLAWS
+                            )
+                            skills.any { player.isSkillAvailable(it) }
+                        } ?: false
+                    }
+                }
+                RiskingInjuryMode.FOUL -> {
+                    isDirtyPlayerAvailableAndUseful(context)
+                }
+                RiskingInjuryMode.FALLING_OVER -> {
+                    isArmBarAvailableAndUseful(state, context)
+                }
+                else -> false
+            }
+
+            return when (hasSkill && ihsIsUseful && !alreadyUsedIhs) {
+                true -> listOf(ConfirmWhenReady, CancelWhenReady)
+                false -> listOf(ContinueWhenReady)
+            }
+        }
+
+        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
+            val useIronHardSkin = (action is Confirm)
+            val context = state.getContext<RiskingInjuryContext>()
+            return when (useIronHardSkin) {
+                true -> compositeCommandOf(
+                    ReportSkillUsed(context.player, SkillType.IRON_HARD_SKIN),
+                    UpdateContext(context.copy(usedIronHardSkin = true)),
                     GotoNode(DecideOnModifierPath)
                 )
+                false -> GotoNode(DecideOnModifierPath)
             }
         }
     }
@@ -219,7 +276,9 @@ object ArmourRoll: Procedure() {
             // 8+ and Armour Value should be 9+.
             val avTarget = context.player.armorValue
             val roll = context.armourRoll.sum() + context.armourModifiers.sum()
-            val clawsWillMatter = avTarget >= 9 && roll >= 8
+            val clawsWillMatter = avTarget >= 9
+                && roll >= 8
+                && !context.usedIronHardSkin
 
             return when (isBlock && isKnockedDown && opponentHasClaws && clawsWillMatter) {
                 true -> GotoNode(ChooseToUseClaws)
@@ -289,6 +348,7 @@ object ArmourRoll: Procedure() {
             val mbWillMatter = roll < target
                 && mbModifier > 0
                 && (roll + mbModifier) >= target
+                && !context.usedIronHardSkin
 
             return if (
                 isBlock
@@ -351,13 +411,9 @@ object ArmourRoll: Procedure() {
         }
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
-            val isFoul = (context.mode == RiskingInjuryMode.FOUL)
-            val hasDirtyPlayer = (context.causedBy?.isSkillAvailable(SkillType.DIRTY_PLAYER) == true)
-            val target = context.player.armorValue
-            val roll = context.armourResult
-            val dirtyPlayerWillHaveImpact = roll < target && (roll + ArmourModifier.DIRTY_PLAYER.modifier) >= target
+            val dirtyPlayerWillHaveImpact = isDirtyPlayerAvailableAndUseful(context)
 
-            return if (isFoul && hasDirtyPlayer && dirtyPlayerWillHaveImpact) {
+            return if (dirtyPlayerWillHaveImpact) {
                 listOf(ConfirmWhenReady, CancelWhenReady)
             } else {
                 listOf(ContinueWhenReady)
@@ -410,7 +466,7 @@ object ArmourRoll: Procedure() {
                     val rerollOption = rerollSource.calculateRerollOptions(
                         DiceRollType.ARMOUR,
                         context.armourRoll,
-                        wasSuccess = false // Lone Fouler can only be used on sucesses
+                        wasSuccess = false // Lone Fouler can only be used on failures
                     ).singleOrNull() ?: error("Lone Fouler returned more than one re-roll option")
                     val rerollContext = state.getRerollContext().copy(
                         source = rerollSource,
@@ -448,6 +504,7 @@ object ArmourRoll: Procedure() {
             val lethalFlightWillMatter = roll < target
                 && avModifier > 0
                 && (roll + avModifier) >= target
+                && !context.usedIronHardSkin
 
             return if (opponentHasLethalFlight && lethalFlightWillMatter) {
                 GotoNode(ChooseToUseLethalFlight)
@@ -496,14 +553,7 @@ object ArmourRoll: Procedure() {
     object CheckIfArmBarIsApplicable: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             val context = state.getContext<RiskingInjuryContext>()
-            val downedPlayer = context.player
-            val modifiersAfterArmBar = context.armourModifiers.sum() + ArmourModifier.ARM_BAR.modifier
-            val resultBeforeArmBar = context.armourResult
-            val resultAfterArmBar = resultBeforeArmBar + modifiersAfterArmBar
-            val doNotBreakBeforeArmBar = downedPlayer.armorValue > resultBeforeArmBar
-            val breakAfterArmBar = downedPlayer.armorValue <= resultAfterArmBar
-            val willBreakArmour = doNotBreakBeforeArmBar && breakAfterArmBar
-            return when (context.startingCoordinatesForArmBar != null && willBreakArmour) {
+            return when (isArmBarAvailableAndUseful(state, context)) {
                 true -> GotoNode(ChooseToUseArmBar)
                 false -> ExitProcedure()
             }
@@ -546,5 +596,37 @@ object ArmourRoll: Procedure() {
                 else -> INVALID_ACTION(action)
             }
         }
+    }
+
+    // --- HELPER METHODS --
+
+    private fun isArmBarAvailableAndUseful(state: Game, context: RiskingInjuryContext): Boolean {
+        val downedPlayer = context.player
+        val modifiersAfterArmBar = context.armourModifiers.sum() + ArmourModifier.ARM_BAR.modifier
+        val resultBeforeArmBar = context.armourResult
+        val resultAfterArmBar = resultBeforeArmBar + modifiersAfterArmBar
+        val doNotBreakBeforeArmBar = downedPlayer.armorValue > resultBeforeArmBar
+        val breakAfterArmBar = downedPlayer.armorValue <= resultAfterArmBar
+        val willBreakArmour = doNotBreakBeforeArmBar && breakAfterArmBar
+        return if (context.startingCoordinatesForArmBar != null && willBreakArmour && !context.usedIronHardSkin) {
+            val team = context.player.team
+            val coordinates = context.startingCoordinatesForArmBar
+            state.rules
+                .getMarkingPlayers(state, team, coordinates)
+                .count { it.isSkillAvailable(SkillType.ARM_BAR) } > 0
+        } else {
+            false
+        }
+    }
+
+    private fun isDirtyPlayerAvailableAndUseful(context: RiskingInjuryContext): Boolean {
+        if (context.causedBy?.isSkillAvailable(SkillType.DIRTY_PLAYER) != true) return false
+        if (context.mode != RiskingInjuryMode.FOUL) return false
+
+        val target = context.player.armorValue
+        val roll = context.armourResult
+        return roll < target
+            && (roll + ArmourModifier.DIRTY_PLAYER.modifier) >= target
+            && !context.usedIronHardSkin
     }
 }

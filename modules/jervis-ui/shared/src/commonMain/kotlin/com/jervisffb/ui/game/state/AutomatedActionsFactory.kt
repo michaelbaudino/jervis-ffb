@@ -513,6 +513,10 @@ class AutomatedActionsFactory(
             return Confirm
         }
 
+        if (menuViewModel.isFeatureEnabled(Feature.ALWAYS_USE_IRON_HARD_SKIN) && currentNode == ArmourRoll.ChooseToUseIronHardSkin) {
+            return Confirm
+        }
+
         return null
     }
 

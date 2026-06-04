@@ -334,7 +334,17 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Horns
   - [x] Add +1 to ST for block action during Blitz
   - [x] Does not work on Block
-- [ ] Iron Hard Skin
+- [x] Iron Hard Skin
+   - [x] Work when Knocked Down by opponent
+   - [x] Work on Foul
+   - [x] Work on Stab/Projectile Vomit (but no modifiers apply)
+   - [x] Work on Projectil Vomit
+   - [x] Work on Animal Savagery
+   - [x] Works against Claws
+   - [x] Mighty Blow
+   - [x] Lethal Flight
+   - [x] Dirty Player
+   - [x] Arm Bar
 - [ ] Monstrous Mouth
 - [x] Prehensile Tail
   - [x] Adds -1 negative modifier

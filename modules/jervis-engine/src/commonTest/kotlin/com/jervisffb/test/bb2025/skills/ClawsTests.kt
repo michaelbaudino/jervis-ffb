@@ -35,7 +35,7 @@ import kotlin.test.assertEquals
  *
  * See page 127 in the BB2025 rulebook.
  */
-class ClawTests: JervisGameBB2025Test() {
+class ClawsTests: JervisGameBB2025Test() {
 
     @BeforeTest
     override fun setUp() {
