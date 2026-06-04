@@ -30,6 +30,7 @@ object Imager {
                 List<GameActionDescriptor>,
             ) -> Any = { state: Game, availableActions: List<GameActionDescriptor> ->
                 if (availableActions.first() == ContinueWhenReady) {
+                    @Suppress("UNUSED_EXPRESSION")
                     Continue
                 }
             }

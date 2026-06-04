@@ -43,9 +43,6 @@ val generateIndexHtml = tasks.register<GenerateIndexHtmlTask>("generateIndexHtml
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexplicit-backing-fields")
-    }
     jvmToolchain((project.properties["java.version"] as String).toInt())
     wasmJs {
         outputModuleName.set("jervis-ui")

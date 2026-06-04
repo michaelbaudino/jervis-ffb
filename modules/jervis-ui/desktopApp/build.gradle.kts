@@ -14,9 +14,6 @@ group = "com.jervisffb"
 version = (rootProject.ext["mavenVersion"] as Provider<String>).get()
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexplicit-backing-fields")
-    }
     jvmToolchain((project.properties["java.version"] as String).toInt())
     dependencies {
         implementation(project(":modules:jervis-ui:shared"))
