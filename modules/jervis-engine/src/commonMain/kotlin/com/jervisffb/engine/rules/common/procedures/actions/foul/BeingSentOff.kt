@@ -46,6 +46,7 @@ import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.EndOfDriveSequence
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.tables.ArgueTheCallResult
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -196,6 +197,7 @@ object BeingSentOff: Procedure() {
                             SetPlayerState(player, PlayerState.BANNED),
                             SetPlayerLocation(player, DogOut),
                         )
+                        getResetChompedStateCommands(player)?.let { add(it) }
                     })
                 }
 

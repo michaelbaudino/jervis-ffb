@@ -14,7 +14,6 @@ import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.RollDice
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetApothecaryUsed
-import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.UpdateContext
 import com.jervisffb.engine.commands.fsm.ExitProcedure
@@ -28,7 +27,6 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.inducements.ApothecaryType
-import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.reports.ReportApothecaryUsed
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.rules.DiceRollType
@@ -89,7 +87,6 @@ object UseBB11Apothecary: Procedure() {
                             finalCasualtyResult = context.casualtyResult,
                             finalLastingInjury = context.lastingInjuryResult,
                         )),
-                        SetPlayerLocation(player, DogOut),
                         ExitProcedure()  // Apothecary not used, just accept the result
                     )
                 }

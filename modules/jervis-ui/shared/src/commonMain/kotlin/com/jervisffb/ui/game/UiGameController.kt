@@ -53,6 +53,7 @@ import com.jervisffb.ui.game.state.actionwheel.CatchWheelController
 import com.jervisffb.ui.game.state.actionwheel.ChargePlayersRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CheeringFansKickingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CheeringFansReceivingTeamRollWheelController
+import com.jervisffb.ui.game.state.actionwheel.ChompWheelController
 import com.jervisffb.ui.game.state.actionwheel.ChooseAlternativeToMascotWheelController
 import com.jervisffb.ui.game.state.actionwheel.ChooseKickingTeamWheelController
 import com.jervisffb.ui.game.state.actionwheel.CoinTossWheelController
@@ -237,6 +238,7 @@ class UiGameController(
         BoneHeadWheelController,
         BreatheFireWheelController,
         CatchWheelController,
+        ChompWheelController,
         DauntlessWheelController,
         DeviateRollWheelController,
         DodgeWheelController,

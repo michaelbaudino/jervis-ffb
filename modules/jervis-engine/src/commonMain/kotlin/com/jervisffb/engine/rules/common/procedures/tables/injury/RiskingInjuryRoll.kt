@@ -28,6 +28,7 @@ import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.tables.CasualtyResult
 import com.jervisffb.engine.rules.common.tables.InjuryResult
@@ -198,7 +199,10 @@ object RiskingInjuryRoll: Procedure() {
                     when {
                         isStunned -> SetPlayerIntermediateState(player, state = null) // Player remains Stunned
                         standOnFailure -> null // Player remains Standing
-                        else -> SetPlayerState(context.player, PlayerState.PRONE, hasTackleZones = false)
+                        else -> compositeCommandOf(
+                            SetPlayerState(context.player, PlayerState.PRONE, hasTackleZones = false),
+                            getResetChompedStateCommands(context.player, context.player.location, forceRemoveChompedByChomper = true)
+                        )
                     },
                     ExitProcedure()
                 )
@@ -217,6 +221,7 @@ object RiskingInjuryRoll: Procedure() {
                     if (context.mode == RiskingInjuryMode.PUSHED_INTO_CROWD) {
                         compositeCommandOf(
                             SetPlayerLocation(context.player, DogOut),
+                            getResetChompedStateCommands(context.player),
                             SetPlayerState(context.player, PlayerState.RESERVE),
                             ExitProcedure(),
                         )
@@ -327,9 +332,9 @@ object RiskingInjuryRoll: Procedure() {
         override fun apply(state: Game, rules: Rules): Command {
             return if (state.getContext<RiskingInjuryContext>().isPartOfMultipleBlock) {
                 val injuryContext = state.getContext<RiskingInjuryContext>()
-                val mbContext = state.getContext<BB2020MultipleBlockContext>()
+                val multipleBlockContext = state.getContext<BB2020MultipleBlockContext>()
                 compositeCommandOf(
-                    mbContext.addInjuryReferenceForPlayer(injuryContext.player, injuryContext),
+                    multipleBlockContext.addInjuryReferenceForPlayer(injuryContext.player, injuryContext),
                     ExitProcedure(),
                 )
             } else {

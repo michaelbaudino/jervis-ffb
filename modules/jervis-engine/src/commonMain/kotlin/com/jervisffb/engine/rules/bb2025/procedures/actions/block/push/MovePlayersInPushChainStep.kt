@@ -21,6 +21,7 @@ import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BB2025PushBack
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.MultipleBlockAction
 import com.jervisffb.engine.rules.bb2025.skills.Leader
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 
 /**
  * Procedure for moving all players' part of a Push Chain created by.
@@ -54,7 +55,7 @@ object MovePlayersInPushChainStep: Procedure() {
         override fun apply(state: Game, rules: Rules): Command {
             val context = state.getContext<PushContext>()
 
-            // If Stand Firm was used, or player is Rooted, no players are moved, so just exit early.
+            // If Stand Firm was used, or player is Rooted or Chomped, no players are moved, so just exit early.
             if (context.isDefenderImmovable) {
                 return ExitProcedure()
             }
@@ -78,6 +79,9 @@ object MovePlayersInPushChainStep: Procedure() {
                             SetPlayerLocation(push.pushee, DogOut),
                             ReportPushedIntoCrowd(push.pushee, push.from)
                         )
+                        getResetChompedStateCommands(push.pushee, DogOut)?.let {
+                            add(it)
+                        }
                         pushedIntoCrowd = true
                     } else {
                         // At this stage, there should only be one ball on the square,
@@ -85,6 +89,9 @@ object MovePlayersInPushChainStep: Procedure() {
                         add(SetPlayerLocation(push.pushee, to))
                         state.pitch[to].balls.singleOrNull()?.let {
                             add(SetBallState.bouncing(it))
+                        }
+                        getResetChompedStateCommands(push.pushee, to)?.let {
+                            add(it)
                         }
                     }
                 }

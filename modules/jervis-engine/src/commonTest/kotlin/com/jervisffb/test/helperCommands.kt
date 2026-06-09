@@ -288,6 +288,11 @@ fun breatheFireRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelecte
     reroll,
 )
 
+fun chompRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
 fun useApothecary(value: Boolean) = when (value) {
     true -> Confirm
     false -> Cancel

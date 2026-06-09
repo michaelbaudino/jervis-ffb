@@ -59,6 +59,8 @@ import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireStep
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompContext
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.StabContext
@@ -361,6 +363,14 @@ object BlitzAction : Procedure() {
             val context = state.getContext<BlitzActionContext>()
             return when (context.blockType!!) {
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> {
+                    AddContext(
+                        ChompContext(
+                            context.attacker,
+                            context.defender!!,
+                        )
+                    )
+                }
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> {
                     AddContext(
@@ -404,6 +414,7 @@ object BlitzAction : Procedure() {
             val context = state.getContext<BlitzActionContext>()
             return when (context.blockType!!) {
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> ChompStep
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> BreatheFireStep
                 BlockType.PROJECTILE_VOMIT -> ProjectileVomitStep
@@ -426,6 +437,7 @@ object BlitzAction : Procedure() {
             // Check if Block Action was completed or not
             val removeContextCommand = when (context.blockType!!) {
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> RemoveContext<ChompContext>()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> RemoveContext<BreatheFireContext>()
                 BlockType.PROJECTILE_VOMIT -> RemoveContext<ProjectileVomitContext>()
@@ -436,6 +448,7 @@ object BlitzAction : Procedure() {
             // Remove state required for the specific block type
             val hasBlocked = when (context.blockType) {
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> (state.getContext<ChompContext>().chompRoll != null)
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> (state.getContext<BreatheFireContext>().result != null)
                 BlockType.PROJECTILE_VOMIT -> (state.getContext<ProjectileVomitContext>().injuryResult != null)

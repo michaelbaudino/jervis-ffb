@@ -29,7 +29,7 @@ import com.jervisffb.engine.rules.bb2020.procedures.actions.block.createPushCont
  * See page 62/63 in the BB2025 rulebook.
  *
  * For single blocks, the entire procedure is run. For Multiple blocks, many
- * of these steps must be run in lockstep. In this case, this procedure
+ * of these steps must be run in lockstep.
  */
 object PushedBack: Procedure() {
     override val initialNode: Node = CreatePushChain
@@ -79,6 +79,7 @@ object PushedBack: Procedure() {
             // If one of the defenders could not be moved (for whatever reason),
             // We can neither Follow-up, nor use Strip Ball, so we just skip those
             // steps.
+            // All effects that prevent the attacker from following up are handled in `FollowUpStep`
             return when (context.isDefenderImmovable) {
                 true -> ResolveEventsInPushChain
                 false -> null

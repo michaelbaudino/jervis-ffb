@@ -66,6 +66,7 @@ object SelectBlockTypeWheelController : ActionWheelDialogController() {
         val (title, icon) = when (blockType) {
             BlockType.BREATHE_FIRE -> "Breathe Fire" to ActionIcon.BREATHE_FIRE
             BlockType.CHAINSAW ->  "Chainsaw" to ActionIcon.CHAINSAW
+            BlockType.CHOMP ->  "Chomp" to ActionIcon.CHOMP
             BlockType.MULTIPLE_BLOCK ->  "Multiple Block" to ActionIcon.MULTIPLE_BLOCK
             BlockType.PROJECTILE_VOMIT ->  "Projectile Vomit" to ActionIcon.PROJECTILE_VOMIT
             BlockType.STAB ->  "Stab" to ActionIcon.STAB

@@ -65,24 +65,27 @@ import com.jervisffb.engine.utils.INVALID_ACTION
  * 2. Player B checks for Rooted. If rooted, Player B cannot be pushed back.
  *    a. Is also checked on Chain Pushes.
  *
- * 3. Player B must decide whether to use Stand Firm. Page 136 in the BB2025
+ * 4. Player B checks for Chomped. If chomped, Player B cannot be pushed back.
+ *    a. Is also checked on Chain Pushes.
+ *
+ * 5. Player B must decide whether to use Stand Firm. Page 136 in the BB2025
  *    rulebook.
  *    a. Cannot be used if Player A used Juggernaut.
  *    b. Can be used on chain pushes.
  *
- * 4. Player A must decide whether to use Grab. Page 128 in the BB2025 rulebook.
+ * 6. Player A must decide whether to use Grab. Page 128 in the BB2025 rulebook.
  *    a. Cannot be used if Player B used Stand Firm.
  *    b. Cannot be used while blitzing.
  *    c. Cannot be used on chain pushes.
  *    d. Cannot be used if no unoccupied squares exist adjacent to Player B.
  *
- * 5. Player B must decide whether to use Sidestep. Page 135 in the BB2025
+ * 7. Player B must decide whether to use Sidestep. Page 135 in the BB2025
  *    rulebook.
  *    a. Cannot be used if Player B used Stand Firm.
  *    b. Cannot be used if Player A used Grab.
  *    c. Cannot be used if no unoccupied squares exist adjacent to Player B.
  *
- * 6. Player A must decide whether to use Eye Gouge. Page 128 in the BB2025
+ * 8. Player A must decide whether to use Eye Gouge. Page 128 in the BB2025
  *    rulebook.
  *    a. Cannot be used if Player B used Stand Firm.
  *.   b. Cannot be used during chain-pushes
@@ -122,6 +125,22 @@ object CreatePushChainStep: Procedure() {
                 true -> compositeCommandOf(
                     SetContextProperty(PushContext.PushData::to, pushData, pushData.pushee.coordinates),
                     SetContextProperty(PushContext.PushData::defenderIsRooted, pushData, defenderIsRooted),
+                    ExitProcedure()
+                )
+                false -> GotoNode(CheckForChomped)
+            }
+        }
+    }
+
+    object CheckForChomped: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            val context = state.getContext<PushContext>()
+            val pushData = context.pushChain.last()
+            val defenderIsChomped = pushData.pushee.hasStatusEffect(PlayerStatusEffectType.CHOMPED)
+            return when (defenderIsChomped) {
+                true -> compositeCommandOf(
+                    SetContextProperty(PushContext.PushData::to, pushData, pushData.pushee.coordinates),
+                    SetContextProperty(PushContext.PushData::defenderIsChomped, pushData, defenderIsChomped),
                     ExitProcedure()
                 )
                 false -> GotoNode(DecideToUseStandFirm)

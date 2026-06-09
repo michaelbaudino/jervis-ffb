@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 enum class BlockType {
     BREATHE_FIRE,
     CHAINSAW,
+    CHOMP,
     MULTIPLE_BLOCK,
     PROJECTILE_VOMIT,
     STAB,

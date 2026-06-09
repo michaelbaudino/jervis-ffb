@@ -2,6 +2,7 @@ package com.jervisffb.test.bb2025.skills
 
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.DirectionSelected
+import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PassTypeSelected
 import com.jervisffb.engine.actions.PlayerSelected
@@ -18,6 +19,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Kick
 import com.jervisffb.engine.rules.bb2025.skills.Punt
 import com.jervisffb.engine.rules.common.actions.PassType
 import com.jervisffb.engine.rules.common.actions.PlayerSpecialActionType
+import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
@@ -275,5 +277,25 @@ class PuntTests : JervisGameBB2025Test() {
         )
         val actions = controller.getAvailableActions().get<SelectPlayerAction>().actions
         assertTrue(actions.any { it.type == PlayerSpecialActionType.PUNT })
+    }
+
+    @Test
+    fun canPuntAndPassInTheSameTurn() {
+        val punter = awayTeam["A10".playerId]
+        punter.addSkill(SkillType.PUNT)
+        giveBallToPlayer(punter)
+        val thrower = awayTeam["A9".playerId]
+
+        controller.rollForward(
+            *activatePlayer(punter, PlayerSpecialActionType.PUNT),
+            PassTypeSelected(PassType.PUNT),
+            DirectionSelected(Direction.RIGHT),
+            *puntDirection(2.d3),
+            *puntDistance(2.d6),
+            bounce(5.d8),
+            *activatePlayer(thrower, PlayerStandardActionType.PASS),
+            EndAction
+        )
+        state.assertNoActivePlayer()
     }
 }

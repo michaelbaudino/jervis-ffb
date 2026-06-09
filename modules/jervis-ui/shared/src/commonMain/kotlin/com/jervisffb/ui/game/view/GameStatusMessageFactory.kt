@@ -67,6 +67,7 @@ import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRoll
 import com.jervisffb.engine.rules.common.procedures.WeatherRoll
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireRoll
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.DauntlessRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.FoulAppearanceRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitRoll
@@ -186,6 +187,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             BrilliantCoaching.ReceivingTeamRollDie to "Roll D6 for Brilliant Coaching",
             CatchRoll.ReRollDie to "Re-roll D6 to Catch the Ball",
             CatchRoll.RollDie to "Roll D6 to Catch the Ball",
+            ChompRoll.ReRollDie to "Re-roll D6 to Chomp the opponent",
+            ChompRoll.RollDie to "Roll D6 to Chomp the opponent",
             Charge.RollForPlayers to "Roll D3 + 3 for Number of Players to be used during Charge",
             DauntlessRoll.ReRollDie to "Re-roll D6 for Dauntless",
             DauntlessRoll.RollDie to "Roll D6 for Dauntless",
@@ -262,6 +265,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             AccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
             com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassAccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
             CatchRoll.ChooseReRollSource to "Accept Catch Result or Reroll D6?",
+            ChompRoll.ChooseReRollSource to "Accept Chomp Result or Reroll D6?",
             DodgeRoll.ChooseReRollSource to "Accept Dodge Result or Reroll D6?",
             PickupRoll.ChooseReRollSource to "Accept Pickup Result or Reroll D6?",
             RushRoll.ChooseReRollSource to "Accept Rush Result or Reroll D6?",

@@ -320,7 +320,7 @@ abstract class Rules(
 
 
     /**
-     * Returns `true` if the player is considered `Marked as described on
+     * Returns `true` if the player is considered `Marked` as described on
      * page 26 in the rulebook.
      *
      * @param player The player that is checked for marks.
@@ -341,7 +341,7 @@ abstract class Rules(
     }
 
     /**
-     * Returns `true` if [player] count as marking [target], `false` if not.*
+     * Returns `true` if [player] count as marking [target], `false` if not.
      */
     fun isMarking(player: Player, target: Player): Boolean {
         if (!player.location.isOnPitch(this)) return false
@@ -351,6 +351,19 @@ abstract class Rules(
         val state = player.team.game
         return player.coordinates.getSurroundingCoordinates(this, 1)
             .any { state.pitch[it].player == target }
+    }
+
+    /**
+     * Returns `true` if [player] count as marking the given location, `false` if not.
+     */
+    fun isMarking(player: Player, target: Location): Boolean {
+        if (!player.location.isOnPitch(this)) return false
+        if (target !is OnPitchLocation) return false
+        if (!player.hasTackleZones) return false
+        if (player.state != PlayerState.STANDING) return false
+        val state = player.team.game
+        return target.getSurroundingCoordinates(this, 1)
+            .any { state.pitch[it] == player.location }
     }
 
     /**
@@ -697,6 +710,7 @@ abstract class Rules(
             DiceRollType.CATCH,
             DiceRollType.CHAINSAW,
             DiceRollType.CHEERING_FANS,
+            DiceRollType.CHOMP,
             DiceRollType.DAUNTLESS,
             DiceRollType.DODGE,
             DiceRollType.FOUL_APPEARANCE,

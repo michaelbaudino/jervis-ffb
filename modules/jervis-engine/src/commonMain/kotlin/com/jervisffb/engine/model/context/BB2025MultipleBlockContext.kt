@@ -101,6 +101,7 @@ data class BB2025MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -118,6 +119,7 @@ data class BB2025MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -131,6 +133,7 @@ data class BB2025MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -145,6 +148,7 @@ data class BB2025MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -161,6 +165,7 @@ data class BB2025MultipleBlockContext(
         val updatedContext = when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -209,6 +214,7 @@ data class BB2025MultipleBlockContext(
         val context = when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()

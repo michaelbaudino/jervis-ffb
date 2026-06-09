@@ -130,6 +130,7 @@ object SelectPlayerActionWheelController : ActionWheelDialogController() {
                 PlayerSpecialActionType.PROJECTILE_VOMIT -> "Projectile Vomit" to ActionIcon.PROJECTILE_VOMIT
                 PlayerSpecialActionType.STAB -> "Stab" to ActionIcon.STAB
                 PlayerSpecialActionType.PUNT -> "Punt" to ActionIcon.PUNT
+                PlayerSpecialActionType.CHOMP -> "Chomp" to ActionIcon.CHOMP
             }
             ActionButtonData(
                 id = id,

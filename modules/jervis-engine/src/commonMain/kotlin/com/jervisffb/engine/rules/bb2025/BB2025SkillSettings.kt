@@ -47,6 +47,7 @@ import com.jervisffb.engine.rules.bb2025.skills.LethalFlight
 import com.jervisffb.engine.rules.bb2025.skills.LoneFouler
 import com.jervisffb.engine.rules.bb2025.skills.Loner
 import com.jervisffb.engine.rules.bb2025.skills.MightyBlow
+import com.jervisffb.engine.rules.bb2025.skills.MonstrousMouth
 import com.jervisffb.engine.rules.bb2025.skills.MyBall
 import com.jervisffb.engine.rules.bb2025.skills.NervesOfSteel
 import com.jervisffb.engine.rules.bb2025.skills.NoBall
@@ -342,9 +343,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.MONSTROUS_MOUTH -> {
-                    // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Monstrous Mouth", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
+                        MonstrousMouth(player, category, expiresAt)
+                    }
                 }
                 SkillType.PREHENSILE_TAIL -> {
                     addNoValueEntry("Prehensile Tail", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->

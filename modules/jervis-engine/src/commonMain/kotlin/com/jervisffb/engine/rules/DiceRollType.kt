@@ -22,6 +22,7 @@ enum class DiceRollType(val description: String) {
     CHAINSAW("Chainsaw"),
     CHARGE("Charge"),
     CHEERING_FANS("Cheering Fans"),
+    CHOMP("Chomp"),
     CROWD_TAKES_ACTION("Crowd Takes Action"), // Stalling
     FAN_FACTOR("Fan Factor"),
     FOUL_APPEARANCE("Foul Appearance"),

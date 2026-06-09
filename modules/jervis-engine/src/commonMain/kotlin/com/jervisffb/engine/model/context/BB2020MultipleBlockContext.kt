@@ -40,6 +40,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -52,6 +53,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -65,6 +67,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -76,6 +79,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -89,6 +93,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -107,6 +112,7 @@ data class MultipleBlockDiceRoll(
         return when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -204,6 +210,7 @@ data class BB2020MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -221,6 +228,7 @@ data class BB2020MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -234,6 +242,7 @@ data class BB2020MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -248,6 +257,7 @@ data class BB2020MultipleBlockContext(
         return when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -264,6 +274,7 @@ data class BB2020MultipleBlockContext(
         val updatedContext = when (getActiveRerollType()) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()
@@ -312,6 +323,7 @@ data class BB2020MultipleBlockContext(
         val context = when (type) {
             BlockType.BREATHE_FIRE -> TODO()
             CHAINSAW -> TODO()
+            BlockType.CHOMP -> TODO()
             MULTIPLE_BLOCK -> TODO()
             PROJECTILE_VOMIT -> TODO()
             STAB -> TODO()

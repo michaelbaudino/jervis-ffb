@@ -45,7 +45,7 @@ data class PushContext(
     // the Push Chain. This can happen if Stand Firm is used or a player is
     // Rooted.
     val isDefenderImmovable: Boolean
-        get() = pushChain.any { it.usedStandFirm || it.defenderIsRooted }
+        get() = pushChain.any { it.usedStandFirm || it.defenderIsRooted || it.defenderIsChomped }
 
     // Returns last "pusher" in the push chain
     fun pusher(): Player {
@@ -72,6 +72,7 @@ data class PushContext(
         var usedStandFirm: Boolean = false,
         var usedSideStep: Boolean = false,
         var defenderIsRooted: Boolean = false,
+        var defenderIsChomped: Boolean = false,
         // Set to `true` if we checked the player in this step for scoring
         var checkedForScoringAfterTrapdoors: Boolean = false,
     )

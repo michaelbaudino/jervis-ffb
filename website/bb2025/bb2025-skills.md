@@ -420,6 +420,42 @@ player during a Block Action...", but when you are pushed into the crowd, the
 player is never Knocked Down. This means that Mighty Blow cannot be used on
 crowd injuries.
 
+## Page 131 - Monstrous Mouth
+The most problematic aspect of Monstrous Mouth is that it is unclear when
+the Chomped condition ends, and what restrictions it puts on players.
+
+The rules just say "...Whilst Chomped, the opposition player cannot leave the 
+square they are in while this player remains Marking them. This condition ends
+immediately if this player is no longer Marking the opposition player..."
+
+Developer's Commentary has then clarified that Trickster, which causes a Player
+to "leave the pitch" (at least during a short window), is enough to cancel
+Chomped.
+
+However, since "Leave a square" is not defined in the rulebook, open questions 
+still remain for e.g. how Chomped behaves.
+
+NAF and FUMBBL both seem to interpret Chomped as having more or less the same
+behavior as being Rooted, Jervis is also following this line of reasoning, and
+until GW can clarify the behavior, Chomped has the following behavior:
+
+- A Chomped Player cannot be Pushed out of their square, either directly or
+  through a Chain-push.
+- A Chomped Player cannot Follow-up out of the square (if pushing the non-Chomper player).
+- A Chomped Player cannot Dodge, Jump, Leap or Pogo out of their square.
+- A Chomped Player cannot use Shadowing or Diving Tackle to leave the square.
+- A Chomped Player cannot be forced to move using Taunt.
+- A Chomped Player cannot be moved using Throw Team-mate or Kick Team-mate.
+- A Chomped Player can leave the pitch when Knocked Out or suffering a Casualty.
+- A Chomped Player cannot follow up a POW on the Chomper if they use Sidestep
+  to move next to them. The reason being that "Pushed Back", "Follow-up" and 
+  "Knocked Down" are all separate phases, and the Chomper doesn't loose their
+  Tacklezone until "Knocked Down".
+- A Chomped Player looses Chomped if rolling a Push Back on the Chomper and they are
+  no longer next to the Chomped Player. The reason is the use of the wording "immediately"
+  and e.g. Trickster also removes the status, even though the window is very small.
+
+
 ## Page 132 - Multiple Block
 
 !!! note "Note"

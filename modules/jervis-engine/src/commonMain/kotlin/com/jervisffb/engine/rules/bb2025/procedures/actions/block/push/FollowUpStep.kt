@@ -153,12 +153,14 @@ object FollowUpStep: Procedure() {
         // - If the attacker used Frenzy, they must follow up if allowed.
         // - If the attacker used Multiple Block, they cannot follow up.
         // - If the attacker is Rooted, they cannot follow up.
+        // - If the attacker is Chomped, they cannot follow up.
         // - If the defender is using Stand Firm, they cannot follow up.
         // - If the defender used Taunt, the attacker must follow up, unless they are Rooted or used Multiple Block.
         // - If the defender is using Fend, the attacker cannot follow up.
         // - If the defender is using Taunt, the attacker must follow up if allowed.
         val isRooted = context.firstPusher.hasStatusEffect(PlayerStatusEffectType.ROOTED)
-        val cannotFollowUp = context.isMultipleBlock || context.defenderIsUsingFend || context.isDefenderImmovable || isRooted
+        val isChomped = context.firstPusher.hasStatusEffect(PlayerStatusEffectType.CHOMPED)
+        val cannotFollowUp = context.isMultipleBlock || context.defenderIsUsingFend || context.isDefenderImmovable || isRooted || isChomped
         val mustFollowUp = context.defenderIsUsingTaunt || context.isAttackerUsingFrenzy
         return when {
             cannotFollowUp -> FollowUpStatus.NOT_ALLOWED

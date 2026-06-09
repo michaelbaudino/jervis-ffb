@@ -124,6 +124,12 @@ object ActivatePlayer : Procedure() {
                             SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.BREATHE_FIRE)
                         )
                     }
+                    PlayerSpecialActionType.CHOMP -> {
+                        compositeCommandOf(
+                            SetSpecialActionSkillUsed(player, player.getSkill(SkillType.MONSTROUS_MOUTH), true),
+                            SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.CHOMP)
+                        )
+                    }
                     PlayerSpecialActionType.PROJECTILE_VOMIT -> {
                         compositeCommandOf(
                             SetSpecialActionSkillUsed(player, player.getSkill(SkillType.PROJECTILE_VOMIT), true),

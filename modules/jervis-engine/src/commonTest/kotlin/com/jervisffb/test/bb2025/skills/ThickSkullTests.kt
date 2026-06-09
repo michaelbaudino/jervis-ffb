@@ -58,7 +58,7 @@ class ThickSkullTests: JervisGameBB2025Test() {
         val attacker = state.getPlayerById("A1".playerId)
         val defender = state.getPlayerById("H1".playerId)
         attacker.addSkill(SkillType.DIRTY_PLAYER)
-        defender.apply { defender
+        defender.apply {
             addSkill(SkillType.STUNTY)
             addSkill(SkillType.THICK_SKULL)
             putProne()
@@ -115,7 +115,7 @@ class ThickSkullTests: JervisGameBB2025Test() {
         val attacker = state.getPlayerById("A1".playerId)
         val defender = state.getPlayerById("H1".playerId)
         attacker.addSkill(SkillType.DIRTY_PLAYER)
-        defender.apply { defender
+        defender.apply {
             addSkill(SkillType.THICK_SKULL)
             putProne()
         }

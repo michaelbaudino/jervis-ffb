@@ -12,6 +12,7 @@ enum class PlayerSpecialActionType: ActionType {
     BOMBARDIER,
     BREATHE_FIRE,
     CHAINSAW,
+    CHOMP,
     HYPNOTIC_GAZE,
     KICK_TEAM_MATE,
     MULTIPLE_BLOCK,

@@ -69,6 +69,7 @@ class FoulAppearanceTests: JervisGameBB2025Test() {
                 PlayerSpecialActionType.BOMBARDIER -> unaffectedActions.add(it)
                 PlayerSpecialActionType.BREATHE_FIRE -> affectedActions.add(it)
                 PlayerSpecialActionType.CHAINSAW -> affectedActions.add(it)
+                PlayerSpecialActionType.CHOMP -> affectedActions.add(it)
                 PlayerSpecialActionType.HYPNOTIC_GAZE -> affectedActions.add(it)
                 PlayerSpecialActionType.KICK_TEAM_MATE -> unaffectedActions.add(it)
                 PlayerSpecialActionType.MULTIPLE_BLOCK -> affectedActions.add(it)

@@ -153,6 +153,7 @@ object BlockAction : Procedure() {
             return when (context.blockType) {
                 BlockType.BREATHE_FIRE -> TODO()
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> TODO()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.PROJECTILE_VOMIT -> TODO()
                 BlockType.STAB -> TODO()
@@ -172,6 +173,7 @@ object BlockAction : Procedure() {
             return when (context.blockType) {
                 BlockType.BREATHE_FIRE -> TODO()
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> TODO()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.PROJECTILE_VOMIT -> TODO()
                 BlockType.STAB -> TODO()
@@ -190,6 +192,7 @@ object BlockAction : Procedure() {
             val removeContextCommand = when (context.blockType) {
                 BlockType.BREATHE_FIRE -> TODO()
                 BlockType.CHAINSAW -> TODO()
+                BlockType.CHOMP -> TODO()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.PROJECTILE_VOMIT -> TODO()
                 BlockType.STAB -> TODO()
@@ -256,6 +259,7 @@ object BlockAction : Procedure() {
                 when (type) {
                     BlockType.BREATHE_FIRE -> if (player.isSkillAvailable(SkillType.BREATHE_FIRE)) add(type)
                     BlockType.CHAINSAW -> if (player.isSkillAvailable(SkillType.CHAINSAW)) add(type)
+                    BlockType.CHOMP -> if (player.isSkillAvailable(SkillType.MONSTROUS_MOUTH)) add(type)
                     BlockType.MULTIPLE_BLOCK -> if (!isMultipleBlock) add(type)
                     BlockType.PROJECTILE_VOMIT -> if (player.isSkillAvailable(SkillType.PROJECTILE_VOMIT)) add(type)
                     BlockType.STAB -> if (player.isSkillAvailable(SkillType.STAB)) add(type)

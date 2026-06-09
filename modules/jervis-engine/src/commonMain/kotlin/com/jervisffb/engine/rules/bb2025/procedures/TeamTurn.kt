@@ -17,6 +17,7 @@ import com.jervisffb.engine.commands.SetPlayerAvailability
 import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.commands.SetPlayerTemporaryStats
 import com.jervisffb.engine.commands.SetSkillUsed
+import com.jervisffb.engine.commands.SetSpecialActionSkillUsed
 import com.jervisffb.engine.commands.SetTurnMarker
 import com.jervisffb.engine.commands.UpdateTurnOver
 import com.jervisffb.engine.commands.compositeCommandOf
@@ -49,6 +50,8 @@ import com.jervisffb.engine.rules.common.procedures.inducements.ActivateInduceme
 import com.jervisffb.engine.rules.common.procedures.inducements.ActivateInducements
 import com.jervisffb.engine.rules.common.procedures.tables.prayers.ResolveThrowARock
 import com.jervisffb.engine.rules.common.skills.Duration
+import com.jervisffb.engine.rules.common.skills.Skill
+import com.jervisffb.engine.rules.common.skills.SpecialActionProvider
 import com.jervisffb.engine.rules.common.tables.PrayerToNuffle
 import com.jervisffb.engine.utils.INVALID_ACTION
 
@@ -297,14 +300,32 @@ object TeamTurn : Procedure() {
 
     // Reset player stats back to start, this e.g. include moves
     private fun resetPlayerTemporaryStats(state: Game, rules: Rules): Array<Command> {
-        return state.activeTeamOrThrow()
+        val commands = mutableListOf<Command>()
+
+        // Reset temporary stats
+        state.activeTeamOrThrow()
             .filter { it.location.isOnPitch(rules) }
             .map {
                 SetPlayerTemporaryStats(
                     it,
                     it.baseMove,
                 )
-            }.toTypedArray()
+            }.let {
+                commands.addAll(it)
+            }
+
+        // Reset Special Actions used
+        state.activeTeamOrThrow()
+            .flatMap { player ->
+                player.skills.filterIsInstance<SpecialActionProvider>().map { skill ->
+                    skill as Skill<*>
+                    SetSpecialActionSkillUsed(player, skill, used = false)
+                }
+            }.let {
+                commands.addAll(it)
+            }
+
+        return commands.toTypedArray()
     }
 
     // Reset player stats back to start, this e.g. include temporary skills

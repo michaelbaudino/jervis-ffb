@@ -46,6 +46,7 @@ import com.jervisffb.engine.rules.SPRINT_EXTRA_RUSHES
 import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025FallingOver
 import com.jervisffb.engine.rules.common.procedures.actions.move.RushRoll
 import com.jervisffb.engine.rules.common.procedures.calculateOptionsForMoveType
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -158,6 +159,7 @@ object PogoStep : Procedure() {
                 )
                 else -> compositeCommandOf(
                     SetPlayerLocation(context.player, context.target!!),
+                    getResetChompedStateCommands(context.player, context.target),
                     GotoNode(ChooseToUseVeryLongLegs)
                 )
             }
@@ -214,6 +216,7 @@ object PogoStep : Procedure() {
                     SetPlayerMoveLeft(player, player.movesLeft + 1),
                     SetPlayerRushesLeft(player, player.rushesLeft - 1),
                     SetPlayerLocation(moveContext.player, moveContext.target!!),
+                    getResetChompedStateCommands(moveContext.player, moveContext.target),
                     RemoveContext(rushContext),
                     GotoNode(ChooseToUseVeryLongLegs)
                 )

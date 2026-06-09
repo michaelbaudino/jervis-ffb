@@ -31,6 +31,7 @@ import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.Pickup
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -60,6 +61,7 @@ object UseShadowingStep: Procedure() {
                         .mapNotNull { state.pitch[it].player }
                         .filter { it.isSkillAvailable(SkillType.SHADOWING) }
                         .filterNot { it.hasStatusEffect(PlayerStatusEffectType.ROOTED) }
+                        .filterNot { it.hasStatusEffect(PlayerStatusEffectType.CHOMPED) }
                 }
                 false -> emptyList()
             }
@@ -103,6 +105,7 @@ object UseShadowingStep: Procedure() {
                 }
                 compositeCommandOf(
                     SetPlayerLocation(context.player, moveContext.startingSquare),
+                    getResetChompedStateCommands(context.player, moveContext.startingSquare),
                     RemoveContext<ShadowingRollContext>(),
                     nextNode
                 )

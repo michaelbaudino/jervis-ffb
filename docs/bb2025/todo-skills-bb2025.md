@@ -236,6 +236,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
     - [ ] 2nd block is not required to be a normal block but can be any valid "block" special action (FAQ)
     - [ ] Foul Appearance must be rolled for both blocks. If failed on first block, 2nd block isn't happening
     - [ ] Brawler will only work on one of the blocks (FAQ May 2026)
+    - [ ] Frenzy blocks twice on Chomped players
 - [x] Kick
   - [x] Usage is optional
   - [x] Reduces distance from D6 to D3
@@ -326,6 +327,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Blitz
   - [x] Breathe Fire
   - [ ] Chainsaw
+  - [x] Chomp
   - [ ] Hypnotic Gaze
   - [ ] Multiple Block
   - [ ] Only stops one block during Multiple Block
@@ -346,6 +348,29 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
    - [x] Dirty Player
    - [x] Arm Bar
 - [ ] Monstrous Mouth
+  - [ ] Ball & Chain can still move when Chomped
+  - [ ] Trickster removes Chomped
+  - [ ] Distracted Removes Chomped
+  - [ ] Being Knocked Down does not remove Chomped
+  - [ ] Both Players being Chomped
+  - [ ] Cannot push back chomped player (count as Rooted)
+  - [ ] Can be Chomped Multiple times
+  - [ ] Cannot Dodge if Chomped
+  - [ ] Cannot Jump if Chomped
+  - [ ] Cannot Leap if Chomped
+  - [ ] Cannot Pogo if Chomped
+  - [ ] Cannot use Diving Tackle if Chomped
+  - [ ] Cannot use Shadowing if Chomped
+  - [ ] Works during Blitz
+  - [ ] Knock Down MM player
+  - [ ] Move MM player
+  - [ ] Throw MM player
+  - [ ] Kick MM player
+  - [ ] Ban MM Player
+  - [ ] MM Player moves using Trickster
+  - [ ] Strip Ball doesn't work
+  - [ ] I'll Carry You removes Trickster
+  - [ ] Chomped + Sidestep (Does not remove Chomped on POW)
 - [x] Prehensile Tail
   - [x] Adds -1 negative modifier
   - [x] Only one player can use it

@@ -53,8 +53,11 @@ object BoneHeadRoll: D6WithRerollProcedure() {
                     GameVersion.BB2020 -> add(AddPlayerStatusEffect(context.player, PlayerStatusEffect.boneHead()))
                     GameVersion.BB2025 -> add(AddPlayerStatusEffect(context.player, PlayerStatusEffect.distracted()))
                 }
-                add(SetHasTackleZones(context.player, false))
-                add(
+                getResetChompedStateCommands(context.player, context.player.location, forceRemoveChompedByChomper = true)?.let {
+                    add(it)
+                }
+                addAll(
+                    SetHasTackleZones(context.player, false),
                     UpdateContext(
                         activateContext.copy(
                             rolledForNegaTrait = true,

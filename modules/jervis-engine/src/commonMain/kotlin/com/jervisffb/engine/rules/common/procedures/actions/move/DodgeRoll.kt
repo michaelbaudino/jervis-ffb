@@ -40,6 +40,7 @@ import com.jervisffb.engine.model.modifiers.BreakTackleModifier
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.model.modifiers.DodgeRollModifier
 import com.jervisffb.engine.model.modifiers.MarkedModifier
+import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.reports.ReportDodgeResult
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.DiceRollType
@@ -50,6 +51,7 @@ import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.D6WithRerollProcedure
 import com.jervisffb.engine.rules.common.procedures.actions.dicerolls.RerollData
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -292,6 +294,7 @@ object DodgeRoll: D6WithRerollProcedure() {
                 }
                 .mapNotNull { state.pitch[it].player }
                 .filter { it.isSkillAvailable(SkillType.DIVING_TACKLE) }
+                .filterNot { it.hasStatusEffect(PlayerStatusEffectType.CHOMPED) }
                 .map { SelectPlayer(it) }
             val canUseBeforeRoll = (rules.baseVersion == GameVersion.BB2020)
 
@@ -420,6 +423,7 @@ object DodgeRoll: D6WithRerollProcedure() {
                 }
                 .mapNotNull { state.pitch[it].player }
                 .filter { it.isSkillAvailable(SkillType.DIVING_TACKLE) }
+                .filterNot { it.hasStatusEffect(PlayerStatusEffectType.CHOMPED) }
 
             return if (eligiblePlayers.isNotEmpty()) {
                 listOf(SelectPlayer.fromPlayers(eligiblePlayers), CancelWhenReady)
@@ -446,6 +450,7 @@ object DodgeRoll: D6WithRerollProcedure() {
                             isSuccess = success
                         )),
                         SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false),
+                        getResetChompedStateCommands(player, context.startingSquare, forceRemoveChompedByChomper = true),
                         SetPlayerLocation(player, context.startingSquare),
                         if (ballInSquare) GotoNode(BounceBallInStartingSquare) else ExitProcedure(),
                     )

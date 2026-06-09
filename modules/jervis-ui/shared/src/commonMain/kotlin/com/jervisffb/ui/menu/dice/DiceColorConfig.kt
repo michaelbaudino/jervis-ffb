@@ -80,6 +80,7 @@ object BB2025DiceColorConfig : DiceColorConfig() {
             DiceRollType.CHAINSAW -> DiceRollTypeConfig(rollType, "Chainsaw", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.CHARGE -> DiceRollTypeConfig(rollType, "Charge", d6, d6Colors, DiceColor.WHITE)
             DiceRollType.CHEERING_FANS -> DiceRollTypeConfig(rollType, "Cheering Fans", d6, d6Colors, DiceColor.WHITE)
+            DiceRollType.CHOMP -> DiceRollTypeConfig(rollType, "Chomp", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.CROWD_TAKES_ACTION -> DiceRollTypeConfig(rollType, "Cheering Fans", d6, d6Colors, DiceColor.WHITE)
             DiceRollType.DAUNTLESS -> DiceRollTypeConfig(rollType, "Dauntless", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.DEVIATE -> DiceRollTypeConfig(rollType, "Deviate", d8, singleColor, DiceColor.DEFAULT)

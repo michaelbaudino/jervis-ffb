@@ -7,6 +7,7 @@ import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.RerollOptionSelected
 import com.jervisffb.engine.actions.SelectDicePoolResult
 import com.jervisffb.engine.actions.SelectRerollOption
+import com.jervisffb.engine.commands.AddPlayerStatusEffect
 import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.model.Ball
@@ -150,6 +151,13 @@ fun Player.makeDistracted() {
 }
 
 /**
+ * Modify the Player state, so they will be considered Chomped.
+ */
+fun Player.makeChomped(causedBy: Player) {
+    AddPlayerStatusEffect(this, PlayerStatusEffect.chomped(causedBy)).execute(this.team.game)
+}
+
+/**
  * Test Helper, checking that this player is the "Active Player".
  */
 fun Player.assertActive() {
@@ -191,6 +199,12 @@ fun Player.assertStunned() {
  */
 fun Player.assertKnockedOut() {
     assertEquals(PlayerState.KNOCKED_OUT, state)
+    assertNull(intermediateState)
+    assertEquals(DogOut, location)
+}
+
+fun Player.assertBadlyHurt() {
+    assertEquals(PlayerState.BADLY_HURT, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }

@@ -104,7 +104,8 @@ object GameDrive : Procedure() {
                     val player = it.player!!
                     compositeCommandOf(
                         SetPlayerState(player, PlayerState.RESERVE),
-                        SetPlayerLocation(player, DogOut)
+                        SetPlayerLocation(player, DogOut),
+                        getResetChompedStateCommands(player, ignoreChomper = true),
                     )
                 }
             // At this point, all temporary balls should have been removed.

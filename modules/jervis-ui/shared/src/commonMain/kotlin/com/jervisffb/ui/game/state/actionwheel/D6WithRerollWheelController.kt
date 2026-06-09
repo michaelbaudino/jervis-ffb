@@ -48,6 +48,8 @@ import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRoll
 import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRollContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireRoll
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompContext
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.DauntlessRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.DauntlessRollContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.FoulAppearanceContext
@@ -78,6 +80,7 @@ import kotlin.time.ExperimentalTime
  * - BoneHead
  * - Breathe Fire
  * - Catch
+ * - Chomped
  * - Dauntless
  * - Dodge
  * - Foul Appearance
@@ -178,6 +181,26 @@ object CatchWheelController : D6WithRerollWheelController() {
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<CatchContext>()
         return context.roll!!.originalRoll
+    }
+}
+
+/**
+ * Define the Action Wheel layout when rolling for Chomp.
+ */
+object ChompWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "chomped"
+    override val diceRollType: DiceRollType = DiceRollType.CHOMP
+    override val rollDiceNode: Node = ChompRoll.RollDie
+    override val chooseRerollSourceNode: Node = ChompRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = ChompRoll.ReRollDie
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<ChompContext>().attacker.coordinates
+    }
+
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<ChompContext>()
+        return context.chompRoll!!.originalRoll
     }
 }
 

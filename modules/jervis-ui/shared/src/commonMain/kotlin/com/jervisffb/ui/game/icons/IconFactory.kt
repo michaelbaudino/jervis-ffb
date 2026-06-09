@@ -160,6 +160,7 @@ enum class ActionIcon(val path: String) {
     BOMBARDIER("jervis/actions/jervis_action_pass.png"),
     BREATHE_FIRE("jervis/actions/jervis_action_block.png"),
     CHAINSAW("jervis/actions/jervis_action_block.png"),
+    CHOMP("jervis/actions/jervis_action_block.png"),
     HYPNOTIC_GAZE("jervis/actions/jervis_action_block.png"),
     KICK_TEAM_MATE("jervis/actions/jervis_action_pass.png"),
     MULTIPLE_BLOCK("jervis/actions/jervis_action_block.png"),

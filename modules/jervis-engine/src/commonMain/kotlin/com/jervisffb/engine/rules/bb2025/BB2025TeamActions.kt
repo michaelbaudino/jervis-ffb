@@ -10,6 +10,7 @@ import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.actions.TeamActions
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireAction
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChompAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.StabAction
 import com.jervisffb.engine.rules.common.procedures.actions.handoff.HandOffAction
@@ -132,9 +133,20 @@ class BB2025TeamActions : TeamActions() {
                     PlayerAction(
                         name = "Breathe Fire",
                         type = PlayerSpecialActionType.BREATHE_FIRE,
-                        countsAs = PlayerStandardActionType.BLOCK,
+                        countsAs = null,
                         availablePrTurn = Int.MAX_VALUE,
                         procedure = BreatheFireAction,
+                        worksDuringBlitz = true,
+                        compulsory = false,
+                    )
+                }
+                PlayerSpecialActionType.CHOMP -> {
+                    PlayerAction(
+                        name = "Chomp",
+                        type = PlayerSpecialActionType.CHOMP,
+                        countsAs = null,
+                        availablePrTurn = Int.MAX_VALUE,
+                        procedure = ChompAction,
                         worksDuringBlitz = true,
                         compulsory = false,
                     )
@@ -143,7 +155,7 @@ class BB2025TeamActions : TeamActions() {
                     PlayerAction(
                         name = "Projectile Vomit",
                         type = PlayerSpecialActionType.PROJECTILE_VOMIT,
-                        countsAs = PlayerStandardActionType.BLOCK,
+                        countsAs = null,
                         availablePrTurn = Int.MAX_VALUE,
                         procedure = ProjectileVomitAction,
                         worksDuringBlitz = true,
@@ -165,7 +177,7 @@ class BB2025TeamActions : TeamActions() {
                     PlayerAction(
                         name = "Punt",
                         type = PlayerSpecialActionType.PUNT,
-                        countsAs = PlayerStandardActionType.PASS,
+                        countsAs = null,
                         availablePrTurn = 1,
                         procedure = PuntAction,
                         worksDuringBlitz = false,

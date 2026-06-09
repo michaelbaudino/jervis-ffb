@@ -173,13 +173,15 @@ object ThrowTeamMateAction : Procedure() {
                             else -> INVALID_GAME_STATE("Unknown Right Stuff skill type: ${rightStuffSkill::class.simpleName}")
                         }
 
-                        // Rooted players cannot leave their square, so they cannot be thrown.
+                        // Rooted or Chomped players cannot leave their square, so they cannot be thrown.
                         val isRooted = player.hasStatusEffect(PlayerStatusEffectType.ROOTED)
+                        val isChomped = player.hasStatusEffect(PlayerStatusEffectType.CHOMPED)
 
                         val canBeThrown = player.team == thrower.team
                             && player.isSkillAvailable(SkillType.RIGHT_STUFF)
                             && player.strength <= maxStrength
                             && !isRooted
+                            && !isChomped
                         if (canBeThrown) {
                             player
                         } else {

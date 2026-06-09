@@ -39,6 +39,7 @@ import com.jervisffb.engine.rules.bb2020.procedures.actions.block.BB2020PushStep
 import com.jervisffb.engine.rules.bb2020.procedures.actions.block.MultipleBlockAction
 import com.jervisffb.engine.rules.bb2020.procedures.actions.throwteammate.ThrowPlayerStep
 import com.jervisffb.engine.rules.common.procedures.Bounce
+import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryRoll
@@ -88,6 +89,7 @@ object MovePlayerIntoSquare : Procedure() {
             val context = state.getContext<MovePlayerIntoSquareContext>()
             return compositeCommandOf(
                 SetPlayerLocation(context.player, context.target, isThrown = false),
+                getResetChompedStateCommands(context.player, context.target),
                 GotoNode(CheckForBouncingBall),
             )
         }
