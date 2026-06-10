@@ -87,7 +87,6 @@ import com.jervisffb.ui.utils.toImageBitmap
 import com.jervisffb.ui.utils.toSkiaColor
 import com.jervisffb.utils.canBeHost
 import com.jervisffb.utils.getHttpClient
-import kotlinx.coroutines.CompletableDeferred
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.statement.readRawBytes
@@ -96,6 +95,7 @@ import io.ktor.http.Url
 import io.ktor.http.encodeURLParameter
 import io.ktor.http.headers
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CompletableDeferred
 import okio.internal.commonToUtf8String
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi

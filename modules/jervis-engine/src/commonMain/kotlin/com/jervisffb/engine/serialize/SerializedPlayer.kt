@@ -46,23 +46,23 @@ class SerializedPlayer(
     companion object {
         fun serialize(player: Player): SerializedPlayer {
             return SerializedPlayer(
-                player.id,
-                player.name,
-                player.number,
-                player.position.id,
-                player.type,
-                player.moveModifiers.filter { it.expiresAt == Duration.PERMANENT }
+                id = player.id,
+                name = player.name,
+                number = player.number,
+                position = player.position.id,
+                type = player.type,
+                statModifiers = player.moveModifiers.filter { it.expiresAt == Duration.PERMANENT }
                     + player.strengthModifiers.filter { it.expiresAt == Duration.PERMANENT }
                     + player.agilityModifiers.filter { it.expiresAt == Duration.PERMANENT }
                     + player.passingModifiers.filter { it.expiresAt == Duration.PERMANENT }
                     + player.armourModifiers.filter { it.expiresAt == Duration.PERMANENT },
-                player.extraSkills.map { it.name },
-                player.nigglingInjuries,
-                player.missNextGame,
-                player.starPlayerPoints,
-                player.level,
-                player.cost,
-                player.icon,
+                extraSkills = player.extraSkills.map { it.skillId.serialize() },
+                nigglingInjuries = player.nigglingInjuries,
+                missNextGame = player.missNextGame,
+                starPlayerPoints = player.starPlayerPoints,
+                level = player.level,
+                cost = player.cost,
+                icon = player.icon,
             )
         }
     }
