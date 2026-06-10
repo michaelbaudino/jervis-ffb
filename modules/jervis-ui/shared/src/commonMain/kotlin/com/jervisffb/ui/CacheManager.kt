@@ -71,7 +71,7 @@ object CacheManager {
     }
 
     /**
-     * @param cachePath relative path under ~/.jervis/cache/images
+     * The [url] is mapped to a deterministic path under ~/.jervis/cache/images (desktop) or in IndexedDB (WASM).
      */
     suspend fun getCachedImage(url: Url): ImageBitmap? {
         val host = url.host

@@ -87,6 +87,7 @@ import com.jervisffb.ui.utils.toImageBitmap
 import com.jervisffb.ui.utils.toSkiaColor
 import com.jervisffb.utils.canBeHost
 import com.jervisffb.utils.getHttpClient
+import kotlinx.coroutines.CompletableDeferred
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.statement.readRawBytes
@@ -221,6 +222,7 @@ object IconFactory {
     private val fumbblCache = mutableMapOf<String, Url>()
 
     private val httpClient = getHttpClient()
+    private val inFlightRequests = mutableMapOf<Url, CompletableDeferred<ImageBitmap?>>()
 
     /**
      * Loads the fumbbl ini file and prepare the mapping between local paths
@@ -409,31 +411,47 @@ object IconFactory {
     }
 
     private suspend fun loadImageFromNetwork(url: Url, useProxy: Boolean): ImageBitmap? {
-        // User server proxy to bypass CORS restrictions but only on Web. JVM and iOS does not need this.
-        // Right now we are just using the "canBeHost()" as an easy way to check for the Web target.
-        // Probably need to find something better in the future.
-        val callUrl = if (useProxy && !canBeHost()) {
-            Url("https://jervis.ilios.dk/proxy.php?url=${url.toString().encodeURLParameter()}")
-        } else {
-            url
-        }
+        CacheManager.getCachedImage(url)?.let { return it }
 
-        val cachedImage = CacheManager.getCachedImage(url)
-        if (cachedImage != null) return cachedImage
-        val result = httpClient.get(callUrl) {
-            headers {
-                // In some cases, gifs are returned even though the path is a png. Problem?
-                accept(ContentType.Image.PNG)
-                accept(ContentType.Image.GIF)
+        // If a fetch for this URL is already in-flight, wait for it instead of
+        // firing a duplicate request. This avoids race conditions on WASM where coroutines
+        // interleave at every suspension point. Which will cause fatal cash misses later.
+        // See https://github.com/cmelchior/jervis-ffb/issues/48
+        inFlightRequests[url]?.let { return it.await() }
+
+        val deferred = CompletableDeferred<ImageBitmap?>()
+        inFlightRequests[url] = deferred
+        try {
+            // Use server proxy to bypass CORS restrictions but only on Web. JVM and iOS does not need this.
+            // Right now we are just using the "canBeHost()" as an easy way to check for the Web target.
+            // Probably need to find something better in the future.
+            val callUrl = when (useProxy && !canBeHost()) {
+                true -> Url("https://jervis.ilios.dk/proxy.php?url=${url.toString().encodeURLParameter()}")
+                false -> url
             }
-        }
-        return if (result.status.isSuccess()) {
-            val bytes = result.readRawBytes()
-            val image = Image.makeFromEncoded(bytes).toComposeImageBitmap()
-            CacheManager.saveImage(url, image)
-            image
-        } else {
-            null
+            val result = httpClient.get(callUrl) {
+                headers {
+                    // In some cases, gifs are returned even though the path is a png. Problem?
+                    accept(ContentType.Image.PNG)
+                    accept(ContentType.Image.GIF)
+                }
+            }
+            val image = when (result.status.isSuccess()) {
+                true -> {
+                    val bytes = result.readRawBytes()
+                    val image = Image.makeFromEncoded(bytes).toComposeImageBitmap()
+                    CacheManager.saveImage(url, image)
+                    image
+                }
+                false -> null
+            }
+            deferred.complete(image)
+            return image
+        } catch (e: Exception) {
+            deferred.completeExceptionally(e)
+            throw e
+        } finally {
+            inFlightRequests.remove(url)
         }
     }
 
