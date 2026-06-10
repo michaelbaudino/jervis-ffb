@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../logging-khronicle/main-SNAPSHOT/logging-khronicle-main-SNAPSHOT.module",
+    "group": "com.juul.indexeddb",
+    "module": "logging-khronicle",
+    "version": "main-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "wasmJsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "dependencies": [
+        {
+          "group": "com.juul.indexeddb",
+          "module": "core",
+          "version": {
+            "requires": "main-SNAPSHOT"
+          }
+        },
+        {
+          "group": "com.juul.khronicle",
+          "module": "khronicle-core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "logging-khronicle-wasm-js.klib",
+          "url": "logging-khronicle-wasm-js-main-SNAPSHOT.klib",
+          "size": 7200,
+          "sha512": "29d2735d59bd65bfef45ad24b587e45dfe3d3311f51a4f36ccf01ec90788debc779b12468aa57016e4c9c989b4f4e1eef78358ae043fe63771e856561ef3eb2c",
+          "sha256": "098a9785916ff6e5725ab64a59bee88ebcef1742c985e1e88c23c690b8c35703",
+          "sha1": "e0c9a838fd32a28528b8d637cc44b18269ddabd8",
+          "md5": "f3f1ec3d67a68d5ec54343c5e8525a44"
+        }
+      ]
+    },
+    {
+      "name": "wasmJsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "dependencies": [
+        {
+          "group": "com.juul.indexeddb",
+          "module": "core",
+          "version": {
+            "requires": "main-SNAPSHOT"
+          }
+        },
+        {
+          "group": "com.juul.khronicle",
+          "module": "khronicle-core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "logging-khronicle-wasm-js.klib",
+          "url": "logging-khronicle-wasm-js-main-SNAPSHOT.klib",
+          "size": 7200,
+          "sha512": "29d2735d59bd65bfef45ad24b587e45dfe3d3311f51a4f36ccf01ec90788debc779b12468aa57016e4c9c989b4f4e1eef78358ae043fe63771e856561ef3eb2c",
+          "sha256": "098a9785916ff6e5725ab64a59bee88ebcef1742c985e1e88c23c690b8c35703",
+          "sha1": "e0c9a838fd32a28528b8d637cc44b18269ddabd8",
+          "md5": "f3f1ec3d67a68d5ec54343c5e8525a44"
+        }
+      ]
+    },
+    {
+      "name": "wasmJsSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "wasm",
+        "org.jetbrains.kotlin.wasm.target": "js"
+      },
+      "files": [
+        {
+          "name": "logging-khronicle-wasm-js-sources.jar",
+          "url": "logging-khronicle-wasm-js-main-SNAPSHOT-sources.jar",
+          "size": 1041,
+          "sha512": "cd73e3352680b85bf4a1d2ed727f688c6a1643825293b3db227d339f5e00b3027fc0274d6d083b895e65e4b9e73aa673e031c4905677412bd479a9f69a5de9e6",
+          "sha256": "15ec39deb2ebaf84ffcafb1b0abd1104a30513caa936923956d67087067f3397",
+          "sha1": "4e3c5ebdb12c8290359b772b19724049819c54ad",
+          "md5": "ee44c2e3956f376fb49ea3303ed4094b"
+        }
+      ]
+    }
+  ]
+}

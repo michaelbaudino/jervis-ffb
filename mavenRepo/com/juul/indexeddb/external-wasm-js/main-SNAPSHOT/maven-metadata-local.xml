@@ -3,7 +3,7 @@
   <groupId>com.juul.indexeddb</groupId>
   <artifactId>external-wasm-js</artifactId>
   <versioning>
-    <lastUpdated>20241224230736</lastUpdated>
+    <lastUpdated>20260610192941</lastUpdated>
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
@@ -12,28 +12,28 @@
         <classifier>sources</classifier>
         <extension>jar</extension>
         <value>main-SNAPSHOT</value>
-        <updated>20241224230736</updated>
+        <updated>20260610192941</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>main-SNAPSHOT</value>
+        <updated>20260610192941</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>main-SNAPSHOT</value>
+        <updated>20260610192941</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>klib</extension>
         <value>main-SNAPSHOT</value>
-        <updated>20241224230736</updated>
+        <updated>20260610192941</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>javadoc</classifier>
         <extension>jar</extension>
         <value>main-SNAPSHOT</value>
-        <updated>20241224230736</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>pom</extension>
-        <value>main-SNAPSHOT</value>
-        <updated>20241224230736</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>module</extension>
-        <value>main-SNAPSHOT</value>
-        <updated>20241224230736</updated>
+        <updated>20260610192941</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

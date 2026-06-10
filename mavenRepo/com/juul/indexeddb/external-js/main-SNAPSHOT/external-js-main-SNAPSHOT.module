@@ -11,7 +11,7 @@
   },
   "createdBy": {
     "gradle": {
-      "version": "8.10"
+      "version": "9.5.1"
     }
   },
   "variants": [
@@ -29,14 +29,14 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-dom-api-compat",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         }
       ],
@@ -44,11 +44,11 @@
         {
           "name": "external-js.klib",
           "url": "external-js-main-SNAPSHOT.klib",
-          "size": 40085,
-          "sha512": "f99e078442a2fc174235ff9c94cd5f84aeff1e2029b02889166250e77bfdb845dcf21062ac6d86d42dbbc8bc9473773901c397a340b5b12de9d0cf73e3a6405f",
-          "sha256": "859086508e6a724bfe36156aa0df9d4e7b2f9d031748c985c98742c2608313ba",
-          "sha1": "db32403c61a4548da12a9507eda315af94eb6495",
-          "md5": "81f4cf6641a85f9746cd46cad5f2ea03"
+          "size": 28455,
+          "sha512": "1958f927c85103f93adee8c6eae50a2be1964928e57b55140881eb939c310d3a06fd3f8ce852406168ff2fa376bff7005b383a62d81b4f0c51070c4d43ce4ca6",
+          "sha256": "0a7736c26cc62aef839b7775c8b4232b6847d071ae4e705a413ce6f9c571b135",
+          "sha1": "d2241076f6e59f5ea0b1ce463e5fc5bf2b2ba212",
+          "md5": "3bf7d44e7030426f02496cddc8d34ab7"
         }
       ]
     },
@@ -66,14 +66,14 @@
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-dom-api-compat",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         },
         {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         }
       ],
@@ -81,11 +81,11 @@
         {
           "name": "external-js.klib",
           "url": "external-js-main-SNAPSHOT.klib",
-          "size": 40085,
-          "sha512": "f99e078442a2fc174235ff9c94cd5f84aeff1e2029b02889166250e77bfdb845dcf21062ac6d86d42dbbc8bc9473773901c397a340b5b12de9d0cf73e3a6405f",
-          "sha256": "859086508e6a724bfe36156aa0df9d4e7b2f9d031748c985c98742c2608313ba",
-          "sha1": "db32403c61a4548da12a9507eda315af94eb6495",
-          "md5": "81f4cf6641a85f9746cd46cad5f2ea03"
+          "size": 28455,
+          "sha512": "1958f927c85103f93adee8c6eae50a2be1964928e57b55140881eb939c310d3a06fd3f8ce852406168ff2fa376bff7005b383a62d81b4f0c51070c4d43ce4ca6",
+          "sha256": "0a7736c26cc62aef839b7775c8b4232b6847d071ae4e705a413ce6f9c571b135",
+          "sha1": "d2241076f6e59f5ea0b1ce463e5fc5bf2b2ba212",
+          "md5": "3bf7d44e7030426f02496cddc8d34ab7"
         }
       ]
     },
@@ -104,11 +104,11 @@
         {
           "name": "external-js-sources.jar",
           "url": "external-js-main-SNAPSHOT-sources.jar",
-          "size": 12245,
-          "sha512": "3a2a028c6d96e51dae7e0b02e11c504ff9298870bb44447ac26ef030879243e61b617c5cce1eea0ed755f5bb842e76d2d5165d836ae894d27cf2e6c4c56451c5",
-          "sha256": "4544ba103a2fb3e00dddea0830aab9d643e95b71ab38b16911521fe08d0a90d7",
-          "sha1": "2c02469ccb20ce1a4217a9b9fbaab27f4ed88140",
-          "md5": "b192d9f78d0090893e39dd1af7468c30"
+          "size": 8757,
+          "sha512": "0a88a563b0a6e2f2f9976d8e28c1a87c6e176d7ccab3e066336e76ed1f3382d9c2fc979fa138d57bafb4dd48df88cd988d3b54687bd7fe2b79c2d50a5503c0dd",
+          "sha256": "c81444cbc005902f8114082330ffc5f514c8d7dd61748888d8dde08a8ec5dfa2",
+          "sha1": "b8e5d0e21ea394a7b819ca9ae42c9df1d22e914a",
+          "md5": "f793fd80833b5ba85a2d25fa20d88232"
         }
       ]
     }

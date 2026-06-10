@@ -11,7 +11,7 @@
   },
   "createdBy": {
     "gradle": {
-      "version": "8.10"
+      "version": "9.5.1"
     }
   },
   "variants": [
@@ -26,6 +26,13 @@
       },
       "dependencies": [
         {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
           "group": "com.juul.indexeddb",
           "module": "external",
           "version": {
@@ -33,17 +40,10 @@
           }
         },
         {
-          "group": "org.jetbrains.kotlinx",
-          "module": "kotlinx-coroutines-core",
-          "version": {
-            "requires": "1.8.1"
-          }
-        },
-        {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         }
       ],
@@ -51,11 +51,11 @@
         {
           "name": "core-wasm-js.klib",
           "url": "core-wasm-js-main-SNAPSHOT.klib",
-          "size": 57677,
-          "sha512": "0d18c5dab68b4299d9bc88ef85d1132ea1dcb873191171681261ef46cca77bea054e2b43511779068f23542e36349e97df37691e3ae308650af672834d8789c5",
-          "sha256": "24a5fe52c6217d4bc44d78504a97d503baeacbe94f0676c10e0f3e5301cb9fcf",
-          "sha1": "3c270c3c6b86939727db5a6178259bcc59868520",
-          "md5": "0bbe245017c369f4a647e6412b07a025"
+          "size": 69730,
+          "sha512": "9351dadd08f5cc27dc70ad80129e5ee1fcc507306a6235d605f5875d85a79a5778e0a640bc219aee56fcc488a1eeb957c8f93296da10bae32fc55e72c3a4b36b",
+          "sha256": "3999d9bea24e8bfb5527b5d33be211ef7037ddffee829e2229ee4811b6319549",
+          "sha1": "39f6be5b2e49bf86d5580fe0d919e573a4458125",
+          "md5": "80d011453bce491ab4465ef29cb8efbc"
         }
       ]
     },
@@ -70,6 +70,13 @@
       },
       "dependencies": [
         {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
           "group": "com.juul.indexeddb",
           "module": "external",
           "version": {
@@ -77,17 +84,10 @@
           }
         },
         {
-          "group": "org.jetbrains.kotlinx",
-          "module": "kotlinx-coroutines-core",
-          "version": {
-            "requires": "1.8.1"
-          }
-        },
-        {
           "group": "org.jetbrains.kotlin",
           "module": "kotlin-stdlib",
           "version": {
-            "requires": "2.0.20"
+            "requires": "2.4.0"
           }
         }
       ],
@@ -95,11 +95,11 @@
         {
           "name": "core-wasm-js.klib",
           "url": "core-wasm-js-main-SNAPSHOT.klib",
-          "size": 57677,
-          "sha512": "0d18c5dab68b4299d9bc88ef85d1132ea1dcb873191171681261ef46cca77bea054e2b43511779068f23542e36349e97df37691e3ae308650af672834d8789c5",
-          "sha256": "24a5fe52c6217d4bc44d78504a97d503baeacbe94f0676c10e0f3e5301cb9fcf",
-          "sha1": "3c270c3c6b86939727db5a6178259bcc59868520",
-          "md5": "0bbe245017c369f4a647e6412b07a025"
+          "size": 69730,
+          "sha512": "9351dadd08f5cc27dc70ad80129e5ee1fcc507306a6235d605f5875d85a79a5778e0a640bc219aee56fcc488a1eeb957c8f93296da10bae32fc55e72c3a4b36b",
+          "sha256": "3999d9bea24e8bfb5527b5d33be211ef7037ddffee829e2229ee4811b6319549",
+          "sha1": "39f6be5b2e49bf86d5580fe0d919e573a4458125",
+          "md5": "80d011453bce491ab4465ef29cb8efbc"
         }
       ]
     },
@@ -118,11 +118,11 @@
         {
           "name": "core-wasm-js-sources.jar",
           "url": "core-wasm-js-main-SNAPSHOT-sources.jar",
-          "size": 10380,
-          "sha512": "be2d8e9e2ecca0341ee3a9fc51311a0986796e2b2ac330ce713833f2cfd40462ce5d74b067459654babc79707e749398c6681f1e82e8d6580aa365ed2045894c",
-          "sha256": "6405b2381bd2d6eb75320817b4e7c28849e8fcc7d54f360a8007596e1015eeec",
-          "sha1": "43ec881220e621f37f2171cdd06457e79abbb38c",
-          "md5": "db42777aeeabd89a2eb66af8b1d6bf62"
+          "size": 13113,
+          "sha512": "ce66b6abd15ddb90fcbb7bed1676dac10bd3ecc9b5b4e853b377d8388891b125746f2d876b4eee6d1e91debd5a97bca3c6d77f619331bb65965d9af0b4b439bb",
+          "sha256": "5f6bd9a76f238028b4fe3a8bfca547f8e1eae041454826c3633ce1c5991d37a8",
+          "sha1": "3460301f8bc28fb3b93664098e8e1a93622bec57",
+          "md5": "dcde881861eafb6cd791990ad5ce00b2"
         }
       ]
     }

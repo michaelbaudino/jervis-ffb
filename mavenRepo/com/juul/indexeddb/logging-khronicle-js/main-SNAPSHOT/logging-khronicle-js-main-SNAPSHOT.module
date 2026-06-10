@@ -1,0 +1,144 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../logging-khronicle/main-SNAPSHOT/logging-khronicle-main-SNAPSHOT.module",
+    "group": "com.juul.indexeddb",
+    "module": "logging-khronicle",
+    "version": "main-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jsApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-dom-api-compat",
+          "version": {
+            "requires": "2.4.0"
+          }
+        },
+        {
+          "group": "com.juul.indexeddb",
+          "module": "core",
+          "version": {
+            "requires": "main-SNAPSHOT"
+          }
+        },
+        {
+          "group": "com.juul.khronicle",
+          "module": "khronicle-core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "logging-khronicle-js.klib",
+          "url": "logging-khronicle-js-main-SNAPSHOT.klib",
+          "size": 7165,
+          "sha512": "a068e53235818eff714a640025b5e573e032c06998657ec13dd27d8082c95aa926c51a898e64230b4114c91ba87b24a3158ed9d4013bcfa6aafc9007ebf24b71",
+          "sha256": "00caa7d1a432390833b52bc78c38c5f785ff2f796e1153c5bcb093649673c61c",
+          "sha1": "29163bb2068dcf51921f445115ca5ac0715b1cf5",
+          "md5": "5d47d114344ad369c05a68c449cbaea0"
+        }
+      ]
+    },
+    {
+      "name": "jsRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-dom-api-compat",
+          "version": {
+            "requires": "2.4.0"
+          }
+        },
+        {
+          "group": "com.juul.indexeddb",
+          "module": "core",
+          "version": {
+            "requires": "main-SNAPSHOT"
+          }
+        },
+        {
+          "group": "com.juul.khronicle",
+          "module": "khronicle-core",
+          "version": {
+            "requires": "1.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.4.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "logging-khronicle-js.klib",
+          "url": "logging-khronicle-js-main-SNAPSHOT.klib",
+          "size": 7165,
+          "sha512": "a068e53235818eff714a640025b5e573e032c06998657ec13dd27d8082c95aa926c51a898e64230b4114c91ba87b24a3158ed9d4013bcfa6aafc9007ebf24b71",
+          "sha256": "00caa7d1a432390833b52bc78c38c5f785ff2f796e1153c5bcb093649673c61c",
+          "sha1": "29163bb2068dcf51921f445115ca5ac0715b1cf5",
+          "md5": "5d47d114344ad369c05a68c449cbaea0"
+        }
+      ]
+    },
+    {
+      "name": "jsSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "files": [
+        {
+          "name": "logging-khronicle-js-sources.jar",
+          "url": "logging-khronicle-js-main-SNAPSHOT-sources.jar",
+          "size": 1041,
+          "sha512": "cd73e3352680b85bf4a1d2ed727f688c6a1643825293b3db227d339f5e00b3027fc0274d6d083b895e65e4b9e73aa673e031c4905677412bd479a9f69a5de9e6",
+          "sha256": "15ec39deb2ebaf84ffcafb1b0abd1104a30513caa936923956d67087067f3397",
+          "sha1": "4e3c5ebdb12c8290359b772b19724049819c54ad",
+          "md5": "ee44c2e3956f376fb49ea3303ed4094b"
+        }
+      ]
+    }
+  ]
+}

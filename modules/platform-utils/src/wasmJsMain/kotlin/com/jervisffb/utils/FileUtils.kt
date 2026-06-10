@@ -3,11 +3,12 @@
 
 package com.jervisffb.utils
 
-import Database
-import KeyPath
 import com.jervisffb.utils.DatabaseManager.filesStore
-import com.juul.indexeddb.external.IDBKey
-import com.juul.indexeddb.external.IDBKeyRange
+import com.juul.indexeddb.Database
+import com.juul.indexeddb.KeyPath
+import com.juul.indexeddb.bound
+import com.juul.indexeddb.only
+import com.juul.indexeddb.openDatabase
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -18,7 +19,6 @@ import okio.Path
 import okio.Path.Companion.toPath
 import okio.Sink
 import okio.Source
-import openDatabase
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.toByteArray
 import org.khronos.webgl.toInt8Array
@@ -102,13 +102,13 @@ actual class FileManager {
         return db.transaction<List<Path>>(filesStore) {
             val store = objectStore(filesStore)
             val pathIndex = store.index("path")
-            val range = IDBKeyRange.bound(
-                IDBKey(directory),
-                IDBKey("\uffff"),
+            val range = bound(
+                directory.toJsString(),
+                "\uffff".toJsString(),
                 false,
                 false
             )
-            val files = pathIndex.openCursor(IDBKey(range), autoContinue = true)
+            val files = pathIndex.openCursor(range, autoContinue = true)
                 .filter {
                     it.key.toString().endsWith(extension)
                 }
@@ -122,7 +122,7 @@ actual class FileManager {
         return db.transaction(filesStore) {
             val store = objectStore(filesStore)
             @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-            (store.get(IDBKey(path)) as WebFile?)?.content?.toByteArray()
+            (store.get(only(path.toJsString())) as WebFile?)?.content?.toByteArray()
         }
     }
     actual suspend fun writeFile(dir: String, fileName: String, fileContent: ByteArray) {
