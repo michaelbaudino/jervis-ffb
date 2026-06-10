@@ -347,34 +347,35 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
    - [x] Lethal Flight
    - [x] Dirty Player
    - [x] Arm Bar
-- [ ] Monstrous Mouth
+- [x] Monstrous Mouth
   - [ ] Ball & Chain can still move when Chomped
   - [ ] Trickster removes Chomped
-  - [ ] Distracted Removes Chomped
-  - [ ] Being Knocked Down does not remove Chomped
-  - [ ] Both Players being Chomped
-  - [ ] Cannot push back chomped player (count as Rooted)
-  - [ ] Can be Chomped Multiple times
-  - [ ] Cannot Dodge if Chomped
-  - [ ] Cannot Jump if Chomped
-  - [ ] Cannot Leap if Chomped
-  - [ ] Cannot Pogo if Chomped
-  - [ ] Cannot use Diving Tackle if Chomped
-  - [ ] Cannot use Shadowing if Chomped
-  - [ ] Works during Blitz
-  - [ ] Knock Down MM player
-  - [ ] Move MM player
-  - [ ] Throw MM player
+  - [x] Distracted Removes Chomped
+  - [x] Being Knocked Down does not remove Chomped
+  - [x] Both Players being Chomped
+  - [x] Cannot push back chomped player (count as Rooted)
+  - [x] Can be Chomped Multiple times
+  - [x] Cannot Dodge if Chomped
+  - [x] Cannot Jump if Chomped
+  - [x] Cannot Leap if Chomped
+  - [x] Cannot Pogo if Chomped
+  - [x] Cannot use Diving Tackle if Chomped
+  - [x] Cannot use Shadowing if Chomped
+  - [x] Works during Blitz
+  - [x] Knock Down MM player
+  - [x] Move MM player
+  - [x] Throw MM player
   - [ ] Kick MM player
-  - [ ] Ban MM Player
+  - [x] Ban MM Player
   - [ ] MM Player moves using Trickster
-  - [ ] Strip Ball doesn't work
+  - [x] Strip Ball doesn't work
   - [ ] I'll Carry You removes Trickster
-  - [ ] Chomped + Sidestep (Does not remove Chomped on POW)
+  - [x] Chomped + Sidestep (Does not remove Chomped on POW)
 - [x] Prehensile Tail
   - [x] Adds -1 negative modifier
   - [x] Only one player can use it
 - [ ] Tentacles
+  - [ ] Check before Dodge
   - [ ] Check before rushing to Jump
   - [ ] Check before rushing to Leap
   - [ ] Check before rushing to Pogo
