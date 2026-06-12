@@ -12,11 +12,13 @@ import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.commands.Command
+import com.jervisffb.engine.commands.SetBallLocation
 import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.commands.SetCurrentBall
 import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.commands.SetSkillUsed
+import com.jervisffb.engine.commands.buildCompositeCommand
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.UpdateContext
 import com.jervisffb.engine.commands.fsm.ExitProcedure
@@ -82,6 +84,8 @@ import kotlinx.collections.immutable.toPersistentList
  * 5. Choose to Reroll or not.
  * 6. If Reroll. Choose optional modifiers with negative consequences for the user.
  *      a. Diving Tackle
+ *          - If Diving Tackle player was holding a ball, the ball is dropped and will bounce.
+ *          - If the dodging player used Fumblerooski, the Diving Tackle player lands on it, and it will bounce.
  * 7. Calculate the final result.
  *
  * Designer's Commentary (BB2020):
@@ -440,20 +444,40 @@ object DodgeRoll: D6WithRerollProcedure() {
                     val skill = player.getSkill(SkillType.DIVING_TACKLE)
                     val updatedModifiers = context.rollModifiers.add(DodgeRollModifier.DIVING_TACKLE)
                     val success = isSuccess(context, overrideModifiers = updatedModifiers)
+
+                    // If the player with Diving Tackle was holding the ball, it is knocked loose and will bounce.
+                    val divingTacklerHasBall = player.hasBall()
+
                     // If a player use Fumblerooski, they might have left a ball in the square the Diving Tackle
                     // player ends up prone in. In that case, the ball will always bounce.
                     val ballInSquare = state.pitch[context.startingSquare].balls.isNotEmpty()
-                    compositeCommandOf(
-                        ReportSkillUsed(player, skill),
-                        UpdateContext(context.copy(
-                            rollModifiers = updatedModifiers,
-                            isSuccess = success
-                        )),
-                        SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false),
-                        getResetChompedStateCommands(player, context.startingSquare, forceRemoveChompedByChomper = true),
-                        SetPlayerLocation(player, context.startingSquare),
-                        if (ballInSquare) GotoNode(BounceBallInStartingSquare) else ExitProcedure(),
-                    )
+
+                    buildCompositeCommand {
+                        addAll(
+                            ReportSkillUsed(player, skill),
+                            UpdateContext(context.copy(
+                                rollModifiers = updatedModifiers,
+                                isSuccess = success
+                            )),
+                            SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false),
+                            SetPlayerLocation(player, context.startingSquare),
+                        )
+                        getResetChompedStateCommands(player, context.startingSquare, forceRemoveChompedByChomper = true)?.let {
+                            add(it)
+                        }
+                        if (divingTacklerHasBall) {
+                            val ball = player.ball ?: INVALID_GAME_STATE("Player doesn't have a ball")
+                            addAll(
+                                SetBallState.bouncing(ball),
+                                SetBallLocation(ball, context.startingSquare)
+                            )
+                        }
+                        val nextNode = when (ballInSquare || divingTacklerHasBall) {
+                            true -> GotoNode(BounceBallInStartingSquare)
+                            false -> ExitProcedure()
+                        }
+                        add(nextNode)
+                    }
                 }
                 Cancel,
                 Continue -> ExitProcedure()
@@ -465,7 +489,7 @@ object DodgeRoll: D6WithRerollProcedure() {
     object BounceBallInStartingSquare: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<DodgeRollContext>()
-            val ball = state.pitch[context.startingSquare].balls.singleOrNull() ?: INVALID_GAME_STATE("Too many balls in square: ${context.startingSquare}")
+            val ball = state.pitch[context.startingSquare].balls.last()
             return compositeCommandOf(
                 SetBallState.bouncing(ball),
                 SetCurrentBall(ball),
@@ -473,9 +497,11 @@ object DodgeRoll: D6WithRerollProcedure() {
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
         override fun onExitNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<DodgeRollContext>()
+            val squareHasMoreBalls = state.pitch[context.startingSquare].balls.isNotEmpty()
             return compositeCommandOf(
                 SetCurrentBall(null),
-                ExitProcedure()
+                if (squareHasMoreBalls) GotoNode(BounceBallInStartingSquare) else ExitProcedure()
             )
         }
     }

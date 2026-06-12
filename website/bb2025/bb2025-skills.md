@@ -129,6 +129,20 @@ This has a few implications:
    modifier from Diving Tackle. See a more expanded discussion in the Leap
    section.
 
+If the Diving Tackler holds the ball, it will bounce when they go Prone, but
+it isn't clear exactly where in the sequence it happens.
+
+For now, Jervis has made the somewhat arbitrary choice to let it bounce 
+immediately, i.e. before rolling for Armour for the dodging player. 
+
+The alternative was to wait after resolving the armour and injury roll, but 
+given that we have potential Steady Footing, armour, injury and 
+apothecaries rolls between, it started to feel rather far away. It would also 
+keep the "Diving Tackle sequence" isolated.
+
+The only downside to this sequence is possible for them to catch it and then 
+Fall Over immediately, which feels a bit weird.
+
 ## Page 128 - Eye Gouge
 In the rulebook, Eye Gouge says it can trigger when an opposition player is 
 Pushed Back. From as strict RAW reading, this would also apply to chain-pushes 

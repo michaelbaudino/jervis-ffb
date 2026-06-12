@@ -1,22 +1,32 @@
 package com.jervisffb.test.bb2025
 
+import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.PassTypeSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerActionSelected
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.commands.SetBallLocation
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
+import com.jervisffb.engine.model.Ball
 import com.jervisffb.engine.model.BallState
+import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PassType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2025Test
+import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.catch
+import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.giveBallToPlayer
+import com.jervisffb.test.landingRoll
 import com.jervisffb.test.moveTo
 import com.jervisffb.test.pickup
+import com.jervisffb.test.qualityRoll
 import com.jervisffb.test.throwBall
 import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.makeDistracted
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -117,5 +127,34 @@ class BounceTests: JervisGameBB2025Test() {
             4.d8, // Bounce to [13, 1]
         )
         assertEquals(BallState.ON_GROUND, state.singleBall().state,)
+    }
+
+    // Ball Clone is not supported in BB2025 yet, but we re-use the BB2020 rules for it.
+    // Unfortunately, these are not clear as they just say "...should a square ever contain
+    // two balls, one ball will immediately bounce...". For now, Jervis interprets this as
+    // it is always the last ball into a square that bounces first.
+    @Test
+    fun bounceOnTopOfOtherBall() {
+        setupAndStartThrowTeamMateGame()
+        val thrownPlayer = awayTeam["A13".playerId]
+        giveBallToPlayer(thrownPlayer)
+        state.balls.add(Ball())
+        SetBallLocation(state.balls.last(), PitchCoordinate(9, 4)).execute(state)
+        controller.rollForward(
+            *activatePlayer("A1", PlayerStandardActionType.THROW_TEAM_MATE),
+            *moveTo(14, 4),
+            *dodge(),
+            PlayerSelected(thrownPlayer),
+            PitchSquareSelected(11, 4),
+            *qualityRoll(6.d6),
+            DiceRollResults(1.d8, 4.d8, 8.d8), // Always scatter, lands in [9, 4]
+            *landingRoll(1.d6),
+            DiceRollResults(1.d6, 1.d6), // Fail armour roll
+            4.d8, // Ball bounce, lands on first ball already in [9, 4]
+            4.d8 // Ball bounce again to [8, 4]
+        )
+        awayTeam["A13".playerId].assertProne()
+        state.balls.last().assertCoordinates(9, 4)
+        state.balls.first().assertCoordinates(8, 4)
     }
 }

@@ -8,6 +8,7 @@ import com.jervisffb.engine.actions.RollDice
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.SetBallLocation
 import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.commands.SetBallState.Companion.outOfBounds
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
 import com.jervisffb.engine.commands.context.RemoveContext
@@ -67,6 +68,7 @@ object Bounce : Procedure() {
                 val isOnKickingTeamSide = if (state.kickingTeam.isHomeTeam()) newLocation.isOnHomeSide(rules) else newLocation.isOnAwaySide(rules)
                 val outOfBounds: Boolean = newLocation.isOutOfBounds(rules) || (isDuringKickOff && isOnKickingTeamSide)
                 val playerAtTarget: Player? = if (!outOfBounds) state.pitch[newLocation].player else null
+                val ballAtTarget: Boolean = !outOfBounds && state.pitch[newLocation].balls.isNotEmpty()
 
                 val nextNode: Command =
                     if (outOfBounds) {
@@ -86,6 +88,8 @@ object Bounce : Procedure() {
                         } else {
                             GotoNode(ResolveBounce)
                         }
+                    } else if (ballAtTarget) {
+                        GotoNode(ResolveLandingOnBall)
                     } else {
                         GotoNode(ResolveLandingOnTheGround)
                     }
@@ -101,6 +105,14 @@ object Bounce : Procedure() {
                     nextNode,
                 )
             }
+        }
+    }
+
+    object ResolveLandingOnBall : ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            // When a bouncing ball lands on another ball, it is bounced again.
+            // The ball already in the square stays put.
+            return GotoNode(ResolveBounce)
         }
     }
 

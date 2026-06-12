@@ -1,22 +1,29 @@
 package com.jervisffb.test.bb2025.skills
 
 import com.jervisffb.engine.actions.Cancel
+import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.MoveType
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
+import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.ext.d6
+import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
+import com.jervisffb.engine.model.Ball
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.skills.DivingTackle
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
+import com.jervisffb.test.bounce
+import com.jervisffb.test.catch
 import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
+import com.jervisffb.test.giveBallToPlayer
 import com.jervisffb.test.jump
 import com.jervisffb.test.leap
 import com.jervisffb.test.moveTo
@@ -181,5 +188,62 @@ class DivingTackleTests: JervisGameBB2025Test() {
         assertEquals(mover,state.activePlayer)
         assertEquals(PitchCoordinate(14, 5), mover.coordinates)
         mover.assertStanding()
+    }
+
+    @Test
+    fun bounceBallIfTacklerHoldsBall() {
+        val mover = awayTeam["A1".playerId]
+        val tackler = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.DIVING_TACKLE)
+            giveBallToPlayer(this)
+        }
+        assertEquals(3, mover.agility)
+        controller.rollForward(
+            *activatePlayer(mover, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            *dodge(4.d6),
+            PlayerSelected(tackler),
+            bounce(5.d8), // Bounce from starting square onto player that dodged
+            *catch(6.d6), // Dodging player hasn't failed their dodge yet, so can catch the ball
+            DiceRollResults(1.d6, 1.d6),
+            bounce(5.d8,) // Dodging player goes prone and ball bounces again
+        )
+        assertNull(state.activePlayer)
+        assertEquals(homeTeam, state.activeTeam)
+        assertEquals(PitchCoordinate(14, 5), mover.coordinates)
+        state.singleBall().assertCoordinates(15, 5)
+        mover.assertProne()
+    }
+
+    @Test
+    fun tacklerLandsOnBallInSquare() {
+        state.balls.add(Ball())
+        val mover = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.FUMBLEROOSKI)
+        }
+        val tackler = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.DIVING_TACKLE)
+        }
+        SetBallState.carried(state.balls.first(), mover).execute(state)
+        SetBallState.carried(state.balls.last(), tackler).execute(state)
+        assertEquals(3, mover.agility)
+        controller.rollForward(
+            *activatePlayer(mover, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            Confirm, // Use Fumblerooski
+            *dodge(4.d6),
+            PlayerSelected(tackler),
+            bounce(5.d8), // Bounce from starting square onto player that dodged
+            *catch(6.d6), // Dodging player hasn't failed their dodge yet, so can catch the ball
+            bounce(3.d8), // Bounce 2nd ball into empty square
+            DiceRollResults(1.d6, 1.d6),
+            bounce(5.d8,) // Dodging player goes prone and ball bounces again
+        )
+        assertNull(state.activePlayer)
+        assertEquals(homeTeam, state.activeTeam)
+        assertEquals(PitchCoordinate(14, 5), mover.coordinates)
+        assertEquals(1, state.pitch[15, 5].balls.size)
+        assertEquals(1, state.pitch[14, 4].balls.size)
+        mover.assertProne()
     }
 }
