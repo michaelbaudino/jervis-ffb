@@ -9,7 +9,7 @@ import com.jervisffb.engine.commands.Command
  * This class is the main way to organize the rules of Blood Bowl, or more correctly the "flow" of the game.
  *
  * The rules as implemented using a dynamic Finite-State-Machine (FSM). This makes it possible to expand nodes
- * dynamically, i.e., you do not need to define the entire FSM from the start, but it can be done as you navigate
+ * on-demand, i.e., you do not need to define the entire FSM from the start, but it can be done as you navigate
  * the state machine.
  *
  * Conceptually this is modeled as a stack of [Procedure]s. Each procedure is its own FSM where "state"
@@ -27,7 +27,7 @@ import com.jervisffb.engine.commands.Command
  *
  * - [ActionNode]: A node type that requires user input.
  * - [ParentNode]: A node type that will load a new [Procedure] and put it on the stack.
- * - [ComputationNode]: A subtype of [ActionNode] that only accept a [Continue] action.
+ * - [ComputationNode]: A subtype of [ActionNode] that only accepts a [Continue] action. Used for intermediate computations.
  *
  * New node types can be introduced by subclassing the [Node] interface.
  *

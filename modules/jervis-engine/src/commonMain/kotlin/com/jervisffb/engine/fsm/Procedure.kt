@@ -40,7 +40,10 @@ abstract class Procedure {
         return "${name()}[${node.name()}]"
     }
 
-    private class EnterProcedureNode(private val procedure: Procedure) : ComputationNode() {
+    /**
+     * This node is always the first node called when entering a [Procedure].
+     */
+    class EnterProcedureNode(private val procedure: Procedure) : ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             // Check if the procedure is valid to call before we run it.
             // If invalid, this method should throw an exception
@@ -52,7 +55,10 @@ abstract class Procedure {
         }
     }
 
-    private class ExitProcedureNode(private val procedure: Procedure) : ComputationNode() {
+    /**
+     * This node is always the last node called leaving a [Procedure].
+     */
+    class ExitProcedureNode(private val procedure: Procedure) : ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
             return compositeCommandOf(
                 procedure.onExitProcedure(state, rules),

@@ -464,26 +464,33 @@ class GameEngineController(
             (
                 stack.currentNode() is ComputationNode ||
                     stack.currentNode() is ParentNode ||
-                    // Some action nodes only accept "Continue" events if all other options have been exhausted
+                    // Some action nodes only accept "Continue" events if all other options have been exhausted.
                     // We want to roll over these as well.
-                    stack.currentNode() is ActionNode && getAvailableActions().singleOrNull() == ContinueWhenReady
+                    (stack.currentNode() is ActionNode && getAvailableActions().singleOrNull() == ContinueWhenReady)
             )
         ) {
-            when (val currentNode: Node = stack.currentNode()) {
+            val currentNode = stack.currentProcedure()?.currentNode()
+            val currentProcedure = stack.currentProcedure()?.procedure
+            when (currentNode) {
                 is ComputationNode -> {
+                    deltaBuilder.addIntermediateNode(currentProcedure, currentNode)
                     // Reduce noise from Continue events
                     val command = currentNode.applyAction(Continue, state, rules)
                     executeCommand(command)
                     rollForwardToNextActionNode()
                 }
                 is ActionNode -> {
+                    deltaBuilder.addIntermediateNode(currentProcedure, currentNode)
                     val command = currentNode.applyAction(Continue, state, rules)
                     executeCommand(command)
                 }
                 is ParentNode -> {
                     val commands =
                         when (stack.peepOrNull()!!.getParentNodeState()) {
-                            ParentNode.State.CHECK_SKIP -> currentNode.shouldEnterNode(state, rules)
+                            ParentNode.State.CHECK_SKIP -> {
+                                deltaBuilder.addIntermediateNode(currentProcedure, currentNode)
+                                currentNode.shouldEnterNode(state, rules)
+                            }
                             ParentNode.State.ENTERING -> currentNode.enterNode(state, rules)
                             ParentNode.State.RUNNING -> currentNode.runNode(state, rules)
                             ParentNode.State.EXITING -> currentNode.exitNode(state, rules)
@@ -491,7 +498,7 @@ class GameEngineController(
                     executeCommand(commands)
                 }
                 else -> {
-                    throw IllegalStateException("Unsupported type: ${currentNode::class.simpleName}")
+                    throw IllegalStateException("Unsupported type: ${ if (currentNode != null) currentNode::class.simpleName else "null"}")
                 }
             }
             rollForwardToNextActionNode()

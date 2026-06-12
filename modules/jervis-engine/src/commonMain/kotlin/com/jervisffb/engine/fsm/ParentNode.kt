@@ -25,8 +25,8 @@ abstract class ParentNode : Node {
      * This is only used for internal bookkeeping.
      */
     enum class State {
-        CHECK_SKIP,
-        ENTERING,
+        CHECK_SKIP, // Optimization allowing us to completely skip this node. Always checked first.
+        ENTERING, //
         RUNNING,
         EXITING,
     }

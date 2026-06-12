@@ -3,6 +3,7 @@ package com.jervisffb.ui.game.state
 import com.jervisffb.engine.ActionRequest
 import com.jervisffb.engine.GameEngineController
 import com.jervisffb.engine.GameSettings
+import com.jervisffb.engine.NodeStep
 import com.jervisffb.engine.actions.Cancel
 import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.Confirm
@@ -21,12 +22,14 @@ import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.actions.SelectPlayers
 import com.jervisffb.engine.actions.SelectRandomPlayers
 import com.jervisffb.engine.fsm.Node
+import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.JumpStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.LeapStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoStep
+import com.jervisffb.engine.rules.common.procedures.ActivatePlayer
 import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
 import com.jervisffb.engine.utils.containsActionWithRandomBehavior
 import com.jervisffb.ui.game.UiGameController
@@ -144,6 +147,15 @@ open class ManualActionProvider(
 
     override suspend fun prepareForNextAction(controller: GameEngineController, actions: ActionRequest) {
         this.availableActions = controller.getAvailableActions()
+
+
+        val searchNode = NodeStep(ActivatePlayer, Procedure.ExitProcedureNode::class)
+        val endActivation = controller.getDelta().steps.any {
+            it.intermediateNodes.contains(searchNode)
+        }
+        if (endActivation) {
+            resetFumblerooskiCommand()
+        }
 
         // If the UI has registered any queued action generators, we run them first before
         // trying to find other automated actions.
@@ -429,6 +441,11 @@ open class ManualActionProvider(
         } else {
             sharedData?.uiDecorations?.useFumblerooskiOnNextMove(null)
         }
+    }
+
+    fun resetFumblerooskiCommand() {
+        nextFumblerooskiCommand = null
+        sharedData?.uiDecorations?.useFumblerooskiOnNextMove(null)
     }
 }
 

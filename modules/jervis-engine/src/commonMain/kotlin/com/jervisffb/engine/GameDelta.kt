@@ -10,6 +10,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.TeamId
 import com.jervisffb.engine.reports.LogEntry
+import kotlin.reflect.KClass
 
 /**
  * Class responsible for tracking all changes to the model that happened between
@@ -58,13 +59,20 @@ data class GameDelta(
     }
 }
 
+data class NodeStep(val procedure: Procedure, val clazz: KClass<out Node>) {
+    override fun toString(): String {
+        return "${procedure.name()}[${clazz.simpleName}]"
+    }
+}
+
 internal class DeltaBuilder(val actionId: GameActionId, val actionOwner: TeamId? = null) {
 
     private val steps = mutableListOf<ActionStep>()
 
     private var currentAction: GameAction? = null
-    private var currentProcedure: Procedure? = null
-    private var currentNode: Node? = null
+    private var startingProcedure: Procedure? = null
+    private var startingNode: Node? = null
+    private var intermediateNodes = mutableListOf<NodeStep>()
     private val commands: MutableList<Command> = mutableListOf()
     private val logs: MutableList<LogEntry> = mutableListOf()
 
@@ -76,9 +84,20 @@ internal class DeltaBuilder(val actionId: GameActionId, val actionOwner: TeamId?
         node: Node
     ) {
         currentAction = action
-        currentProcedure = procedure
-        currentNode = node
+        startingProcedure = procedure
+        startingNode = node
+        intermediateNodes.clear()
         commands.clear()
+    }
+
+    // As the GameAction is processed, we might transfer control across multiple nodes.
+    // This method should be called every time we enter a new node as it makes it possible
+    // for listeners to follow the flow. This is useful for debugging or for certain UI flows
+    // like Fumblerooski.
+    fun addIntermediateNode(procedure: Procedure?, node: Node?) {
+        if (procedure != null && node != null) {
+            intermediateNodes.add(NodeStep(procedure, node::class))
+        }
     }
 
     fun addCommand(command: Command) {
@@ -92,14 +111,16 @@ internal class DeltaBuilder(val actionId: GameActionId, val actionOwner: TeamId?
     fun endAction() {
         val newStep = ActionStep(
             currentAction!!,
-            currentProcedure!!,
-            currentNode!!,
-            commands.toList()
+            startingProcedure!!,
+            startingNode!!,
+            intermediateNodes.toList(), // Copy list
+            commands.toList() // Copy list
         )
         steps.add(newStep)
         currentAction = null
-        currentProcedure = null
-        currentNode = null
+        startingProcedure = null
+        startingNode = null
+        intermediateNodes.clear()
         commands.clear()
     }
 

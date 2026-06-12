@@ -12,14 +12,6 @@ class MutableProcedureState(val procedure: Procedure, initialNode: Node) {
     // modify this if `activeNode` is a ParentNode
     private var parentNodeState: ParentNode.State? = null
 
-    private constructor(
-        procedure: Procedure,
-        history: Node,
-        parentNodeState: ParentNode.State?,
-    ) : this(procedure, history) {
-        this.parentNodeState = parentNodeState
-    }
-
     /**
      * If the current node is a [ParentNode], this will return its [ParentNode.State].
      * If it is any other type, an [IllegalStateException] is thrown.

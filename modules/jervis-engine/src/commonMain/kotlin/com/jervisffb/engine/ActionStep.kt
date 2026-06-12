@@ -22,6 +22,7 @@ data class ActionStep(
     val action: GameAction,
     val procedure: Procedure, // The procedure that handled the action
     val node: Node, // The node that handled the action
+    val intermediateNodes: List<NodeStep>,
     // Commands are flattened, i.e., a hierarchy of CompositeCommands is unrolled into a single long list.
     val commands: List<Command>,
 ) {
