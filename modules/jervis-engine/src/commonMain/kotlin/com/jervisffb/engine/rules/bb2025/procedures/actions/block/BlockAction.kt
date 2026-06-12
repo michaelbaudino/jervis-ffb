@@ -84,7 +84,7 @@ object BlockAction : Procedure() {
                 false -> SelectDefenderOrEndAction
             }
         }
-        override fun onEnterNode(state: Game, rules: Rules): Command? {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<ActivatePlayerContext>()
             return AddContext(JumpUpRollContext(context.player))
         }
@@ -176,7 +176,14 @@ object BlockAction : Procedure() {
             val context = state.getContext<BlockActionContext>()
             return when (context.blockType) {
                 BlockType.CHAINSAW -> TODO()
-                BlockType.CHOMP -> TODO()
+                BlockType.CHOMP -> {
+                    AddContext(
+                        ChompContext(
+                            attacker = context.attacker,
+                            defender = context.defender,
+                        )
+                    )
+                }
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> {
                     AddContext(

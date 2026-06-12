@@ -22,7 +22,6 @@ import com.jervisffb.engine.fsm.ComputationNode
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
-import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
@@ -71,21 +70,19 @@ object PuntStep : Procedure() {
             )
         }
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
-            return castAction<DirectionSelected>(action) {
-                val context = state.getContext<PuntContext>()
-                return when (action) {
-                    Cancel -> ExitProcedure()
-                    is DirectionSelected -> {
-                        compositeCommandOf(
-                            UpdateContext(context.copy(
-                                selectedDirection = it.direction,
-                                hasPunted = true,
-                            )),
-                            GotoNode(RollDirectionStep)
-                        )
-                    }
-                    else -> INVALID_ACTION(action)
+            return when (action) {
+                Cancel -> ExitProcedure()
+                is DirectionSelected -> {
+                    val context = state.getContext<PuntContext>()
+                    compositeCommandOf(
+                        UpdateContext(context.copy(
+                            selectedDirection = action.direction,
+                            hasPunted = true,
+                        )),
+                        GotoNode(RollDirectionStep)
+                    )
                 }
+                else -> INVALID_ACTION(action)
             }
         }
     }
