@@ -19,6 +19,7 @@ import com.jervisffb.engine.model.context.RushRollContext
 import com.jervisffb.engine.model.context.SecureTheBallRollContext
 import com.jervisffb.engine.model.context.ShadowingRollContext
 import com.jervisffb.engine.model.context.SteadyFootingRollContext
+import com.jervisffb.engine.model.context.TentaclesRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.DiceRollType
@@ -35,6 +36,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopC
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRollContext
 import com.jervisffb.engine.rules.common.procedures.CatchRoll
@@ -649,6 +651,21 @@ object TeamMascotWheelController : D6WithRerollWheelController() {
     }
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<MascotRollContext>()
+        return context.roll?.originalRoll!!
+    }
+}
+
+object TentaclesWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "tentacles"
+    override val diceRollType: DiceRollType = DiceRollType.TENTACLES
+    override val rollDiceNode: Node = TentaclesRoll.RollDie
+    override val chooseRerollSourceNode: Node = TentaclesRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = TentaclesRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        return state.getContext<TentaclesRollContext>().tentaclePlayer!!.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<TentaclesRollContext>()
         return context.roll?.originalRoll!!
     }
 }

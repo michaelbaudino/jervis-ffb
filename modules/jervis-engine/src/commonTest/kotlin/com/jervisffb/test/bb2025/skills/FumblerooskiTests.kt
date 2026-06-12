@@ -25,14 +25,16 @@ import com.jervisffb.test.moveTo
 import com.jervisffb.test.pogoRoll
 import com.jervisffb.test.pogoTo
 import com.jervisffb.test.rushRoll
+import com.jervisffb.test.tentaclePlayer
 import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.putProne
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * Class testing usage of the [Fumblerooski] skill.
@@ -50,12 +52,6 @@ class FumblerooskiTests: JervisGameBB2025Test() {
         ballCarrier = awayTeam["A1".playerId]
         ballCarrier.addSkill(SkillType.FUMBLEROOSKI)
         SetBallState.carried(state.singleBall(), ballCarrier).execute(state)
-    }
-
-    @Ignore
-    @Test
-    fun doesNotWorkIfTentaclesPreventMove() {
-        TODO("Tentacles not supported yet")
     }
 
     @Test
@@ -294,5 +290,39 @@ class FumblerooskiTests: JervisGameBB2025Test() {
         ballCarrier.assertProne()
         state.singleBall().assertCoordinates(14, 5)
         assertEquals(BallState.ON_GROUND, state.singleBall().state)
+    }
+
+    @Test
+    fun workIfFailingTentacles() {
+        val tentacles = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.TENTACLES)
+        }
+        controller.rollForward(
+            *activatePlayer(ballCarrier, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            *tentaclePlayer(tentacles, 2.d6),
+            Confirm, // Use Fumblerooski
+            *dodge(6.d6),
+            EndAction
+        )
+        assertNull(state.activePlayer)
+        ballCarrier.assertCoordinates(14, 5)
+        state.singleBall().assertCoordinates(13, 5)
+        assertEquals(BallState.ON_GROUND, state.singleBall().state)
+    }
+
+    @Test
+    fun doesNotWorkIfTentaclesSucceed() {
+        val tentacles = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.TENTACLES)
+        }
+        controller.rollForward(
+            *activatePlayer(ballCarrier, PlayerStandardActionType.MOVE),
+            *moveTo(14, 5),
+            *tentaclePlayer(tentacles, 6.d6),
+        )
+        state.assertNoActivePlayer()
+        ballCarrier.assertCoordinates(13, 5)
+        assertTrue(ballCarrier.hasBall())
     }
 }

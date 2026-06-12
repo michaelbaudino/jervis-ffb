@@ -18,7 +18,7 @@ import com.jervisffb.engine.rules.Rules
  * Class wrapping using the Trickster skill in BB2025, but does not include
  * checking for touchdowns after the Block.
  */
-object UseTricksterStep: Procedure() {
+object TricksterStep: Procedure() {
     override val initialNode: Node = ChooseTouseTrickster
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null

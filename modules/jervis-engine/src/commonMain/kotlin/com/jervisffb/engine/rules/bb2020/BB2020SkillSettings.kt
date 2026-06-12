@@ -232,7 +232,7 @@ class BB2020SkillSettings: SkillSettings() {
                         PrehensileTail(player, category, expiresAt)
                     }
                 }
-                SkillType.TENTACLE -> {
+                SkillType.TENTACLES -> {
                     // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
                     // TODO()
                     // }

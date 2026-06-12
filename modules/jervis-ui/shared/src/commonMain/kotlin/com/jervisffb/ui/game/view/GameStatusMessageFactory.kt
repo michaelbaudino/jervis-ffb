@@ -39,7 +39,9 @@ import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.SafePairOfHandsStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
-import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.DodgySnack
 import com.jervisffb.engine.rules.builder.DiceRollOwner
@@ -250,6 +252,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             TeamCaptainRoll.RollDie to "Roll D6 for Team Captain",
             TeamMascotRoll.ReRollDie to "Re-roll D6 for Team Mascot",
             TeamMascotRoll.RollDie to "Roll D6 for Team Mascot",
+            TentaclesRoll.RollDie to "Roll D6 for Tentacles",
+            TentaclesRoll.ReRollDie to "Re-roll D6 for Tentacles",
             TheKickOffEvent.RollForKickOffEvent to "Roll 2D6 for the Kick-off Event",
             ThrowPlayerStep.BouncePlayer to "Roll D8 to Bounce the Player",
             ThrowTeammateAccuracyRoll.ReRollDie to "Re-roll D6 to Throw Player",
@@ -292,6 +296,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             TeamMascotRoll.ChooseReRollSource to "Accept Mascot Result or Re-roll D6?",
             TeamMascotStep.ChooseAnotherReroll to "Team Mascot Failed, Choose Another Team Re-roll?",
             TeamCaptainRoll.ChooseReRollSource to "Accept Team Captain Result or Re-roll D6?",
+            TentaclesRoll.ChooseReRollSource to "Accept Tentacles Result or Re-roll D6?",
             ProRoll.ChooseReRollSource to "Accept Pro Result or Re-roll D6?",
         )
 
@@ -329,7 +334,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             ScatterRoll.RollDice to { _, _, _ ->
                 "Scatter Roll"
             },
-            UseShadowingStep.CheckIfShadowingIsAvailable to { isActiveClient, _, _ ->
+            ShadowingStep.CheckIfShadowingIsAvailable to { isActiveClient, _, _ ->
                 when (isActiveClient) {
                     true -> "Select player to use Shadowing"
                     false -> "Waiting for player to use Shadowing"
@@ -651,6 +656,12 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                 when (isActiveClient) {
                     true -> "Select a player to use Arm Bar"
                     false -> "Waiting for opponent to use Arm Bar"
+                }
+            },
+            TentaclesStep.ChooseToUseTentacles to { isActiveClient, _, _ ->
+                when (isActiveClient) {
+                    true -> "Select player to use Tentacles"
+                    false -> "Waiting for player to use Tentacles"
                 }
             },
         )

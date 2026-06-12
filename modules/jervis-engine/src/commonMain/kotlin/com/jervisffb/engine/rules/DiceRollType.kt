@@ -70,6 +70,7 @@ enum class DiceRollType(val description: String) {
     TAKE_ROOT("Take Root"),
     TEAM_CAPTAIN("Team Captain"),
     TEAM_MASCOT("Team Mascot"),
+    TENTACLES("Tentacles"),
     THROW_A_ROCK("Throw A Rock"),
     THROWIN_DIRECTION("Throw-in Direction"),
     THROWIN_DISTANCE("Throw-in Distance"),

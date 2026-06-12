@@ -39,7 +39,7 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
 /**
  * Class wrapping using the Shadowing skill in BB2025.
  */
-object UseShadowingStep: Procedure() {
+object ShadowingStep: Procedure() {
     override val initialNode: Node = CheckIfShadowingIsAvailable
     override fun onEnterProcedure(state: Game, rules: Rules): Command? = null
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null

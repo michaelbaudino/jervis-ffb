@@ -15,7 +15,8 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.HailMaryPassSte
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
-import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
@@ -34,7 +35,7 @@ import com.jervisffb.ui.game.view.SimpleContextMenuOption
 object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
 
     private val nodesForGameStatusButton = setOf(
-        UseShadowingStep.CheckIfShadowingIsAvailable,
+        ShadowingStep.CheckIfShadowingIsAvailable,
         InterceptionStep.SelectPlayerForInterception,
         DodgeRoll.ChooseToUseTackle,
         DodgeRoll.ChooseToUsePrehensileTail,
@@ -44,7 +45,8 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
         PogoRoll.ChooseToUseDivingTackleAfterReRoll,
         HitAndRunStep.SelectTargetSquareOrCancel,
         ArmourRoll.ChooseToUseArmBar,
-        InjuryRoll.ChooseToUseArmBar
+        InjuryRoll.ChooseToUseArmBar,
+        TentaclesStep.ChooseToUseTentacles,
     )
 
     private val nodesForContextMenu = setOf(
@@ -88,7 +90,7 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
         if (currentNode in nodesForGameStatusButton) {
             // For these actions we want to have them in as the Game Status Button
             val title = when (state.stack.currentNode()) {
-                UseShadowingStep.CheckIfShadowingIsAvailable -> "Do not use Shadowing"
+                ShadowingStep.CheckIfShadowingIsAvailable -> "Do not use Shadowing"
                 InterceptionStep.SelectPlayerForInterception -> "Do not intercept"
                 DodgeRoll.ChooseToUseTackle -> "Do not use Tackle"
                 DodgeRoll.ChooseToUsePrehensileTail -> "Do not use Prehensile Tail"
@@ -99,6 +101,7 @@ object CancelDecorator : PitchActionDecorator<CancelWhenReady> {
                 HitAndRunStep.SelectTargetSquareOrCancel -> "Do not use Hit and Run"
                 ArmourRoll.ChooseToUseArmBar -> "Do not use Arm Bar"
                 InjuryRoll.ChooseToUseArmBar -> "Do not use Arm Bar"
+                TentaclesStep.ChooseToUseTentacles -> "Do not use Tentacles"
                 else -> error("Unsupported node: ${state.stack.currentNode()}")
             }
             acc.updateGameStatus {

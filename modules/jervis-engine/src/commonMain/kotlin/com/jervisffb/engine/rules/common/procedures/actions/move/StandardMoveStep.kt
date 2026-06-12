@@ -31,17 +31,20 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.DodgeRollContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.MovePlayerIntoSquareContext
 import com.jervisffb.engine.model.context.RushRollContext
+import com.jervisffb.engine.model.context.TentaclesRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.SPRINT_EXTRA_RUSHES
 import com.jervisffb.engine.rules.bb2020.procedures.tables.injury.BB2020FallingOver
-import com.jervisffb.engine.rules.bb2025.procedures.skills.UseShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingStep
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025FallingOver
 import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.procedures.calculateOptionsForMoveType
@@ -136,16 +139,29 @@ object StandardMoveStep: Procedure() {
         }
     }
 
-    // TODO Implement tentacle movement logic
-    object ChooseToUseTentacles: ActionNode() {
-        override fun actionOwner(state: Game, rules: Rules): Team {
-            return state.getContext<MoveContext>().player.team.otherTeam()
+    object ChooseToUseTentacles: ParentNode() {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val moveContext = state.getContext<MoveContext>()
+            val tentaclesContext = TentaclesRollContext(
+                movingPlayer = moveContext.player
+            )
+            return AddContext(tentaclesContext)
         }
-        override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
-            return listOf(ContinueWhenReady)
-        }
-        override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
-            return GotoNode(MovePlayer)
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = TentaclesStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            val activeContext = state.getContext<ActivatePlayerContext>()
+            val context = state.getContext<TentaclesRollContext>()
+            return buildCompositeCommand {
+                add(RemoveContext(context))
+                // Logging is done inside TentaclesStep, so just determine next step here
+                when (context.isSuccess) {
+                    true -> addAll(
+                        UpdateContext(activeContext.copy(activationEndsImmediately = true)),
+                        ExitProcedure()
+                    )
+                    false -> add(GotoNode(MovePlayer))
+                }
+            }
         }
     }
 
@@ -308,7 +324,7 @@ object StandardMoveStep: Procedure() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure {
             return when (rules.baseVersion) {
                 GameVersion.BB2020 -> error("Unsupported game version: ${rules.baseVersion}")
-                GameVersion.BB2025 -> UseShadowingStep
+                GameVersion.BB2025 -> ShadowingStep
             }
         }
         override fun onExitNode(state: Game, rules: Rules): Command {

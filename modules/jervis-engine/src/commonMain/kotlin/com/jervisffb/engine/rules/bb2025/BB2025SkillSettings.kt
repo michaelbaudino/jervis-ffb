@@ -82,6 +82,7 @@ import com.jervisffb.engine.rules.bb2025.skills.Swoop
 import com.jervisffb.engine.rules.bb2025.skills.Tackle
 import com.jervisffb.engine.rules.bb2025.skills.TakeRoot
 import com.jervisffb.engine.rules.bb2025.skills.Taunt
+import com.jervisffb.engine.rules.bb2025.skills.Tentacles
 import com.jervisffb.engine.rules.bb2025.skills.ThickSkull
 import com.jervisffb.engine.rules.bb2025.skills.ThrowTeamMate
 import com.jervisffb.engine.rules.bb2025.skills.Timmmber
@@ -352,10 +353,10 @@ class BB2025SkillSettings: SkillSettings() {
                         PrehensileTail(player, category, expiresAt)
                     }
                 }
-                SkillType.TENTACLE -> {
-                    // addEntry(type, SkillCategory.MUTATIONS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                SkillType.TENTACLES -> {
+                    addNoValueEntry("Tentacles", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->
+                        Tentacles(player, category, expiresAt)
+                    }
                 }
                 SkillType.TWO_HEADS -> {
                     addNoValueEntry("Two Heads", type, SkillCategory.MUTATIONS) { player, category,expiresAt ->

@@ -133,7 +133,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Apply on Stumble
   - [x] Does not work against Stand Firm
 - [x] Fumblerooski 
-  - [ ] Does not work against Tentacles
+  - [x] Works if failing Tentacles
+  - [x] Does not work if failing Tentacles
   - [x] Decide after leaving the last square, but before rolling any dice.
   - [x] Use before Rush
   - [x] Use Before Dodge
@@ -374,11 +375,14 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Prehensile Tail
   - [x] Adds -1 negative modifier
   - [x] Only one player can use it
-- [ ] Tentacles
-  - [ ] Check before Dodge
-  - [ ] Check before rushing to Jump
-  - [ ] Check before rushing to Leap
-  - [ ] Check before rushing to Pogo
+- [x] Tentacles
+  - [x] Check before Dodge
+  - [x] Check before rushing to Jump
+  - [x] Check before rushing to Leap
+  - [x] Check before rushing to Pogo
+  - [x] Does not work when Distracted
+  - [x] Only one player can use skill
+  - [x] 6+ to succeed
 - [x] Two Heads
   - [x] Use skill on dodge
   - [x] Use skill multiple times pr. turn

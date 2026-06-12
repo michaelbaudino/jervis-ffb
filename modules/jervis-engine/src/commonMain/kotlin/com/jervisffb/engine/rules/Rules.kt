@@ -740,6 +740,7 @@ abstract class Rules(
             DiceRollType.TAKE_ROOT,
             DiceRollType.TEAM_CAPTAIN,
             DiceRollType.TEAM_MASCOT,
+            DiceRollType.TENTACLES,
             DiceRollType.TREACHEROUS_TRAPDOOR,
             DiceRollType.UNCHANNELLED_FURY -> true
         }

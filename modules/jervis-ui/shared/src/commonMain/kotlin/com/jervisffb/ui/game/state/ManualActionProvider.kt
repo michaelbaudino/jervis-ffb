@@ -211,9 +211,7 @@ open class ManualActionProvider(
     }
 
     override fun decorateSelectedAction(action: GameAction, acc: UiSnapshotAccumulator) {
-        // TODO In general we need to rethink the lifecycle of the Action Wheel since we want to enable
-        //  animations between states in the Wheel. At that point, this logic should probably be changed
-        //  so we temporarily hide the action wheel
+        // Do nothing
     }
 
     override suspend fun getAction(): GameAction {

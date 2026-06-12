@@ -55,8 +55,8 @@ import com.jervisffb.engine.rules.common.tables.PrayerToNuffle
  * might result in the player being removed from play immediately.
  *
  * This procedure should not be called until after all rolls for entering the
- * square have been resolved, i.e., Rush, Dodge, Jump, Leap and Landing. This is
- * covered under Picking Up The Ball on page 46 in the rulebook.
+ * square have been resolved, i.e., Tentacles, Rush, Dodge, Jump, Leap and
+ * Landing. This is covered under Picking Up The Ball on page 46 in the rulebook.
  *
  * This procedure does NOT check for touchdowns nor pickups. That is left up
  * to the parent procedure.

@@ -80,7 +80,7 @@ enum class SkillType(val description: String) {
     IRON_HARD_SKIN("Iron Hard Skin"),
     MONSTROUS_MOUTH("Monstrous Mouth"),
     PREHENSILE_TAIL("Prehensile Tail"),
-    TENTACLE("Tentacle"),
+    TENTACLES("Tentacles"),
     TWO_HEADS("Two Heads"),
     VERY_LONG_LEGS("Very Long Legs"),
 

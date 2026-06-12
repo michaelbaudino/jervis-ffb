@@ -131,6 +131,7 @@ object BB2025DiceColorConfig : DiceColorConfig() {
             DiceRollType.TAKE_ROOT -> DiceRollTypeConfig(rollType, "Take Root", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.TEAM_CAPTAIN -> DiceRollTypeConfig(rollType, "Take Root", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.TEAM_MASCOT -> DiceRollTypeConfig(rollType, "Team Mascot", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.TENTACLES -> DiceRollTypeConfig(rollType, "Tentacles", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.THROWIN_DIRECTION -> DiceRollTypeConfig(rollType, "Throw-In Direction", d8, singleColor, DiceColor.DEFAULT)
             DiceRollType.THROWIN_DISTANCE -> DiceRollTypeConfig(rollType, "Throw-In Distance", d16, singleColor, DiceColor.DEFAULT)
             DiceRollType.THROW_A_ROCK -> DiceRollTypeConfig(rollType, "Throw a Rock", d6, d6Colors, DiceColor.WHITE)

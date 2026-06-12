@@ -31,9 +31,11 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.PogoRollContext
 import com.jervisffb.engine.model.context.RushRollContext
+import com.jervisffb.engine.model.context.TentaclesRollContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
@@ -43,6 +45,7 @@ import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.JUMP_DISTANCE
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.SPRINT_EXTRA_RUSHES
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025FallingOver
 import com.jervisffb.engine.rules.common.procedures.actions.move.RushRoll
 import com.jervisffb.engine.rules.common.procedures.calculateOptionsForMoveType
@@ -138,10 +141,36 @@ object PogoStep : Procedure() {
         }
     }
 
-    // TODO Implement Tentacles
-    object ChooseToUseTentacles: ComputationNode() {
-        override fun apply(state: Game, rules: Rules): Command {
-            return GotoNode(CheckIfRushingIsNeeded)
+    object ChooseToUseTentacles: ParentNode() {
+        override fun skipNodeFor(state: Game, rules: Rules): Node {
+            // For now, we ignore Tentacles when using Pogo as that is strictly the RAW
+            // reading of the rules. Pogo not on that list seems like a mistake, but until
+            // there is a FAQ for it, we will ignore it. But since there is a high chance that we
+            // need a toggle in the ruleset for it, the code is added (for now).
+            return CheckIfRushingIsNeeded
+        }
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val moveContext = state.getContext<MoveContext>()
+            val tentaclesContext = TentaclesRollContext(
+                movingPlayer = moveContext.player
+            )
+            return AddContext(tentaclesContext)
+        }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = TentaclesStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            val activeContext = state.getContext<ActivatePlayerContext>()
+            val context = state.getContext<TentaclesRollContext>()
+            return buildCompositeCommand {
+                add(RemoveContext(context))
+                // Logging is done inside TentaclesStep, so just determine next step here
+                when (context.isSuccess) {
+                    true -> addAll(
+                        UpdateContext(activeContext.copy(activationEndsImmediately = true)),
+                        ExitProcedure()
+                    )
+                    false -> GotoNode(CheckIfRushingIsNeeded)
+                }
+            }
         }
     }
 

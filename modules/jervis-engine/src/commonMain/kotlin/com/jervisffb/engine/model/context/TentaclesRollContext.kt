@@ -2,15 +2,16 @@ package com.jervisffb.engine.model.context
 
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.modifiers.DiceModifier
+import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
-
 /**
- * Context data for rolling for Shadowing.
+ * Context data for rolling for Tentacles.
  *
- * @see [com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingStep]
+ * See [TentaclesStep]
  */
-data class ShadowingRollContext(
-    val player: Player,
+data class TentaclesRollContext(
+    val movingPlayer: Player,
+    val tentaclePlayer: Player? = null,
     val modifiers: List<DiceModifier> = emptyList(),
     val roll: D6DieRoll? = null,
     val isSuccess: Boolean = false,

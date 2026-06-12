@@ -10,15 +10,14 @@ import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.Revert
 import com.jervisffb.engine.actions.Undo
-import com.jervisffb.engine.commands.SetPlayerLocation
 import com.jervisffb.engine.commands.fsm.ExitProcedure
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.context.MoveContext
+import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.hasSkill
-import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rng.DiceRollGenerator
 import com.jervisffb.engine.rng.UnsafeRandomDiceGenerator
@@ -105,6 +104,7 @@ import com.jervisffb.ui.game.state.actionwheel.SwoopDistanceWheelController
 import com.jervisffb.ui.game.state.actionwheel.TakeRootWheelController
 import com.jervisffb.ui.game.state.actionwheel.TeamCaptainWheelController
 import com.jervisffb.ui.game.state.actionwheel.TeamMascotWheelController
+import com.jervisffb.ui.game.state.actionwheel.TentaclesWheelController
 import com.jervisffb.ui.game.state.actionwheel.ThrowInWheelController
 import com.jervisffb.ui.game.state.actionwheel.UnchannelledFuryWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseApothecaryWheelController
@@ -269,6 +269,7 @@ class UiGameController(
         SwoopDistanceWheelController,
         TeamCaptainWheelController,
         TeamMascotWheelController,
+        TentaclesWheelController,
 
         StandardBlockRollWheelController,
         StandardBlockChooseResultOrRerollWheelController,
@@ -722,7 +723,7 @@ class UiGameController(
 
         // Add decoration when moving player
         val normalMoveStep = delta.steps.lastOrNull()?.let {
-            it.procedure == StandardMoveStep && it.action is PitchSquareSelected
+            it.procedure == StandardMoveStep && it.node == StandardMoveStep.MovePlayer && it.action is PitchSquareSelected
         } ?: false
 
         val jumpMoveStep = delta.steps.lastOrNull()?.let {
@@ -732,13 +733,8 @@ class UiGameController(
         } ?: false
 
         if (normalMoveStep) {
-            val start = delta.allCommands()
-                .filterIsInstance<SetPlayerLocation>()
-                .first {
-                    // When a touchdown is triggered, we will see both the player moving into the end zone and
-                    //  all players moving into the Dogout. We only care about the first.
-                    it.location != DogOut
-                }.originalPlayerLocation
+            // The player might not have moved yet, if we need to roll for tenacles.
+            val start = state.getContext<MoveContext>().startingSquare
             uiIndicators.addMoveUsed(start)
             uiIndicators.registerUndo(
                 deltaId = delta.id,
