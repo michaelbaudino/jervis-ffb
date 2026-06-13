@@ -275,9 +275,9 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Prevent use of Dodge skill when dodging away
   - [x] Only use Tackle if other player has Dodge
   - [x] Defender does not count as having dodge during a Block
-- [ ] Taunt
+- [x] Taunt
   - [x] Cannot use Taunt if Fend is selected
-  - [ ] Does not work against Rooted
+  - [x] Does not work against Rooted
   - [x] Works on POW
   - [x] Works on Stumble
   - [x] Works on Pushback

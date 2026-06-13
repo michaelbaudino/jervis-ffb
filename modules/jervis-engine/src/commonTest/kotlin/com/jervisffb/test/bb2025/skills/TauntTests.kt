@@ -18,11 +18,12 @@ import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.activatePlayer
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.standardBlock
+import com.jervisffb.test.takeRoot
 import com.jervisffb.test.utils.SelectSingleBlockDieResult
 import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.makeDistracted
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -172,9 +173,22 @@ class TauntTests: JervisGameBB2025Test() {
         attacker.assertCoordinates(13, 5)
     }
 
-    @Ignore
     @Test
     fun doesNotWorkAgainstRooted() {
-        // Wait for Take Root to be implemented
+        val defender = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.TAUNT)
+        }
+        val rooted = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.TAKE_ROOT)
+        }
+        controller.rollForward(
+            *activatePlayer(rooted, PlayerStandardActionType.BLOCK),
+            *takeRoot(1.d6),
+            *standardBlock(defender, 3.dblock),
+            DirectionSelected(Direction.LEFT)
+        )
+        state.assertNoActivePlayer()
+        defender.assertCoordinates(11, 5)
+        rooted.assertCoordinates(13, 5)
     }
 }
