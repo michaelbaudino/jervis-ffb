@@ -13,10 +13,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.asComposeShader
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.graphics.skiaShader
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import org.jetbrains.skia.RuntimeEffect
@@ -121,15 +123,15 @@ private fun Modifier.drawWithPixelBorder(
     onCaptureRequested: () -> Unit,
 ): Modifier = drawWithCache {
 
-    fun outlineShader(bitmap: ImageBitmap, size: IntSize): Shader {
+    fun outlineShader(bitmap: ImageBitmap, size: IntSize): androidx.compose.ui.graphics.Shader {
         val imageShader = ImageShader(bitmap, TileMode.Clamp, TileMode.Clamp)
         val runtimeEffect = RuntimeEffect.makeForShader(borderShader)
         val shader = RuntimeShaderBuilder(runtimeEffect).apply {
-            child("image", imageShader)
+            child("image", imageShader.skiaShader)
             uniform("resolution", size.width, size.height)
             uniform("scaleFactor", 1f, 1f)
         }.makeShader()
-        return shader
+        return shader.asComposeShader()
     }
 
     val paint = Paint()
