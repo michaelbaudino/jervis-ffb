@@ -89,8 +89,10 @@ import com.jervisffb.utils.canBeHost
 import com.jervisffb.utils.getHttpClient
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.encodeURLParameter
 import io.ktor.http.headers
@@ -197,6 +199,8 @@ data class PlayerSprite(
  * resources.
  */
 object IconFactory {
+
+    private val BASE_URL = "https://jervis.ilios.dk"
 
     // Many of the assets are pixel-art, where we want to preserve as much or the
     // blockiness as possible. Use the scale factor to adjust the size of images
@@ -426,7 +430,7 @@ object IconFactory {
             // Right now we are just using the "canBeHost()" as an easy way to check for the Web target.
             // Probably need to find something better in the future.
             val callUrl = when (useProxy && !canBeHost()) {
-                true -> Url("https://jervis.ilios.dk/proxy.php?url=${url.toString().encodeURLParameter()}")
+                true -> Url("${BASE_URL}/proxy.php?url=${url.toString().encodeURLParameter()}")
                 false -> url
             }
             val result = httpClient.get(callUrl) {
@@ -434,6 +438,7 @@ object IconFactory {
                     // In some cases, gifs are returned even though the path is a png. Problem?
                     accept(ContentType.Image.PNG)
                     accept(ContentType.Image.GIF)
+                    header(HttpHeaders.Origin, BASE_URL)
                 }
             }
             val image = when (result.status.isSuccess()) {
