@@ -500,9 +500,7 @@ private fun TeamTableCellIcon(player: Player, isOnHomeTeam: Boolean, width: Dp, 
     val scope = rememberCoroutineScope()
     LaunchedEffect(player) {
         scope.launch {
-            player.icon?.sprite?.let {
-                imageBitmap = IconFactory.loadPlayerSprite(player, isOnHomeTeam)?.default
-            }
+            imageBitmap = IconFactory.loadPlayerSprite(player, isOnHomeTeam).default
         }
     }
     Box(

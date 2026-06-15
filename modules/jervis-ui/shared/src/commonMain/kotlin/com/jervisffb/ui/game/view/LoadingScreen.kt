@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jervisffb.ui.menu.GameScreenModel
+import com.jervisffb.utils.loggerInstance
 import kotlinx.coroutines.delay
 import org.jetbrains.skia.Point
 import kotlin.time.Clock
@@ -71,6 +72,7 @@ fun LoadingScreen(
             try {
                 viewModel.initialize(density)
             } catch (ex: Exception) {
+                loggerInstance.w("Error starting game", ex)
                 viewModel.menuViewModel.showReportIssueDialog(
                     title = "Error starting game",
                     body = ex.message ?: "An unknown error has occurred.",

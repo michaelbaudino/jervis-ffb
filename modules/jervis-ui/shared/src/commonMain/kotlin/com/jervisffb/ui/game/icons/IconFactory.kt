@@ -1,7 +1,6 @@
 package com.jervisffb.ui.game.icons
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
@@ -29,6 +28,7 @@ import com.jervisffb.engine.model.Direction.Companion.UP_LEFT
 import com.jervisffb.engine.model.Direction.Companion.UP_RIGHT
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
+import com.jervisffb.engine.model.PlayerSize
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TeamId
 import com.jervisffb.engine.model.isOnHomeTeam
@@ -75,8 +75,8 @@ import com.jervisffb.shared.generated.resources.jervis_icon_team_reroll
 import com.jervisffb.shared.generated.resources.jervis_inducement_apothercary
 import com.jervisffb.shared.generated.resources.jervis_inducement_keg
 import com.jervisffb.ui.CacheManager
+import com.jervisffb.ui.game.icons.PlayerSpriteFallbackGenerator.generatePlayerSprite
 import com.jervisffb.ui.game.model.UiPitchPlayer
-import com.jervisffb.ui.game.view.JervisTheme
 import com.jervisffb.ui.game.viewmodel.PitchDetails
 import com.jervisffb.ui.loadFileAsImage
 import com.jervisffb.ui.loadImage
@@ -84,15 +84,13 @@ import com.jervisffb.ui.utils.getSubImage
 import com.jervisffb.ui.utils.jdp
 import com.jervisffb.ui.utils.scalePixels
 import com.jervisffb.ui.utils.toImageBitmap
-import com.jervisffb.ui.utils.toSkiaColor
 import com.jervisffb.utils.canBeHost
 import com.jervisffb.utils.getHttpClient
+import com.jervisffb.utils.loggerInstance
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
-import io.ktor.client.request.header
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.encodeURLParameter
 import io.ktor.http.headers
@@ -103,13 +101,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.FontMgr
-import org.jetbrains.skia.FontStyle
 import org.jetbrains.skia.Image
-import org.jetbrains.skia.PaintMode
-import org.jetbrains.skia.TextLine
-import kotlin.math.floor
 
 enum class DiceColor {
     DEFAULT,
@@ -201,6 +193,7 @@ data class PlayerSprite(
 object IconFactory {
 
     private val BASE_URL = "https://jervis.ilios.dk"
+    private val DEFAULT_PORTRAIT = SingleSprite.embedded("jervis/portraits/default_portrait.png")
 
     // Many of the assets are pixel-art, where we want to preserve as much or the
     // blockiness as possible. Use the scale factor to adjust the size of images
@@ -290,104 +283,7 @@ object IconFactory {
                 cachedImages[path] = image
                 return image
             } catch (ex: Exception) {
-                throw IllegalStateException("Problems loading: $path", ex)
-            }
-        }
-    }
-
-    // Create a player sprite. We create this as a normal player size, so 4x(30x30) = 120x30 px
-    private fun generatePlayerSprite(letters: String): ImageBitmap {
-        if (cachedGeneratedPlayers.contains(letters)) return cachedGeneratedPlayers[letters]!!
-        // Prepare sprite sheet image
-        val w = 120
-        val h = 30
-        val bitmap = Bitmap()
-        bitmap.allocN32Pixels(w, h, false)
-        val canvas = org.jetbrains.skia.Canvas(bitmap)
-
-        // Load default system font
-        val mgr = FontMgr.default
-        val typeface = mgr.matchFamilyStyle(null, FontStyle.NORMAL)
-            ?: mgr.legacyMakeTypeface("", FontStyle.NORMAL)
-        val font = org.jetbrains.skia.Font(typeface, 14f).apply {
-            this.isSubpixel = false
-        }
-
-        // Draw sprites
-        val radius = 14f
-        val centers = floatArrayOf(15f, 45f, 75f, 105f).map { x -> Offset(x, 15f) }
-
-        val paint = org.jetbrains.skia.Paint().apply {
-            color = JervisTheme.rulebookRed.toSkiaColor()
-            isAntiAlias = false
-        }
-        val borderPaint = org.jetbrains.skia.Paint().apply {
-            color = JervisTheme.black.toSkiaColor()
-            mode = PaintMode.STROKE
-            strokeWidth = 1f
-            isAntiAlias = false
-        }
-        val textPaint = org.jetbrains.skia.Paint().apply {
-            color = JervisTheme.white.toSkiaColor()
-            isAntiAlias = false
-        }
-
-        val l = TextLine.make(letters, font)
-        val ascent = l.ascent
-        val descent = l.descent
-        val leading = l.leading
-
-        // Not 100% sure why this is correct. It feels like it is just by accident :thinking:
-        // val baselineY = centers[0].y + (0.5f*centers[0].y + 0.5f*((ascent + descent) * 0.5f + leading * 0.5f));
-
-        // Y-value is the same, so just use the first
-        val baselineY = centers[0].y + (l.height - (descent + leading)) / 2f;
-
-        // First two red
-        paint.color = JervisTheme.rulebookRed.toSkiaColor()
-        canvas.drawCircle(centers[0].x, centers[0].y, radius, paint)
-        canvas.drawCircle(centers[0].x, centers[0].y, radius, borderPaint)
-        val baseline1X = floor(centers[0].x - (l.width / 2f)) // Round down since rounding up makes it look more "off"
-        canvas.drawTextLine(l, baseline1X, baselineY, textPaint)
-
-        canvas.drawCircle(centers[1].x, centers[1].y, radius, paint)
-        canvas.drawCircle(centers[1].x, centers[1].y, radius, borderPaint)
-        val baseline2X = floor(centers[1].x - (l.width / 2f)) // Round down since rounding up makes it look more "off"
-        canvas.drawTextLine(l,baseline2X, baselineY, textPaint)
-
-        // Last two blue
-        paint.color = JervisTheme.rulebookBlue.toSkiaColor()
-        canvas.drawCircle(centers[2].x, centers[2].y, radius, paint)
-        canvas.drawCircle(centers[2].x, centers[2].y, radius, borderPaint)
-        val baseline3X = floor(centers[2].x - (l.width / 2f)) // Round down since rounding up makes it look more "off"
-        canvas.drawTextLine(l,baseline3X, baselineY, textPaint)
-
-        canvas.drawCircle(centers[3].x, centers[3].y, radius, paint)
-        canvas.drawCircle(centers[3].x, centers[3].y, radius, borderPaint)
-        val baseline4X = floor(centers[3].x - (l.width / 2f)) // Round down since rounding up makes it look more "off"
-        canvas.drawTextLine(l,baseline4X, baselineY, textPaint)
-
-        // Return generated sprite sheet
-        canvas.close()
-        val spriteSheet = Image.makeFromBitmap(bitmap).toComposeImageBitmap()
-        cachedGeneratedPlayers[letters] = spriteSheet
-        return spriteSheet
-    }
-
-    private suspend fun createPlayerSprite(player: Player, isHomeTeam: Boolean): PlayerSprite {
-        val playerSprite = player.icon?.sprite ?: throw IllegalStateException("Cannot find sprite configured for: $player")
-        val image = when (playerSprite.type) {
-            SpriteLocation.EMBEDDED -> loadImageFromResources(playerSprite.resource)
-            SpriteLocation.URL -> loadImageFromNetwork(Url(playerSprite.resource), false)!! // TODO Fallback image
-            SpriteLocation.FUMBBL_INI -> loadImageFromFumbblIni(playerSprite.resource)!! // TODO Fallback image
-            SpriteLocation.GENERATED -> generatePlayerSprite(letters = playerSprite.resource)
-        }
-        return when (val sprite = playerSprite) {
-            is SingleSprite -> {
-                PlayerSprite(image, image)
-            }
-            is SpriteSheet -> {
-                extractSprites(image, sprite.variants, sprite.selectedIndex ?: 0, isHomeTeam)
+                throw IllegalStateException("Problems loading image resource: $path", ex)
             }
         }
     }
@@ -414,6 +310,39 @@ object IconFactory {
         }
     }
 
+    private suspend fun loadPlayerSpriteImage(playerSprite: SpriteSource, size: PlayerSize): ImageBitmap? {
+        return when (playerSprite.type) {
+            SpriteLocation.EMBEDDED -> loadImageFromResources(playerSprite.resource)
+            SpriteLocation.URL -> runCatching { loadImageFromNetwork(Url(playerSprite.resource), false) }.getOrNull()
+            SpriteLocation.FUMBBL_INI -> runCatching { loadImageFromFumbblIni(playerSprite.resource) }.getOrNull()
+            SpriteLocation.GENERATED -> generatePlayerSprite(letters = playerSprite.resource, size)
+        }
+    }
+
+    private fun createPlayerSprite(image: ImageBitmap, playerSprite: SpriteSource, isHomeTeam: Boolean): PlayerSprite {
+        return when (val sprite = playerSprite) {
+            is SingleSprite -> {
+                PlayerSprite(image, image)
+            }
+            is SpriteSheet -> {
+                extractSprites(image, sprite.variants, sprite.selectedIndex ?: 0, isHomeTeam)
+            }
+        }
+    }
+
+    private suspend fun createFallbackPlayerSprite(player: Player, isHomeTeam: Boolean): PlayerSprite {
+        val letters = player.position.shortHand.ifBlank { "?" }
+        val size  = player.position.size
+        val spriteSheet = if (cachedGeneratedPlayers.contains(letters)) {
+            cachedGeneratedPlayers[letters]!!
+        } else {
+            val spriteSheet = PlayerSpriteFallbackGenerator.generatePlayerSprite(letters, size)
+            cachedGeneratedPlayers[letters] = spriteSheet
+            spriteSheet
+        }
+        return extractSprites(spriteSheet, variants = 1, selectedIndex = 0, onHomeTeam = isHomeTeam)
+    }
+
     private suspend fun loadImageFromNetwork(url: Url, useProxy: Boolean): ImageBitmap? {
         CacheManager.getCachedImage(url)?.let { return it }
 
@@ -430,7 +359,7 @@ object IconFactory {
             // Right now we are just using the "canBeHost()" as an easy way to check for the Web target.
             // Probably need to find something better in the future.
             val callUrl = when (useProxy && !canBeHost()) {
-                true -> Url("${BASE_URL}/proxy.php?url=${url.toString().encodeURLParameter()}")
+                true -> Url("${BASE_URL}/proxy1.php?url=${url.toString().encodeURLParameter()}")
                 false -> url
             }
             val result = httpClient.get(callUrl) {
@@ -438,7 +367,6 @@ object IconFactory {
                     // In some cases, gifs are returned even though the path is a png. Problem?
                     accept(ContentType.Image.PNG)
                     accept(ContentType.Image.GIF)
-                    header(HttpHeaders.Origin, BASE_URL)
                 }
             }
             val image = when (result.status.isSuccess()) {
@@ -452,9 +380,10 @@ object IconFactory {
             }
             deferred.complete(image)
             return image
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            loggerInstance.w("Error loading image from network: $url", e)
             deferred.completeExceptionally(e)
-            throw e
+            return null
         } finally {
             inFlightRequests.remove(url)
         }
@@ -551,16 +480,15 @@ object IconFactory {
 
     private suspend fun saveTeamPlayerImagesToCache(team: Team) {
         team.forEach { player ->
-            val playerSprite = createPlayerSprite(player, player.isOnHomeTeam())
-            cachedPlayers[player.id] = playerSprite
-            val portrait = player.icon?.portrait ?: SingleSprite.embedded("jervis/portraits/default_portrait.png")
+            loadPlayerSprite(player, player.isOnHomeTeam())
+            val portrait = player.icon?.portrait ?: DEFAULT_PORTRAIT
             val portraitImage = when (portrait.type) {
                 SpriteLocation.EMBEDDED -> loadImageFromResources(portrait.resource)
-                SpriteLocation.URL -> loadImageFromNetwork(Url(portrait.resource), false)
+                SpriteLocation.URL -> loadImageFromNetwork(Url(portrait.resource), useProxy = false)
                 SpriteLocation.FUMBBL_INI -> loadImageFromFumbblIni(portrait.resource)
-                SpriteLocation.GENERATED -> generatePlayerSprite(letters = portrait.resource)
-            }
-            cachedPortraits[player.id] = portraitImage!! // TODO Fix null value
+                SpriteLocation.GENERATED -> generatePlayerSprite(letters = portrait.resource, player.position.size)
+            } ?: loadImageFromResources(DEFAULT_PORTRAIT.resource)
+            cachedPortraits[player.id] = portraitImage
         }
     }
 
@@ -573,7 +501,7 @@ object IconFactory {
                 cachedPlayers[player.id]!!.default
             }
         } else {
-            error("Could not find: $player")
+            error("Could not find player: ${player.id}")
         }
     }
 
@@ -581,7 +509,7 @@ object IconFactory {
      * Returns size of dice image for the current dice type in [androidx.compose.ui.unit.Dp].
      */
     fun getDiceSizeDp(die: DieResult): DpSize {
-        val image = cachedDice[DiceColor.DEFAULT]?.get(die) ?: error("Could not find: $die")
+        val image = cachedDice[DiceColor.DEFAULT]?.get(die) ?: error("Could not find die: $die")
         return DpSize(
             (image.width / scaleFactor).jdp * 1.25f,
             (image.height / scaleFactor).jdp * 1.25f
@@ -592,7 +520,7 @@ object IconFactory {
      * Returns size of dice image for the current dice type in pixels
      */
     fun getDiceSizePx(die: DieResult): Size {
-        val image = cachedDice[DiceColor.DEFAULT]?.get(die) ?: error("Could not find: $die")
+        val image = cachedDice[DiceColor.DEFAULT]?.get(die) ?: error("Could not find die: $die")
         return Size(image.width.toFloat(), image.height.toFloat())
     }
 
@@ -761,8 +689,8 @@ object IconFactory {
             SpriteLocation.GENERATED -> error("Generated logos are not supported yet")
         }
         when (size) {
-            LogoSize.LARGE -> cachedLargeLogos[id] = image ?: error("Could not find: ${logo.resource}")
-            LogoSize.SMALL -> cachedSmallLogos[id] = image ?: error("Could not find: ${logo.resource}")
+            LogoSize.LARGE -> cachedLargeLogos[id] = image ?: error("Could not find logo: ${logo.resource}")
+            LogoSize.SMALL -> cachedSmallLogos[id] = image ?: error("Could not find logo: ${logo.resource}")
         }
     }
 
@@ -770,27 +698,27 @@ object IconFactory {
      * Returns the logo for the given team and size or throws an exception if the logo is not found.
      */
     fun getLogo(id: TeamId, size: LogoSize): ImageBitmap {
+        return getLogoOrNull(id, size) ?: error("Could not find logo: $id")
+    }
+
+    fun getLogoOrNull(id: TeamId, size: LogoSize): ImageBitmap? {
         return when (size) {
-            LogoSize.LARGE -> cachedLargeLogos[id] ?: error("Could not find: $id")
-            LogoSize.SMALL -> cachedSmallLogos[id] ?: error("Could not find: $id")
+            LogoSize.LARGE -> cachedLargeLogos[id]
+            LogoSize.SMALL -> cachedSmallLogos[id]
         }
     }
 
-    suspend fun loadPlayerSprite(player: Player, isOnHomeTeam: Boolean): PlayerSprite? {
-        if (player.icon?.sprite == null) return null
-        val playerSprite = player.icon?.sprite!!
-        val image = when (playerSprite.type) {
-            SpriteLocation.EMBEDDED -> loadImageFromResources(playerSprite.resource)
-            SpriteLocation.URL -> loadImageFromNetwork(Url(playerSprite.resource), false) ?: error("Could not find: ${playerSprite.resource}") // TODO Fallback to something?
-            SpriteLocation.FUMBBL_INI -> loadImageFromFumbblIni(playerSprite.resource) ?: error("Could not find: ${playerSprite.resource}") // TODO Fallback to something?
-            SpriteLocation.GENERATED -> generatePlayerSprite(playerSprite.resource)
-        }
-        val sprite = when (val sprite = playerSprite) {
-            is SingleSprite -> {
-                PlayerSprite(image, image)
-            }
-            is SpriteSheet -> {
-                extractSprites(image, sprite.variants, sprite.selectedIndex ?: 0, isOnHomeTeam)
+    suspend fun loadPlayerSprite(player: Player, isOnHomeTeam: Boolean): PlayerSprite {
+        cachedPlayers[player.id]?.let { return it }
+        val playerSprite = player.icon?.sprite
+        val sprite = if (playerSprite == null) {
+            createFallbackPlayerSprite(player, isOnHomeTeam)
+        } else {
+            val image = loadPlayerSpriteImage(playerSprite, player.position.size)
+            if (image == null) {
+                createFallbackPlayerSprite(player, isOnHomeTeam)
+            } else {
+                createPlayerSprite(image, playerSprite, isOnHomeTeam)
             }
         }
         cachedPlayers[player.id] = sprite
@@ -805,8 +733,12 @@ object IconFactory {
             LogoSize.LARGE -> logo.large ?: SingleSprite.embedded("jervis/roster/logo/roster_logo_jervis_default_large.png")
             LogoSize.SMALL -> logo.small ?: SingleSprite.embedded("jervis/roster/logo/roster_logo_jervis_default_small.png")
         }
-        saveLogo(team, sprite, size)
-        return getLogo(team, size)
+        var cachedLogo = getLogoOrNull(team, size)
+        if (cachedLogo == null) {
+            saveLogo(team, sprite, size)
+            cachedLogo = getLogo(team, size)
+        }
+        return cachedLogo
     }
 
     /**
