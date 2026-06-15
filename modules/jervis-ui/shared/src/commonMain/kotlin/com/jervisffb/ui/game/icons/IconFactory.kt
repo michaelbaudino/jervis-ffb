@@ -359,7 +359,7 @@ object IconFactory {
             // Right now we are just using the "canBeHost()" as an easy way to check for the Web target.
             // Probably need to find something better in the future.
             val callUrl = when (useProxy && !canBeHost()) {
-                true -> Url("${BASE_URL}/proxy1.php?url=${url.toString().encodeURLParameter()}")
+                true -> Url("${BASE_URL}/proxy.php?url=${url.toString().encodeURLParameter()}")
                 false -> url
             }
             val result = httpClient.get(callUrl) {
