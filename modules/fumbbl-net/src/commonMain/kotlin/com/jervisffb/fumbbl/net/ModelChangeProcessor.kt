@@ -84,6 +84,7 @@ import com.jervisffb.fumbbl.net.model.change.GameSetTimeoutPossible
 import com.jervisffb.fumbbl.net.model.change.GameSetTurnMode
 import com.jervisffb.fumbbl.net.model.change.GameSetWaitingForOpponent
 import com.jervisffb.fumbbl.net.model.change.InducementSetAddPrayer
+import com.jervisffb.fumbbl.net.model.change.InducementSetAddInducement
 import com.jervisffb.fumbbl.net.model.change.InducementSetRemovePrayer
 import com.jervisffb.fumbbl.net.model.change.ModelChange
 import com.jervisffb.fumbbl.net.model.change.PlayerMarkSkillUnused
@@ -246,7 +247,7 @@ object ModelChangeProcessor {
             is GameSetWaitingForOpponent -> game.waitingForOpponent = change.value
 //            is InducementSetActivateCard -> TODO()
 //            is InducementSetAddAvailableCard -> TODO()
-//            is InducementSetAddInducement -> TODO()
+            is InducementSetAddInducement -> getInducementSet(game, change.isHomeData()).inducementArray.add(change.value)
             is InducementSetAddPrayer -> getInducementSet(game, change.isHomeData()).prayers.add(change.value)
 //            is InducementSetCardChoices -> TODO()
 //            is InducementSetDeactivateCard -> TODO()
