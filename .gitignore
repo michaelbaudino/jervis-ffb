@@ -27,8 +27,10 @@ site/
 
 # All downloaded games. Dont commit them to this repo
 # TODO Find a different way of sharing them
-/replays/
+/replays/*
 /replays-fumbbl/
+# Exception: test fixtures committed for reproducible tests
+!/replays/game-1858100.json
 
 # A copy of the FUMBBL source code decompiled from the jar files.
 # But dont commit it to the repo.
