@@ -17,6 +17,7 @@ data class ActingPlayer(
     var hasJumped: Boolean = false,
     var hasMoved: Boolean,
     var hasPassed: Boolean,
+    var hasTriggeredEffect: Boolean = false,
     var playerAction: PlayerAction?,
     var standingUp: Boolean,
     var sufferingAnimosity: Boolean,
@@ -53,6 +54,7 @@ data class ActingPlayer(
         sufferingBloodlust = false
         sufferingAnimosity = false
         hasJumped = false
+        hasTriggeredEffect = false
         // wasProne = false
         fumblerooskiePending = false
 //        val player: Player<*> = getGame().getPlayerById(getPlayerId())

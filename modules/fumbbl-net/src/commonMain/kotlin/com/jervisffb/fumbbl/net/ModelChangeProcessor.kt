@@ -16,6 +16,7 @@ import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetHasFouled
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetHasJumped
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetHasMoved
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetHasPassed
+import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetHasTriggeredEffect
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetLeaping
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetOldPlayerState
 import com.jervisffb.fumbbl.net.model.change.ActingPlayerSetPlayerAction
@@ -38,6 +39,7 @@ import com.jervisffb.fumbbl.net.model.change.FieldModelRemoveCard
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemoveCardEffect
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemoveDiceDecoration
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemoveFieldMarker
+import com.jervisffb.fumbbl.net.model.change.FieldModelAddFieldMarker
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemoveMoveSquare
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemovePlayer
 import com.jervisffb.fumbbl.net.model.change.FieldModelRemovePlayerMarker
@@ -125,6 +127,7 @@ import com.jervisffb.fumbbl.net.model.change.TeamResultSetSpectators
 import com.jervisffb.fumbbl.net.model.change.TeamResultSetSpirallingExpenses
 import com.jervisffb.fumbbl.net.model.change.TeamResultSetTeamValue
 import com.jervisffb.fumbbl.net.model.change.TeamResultSetWinnings
+import com.jervisffb.fumbbl.net.model.change.TargetSelectionCommitted
 import com.jervisffb.fumbbl.net.model.change.TurnDataSetApothecaries
 import com.jervisffb.fumbbl.net.model.change.TurnDataSetBlitzUsed
 import com.jervisffb.fumbbl.net.model.change.TurnDataSetBombUsed
@@ -165,6 +168,7 @@ object ModelChangeProcessor {
             is ActingPlayerSetHasJumped -> game.actingPlayer.hasJumped = change.value
             is ActingPlayerSetHasMoved -> game.actingPlayer.hasMoved = change.value
             is ActingPlayerSetHasPassed -> game.actingPlayer.hasPassed = change.value
+            is ActingPlayerSetHasTriggeredEffect -> game.actingPlayer.hasTriggeredEffect = change.value
             is ActingPlayerSetLeaping -> game.actingPlayer.jumping = change.value
             is ActingPlayerSetOldPlayerState -> game.actingPlayer.playerStateOld = change.value
             is ActingPlayerSetPlayerAction -> game.actingPlayer.playerAction = change.value
@@ -177,7 +181,7 @@ object ModelChangeProcessor {
             is FieldModelAddCard -> game.fieldModel.addCard(change.key, change.value)
             is FieldModelAddCardEffect -> game.fieldModel.addCardEffect(change.key, change.value)
             is FieldModelAddDiceDecoration -> game.fieldModel.addDiceDecoration(change.value)
-//            is FieldModelAddFieldMarker -> TODO()
+            is FieldModelAddFieldMarker -> change.value?.let { game.fieldModel.fieldMarkerArray.add(it) }
 //            is FieldModelAddIntensiveTraining -> TODO()
             is FieldModelAddMoveSquare -> game.fieldModel.addMoveSquare(change.value)
             is FieldModelAddPlayerMarker -> game.fieldModel.addPlayerMarker(change.value)
@@ -290,6 +294,11 @@ object ModelChangeProcessor {
             is TeamResultSetSpirallingExpenses -> getTeamResult(game, change.isHomeData()).spirallingExpenses = change.value
             is TeamResultSetTeamValue -> getTeamResult(game, change.isHomeData()).teamValue = change.value
             is TeamResultSetWinnings -> getTeamResult(game, change.isHomeData()).winnings = change.value
+            is TargetSelectionCommitted -> {
+                game.fieldModel.targetSelectionState?.let {
+                    game.fieldModel.targetSelectionState = it.copy(targetSelectionStatusIsCommitted = change.value)
+                }
+            }
             is TurnDataSetApothecaries -> getTurnData(game, change.isHomeData()).apothecaries = change.value
             is TurnDataSetBlitzUsed -> getTurnData(game, change.isHomeData()).blitzUsed = change.value
             is TurnDataSetBombUsed -> getTurnData(game, change.isHomeData()).bombUsed = change.value

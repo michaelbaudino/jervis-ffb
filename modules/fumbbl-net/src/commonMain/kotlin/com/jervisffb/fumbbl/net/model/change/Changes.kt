@@ -143,6 +143,17 @@ data class ActingPlayerSetHasPassed(
 ) : ModelChange
 
 @Serializable
+@SerialName("actingPlayerSetHasTriggeredEffect")
+data class ActingPlayerSetHasTriggeredEffect(
+    @SerialName("modelChangeId")
+    override val id: ModelChangeId = ModelChangeId.ACTING_PLAYER_SET_HAS_TRIGGERED_EFFECT,
+    @SerialName("modelChangeKey")
+    override val key: Nothing?,
+    @SerialName("modelChangeValue")
+    override val value: Boolean,
+) : ModelChange
+
+@Serializable
 @SerialName("actingPlayerSetLeaping")
 data class ActingPlayerSetLeaping(
     @SerialName("modelChangeId")
@@ -293,7 +304,7 @@ data class FieldModelAddFieldMarker(
     @SerialName("modelChangeKey")
     override val key: String?,
     @SerialName("modelChangeValue")
-    override val value: String?,
+    override val value: FieldMarker?,
 ) : ModelChange
 
 // This looks to only indicate a possible target square
@@ -1472,6 +1483,17 @@ data class TeamResultSetWinnings(
     override val key: String?,
     @SerialName("modelChangeValue")
     override val value: Int,
+) : ModelChange
+
+@Serializable
+@SerialName("targetSelectionCommitted")
+data class TargetSelectionCommitted(
+    @SerialName("modelChangeId")
+    override val id: ModelChangeId = ModelChangeId.TARGET_SELECTION_COMMITTED,
+    @SerialName("modelChangeKey")
+    override val key: Nothing?,
+    @SerialName("modelChangeValue")
+    override val value: Boolean,
 ) : ModelChange
 
 @Serializable
