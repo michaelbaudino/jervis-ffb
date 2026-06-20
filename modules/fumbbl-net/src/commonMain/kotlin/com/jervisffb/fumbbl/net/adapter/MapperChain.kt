@@ -75,7 +75,7 @@ class MapperChain constructor(jervisGame: Game, fumbblGame: FumbblGame, checkCom
                         }
                     }
                     // Progress Jervis Game in cadence with the commands.
-                    if (checkCommands) {
+                    try {
                         val jervisAction = when (action) {
                             is CalculatedJervisAction -> {
                                 action.actionFunc(jervisGame, jervisGameController.rules)
@@ -87,13 +87,15 @@ class MapperChain constructor(jervisGame: Game, fumbblGame: FumbblGame, checkCom
                                 null
                             }
                         }
-                        try {
-                            if (jervisAction != null) {
-                                jervisGameController.handleAction(jervisAction)
-                            }
-                        } catch (ex: Exception) {
+                        if (jervisAction != null) {
+                            jervisGameController.handleAction(jervisAction)
+                        }
+                    } catch (ex: Exception) {
+                        if (checkCommands) {
                             println("Processed up to: ${serverCommand.commandNr}")
                             throw ex
+                        } else {
+                            println("Warning: Action failed at CommandNr ${serverCommand.commandNr}: ${ex.message}")
                         }
                     }
                 }

@@ -67,12 +67,13 @@ object StartBlitzActionMapper: CommandActionMapper {
         // Check if the player is standing up when starting the blitz action part of the Blitz
         // TODO Unclear how this works with Move 2 or less.
         val startActionCommand = processedCommands[processedCommands.size - 2]
-        if (startActionCommand.firstReport() !is PlayerActionReport) {
-            throw IllegalStateException("Unexpected state: ${startActionCommand.firstReport()}")
+        val playerStandingUp = if (startActionCommand.firstReport() is PlayerActionReport) {
+            startActionCommand.modelChangeList
+                .filterIsInstance<ActingPlayerSetStandingUp>()
+                .count { it.value } > 0
+        } else {
+            false
         }
-        val playerStandingUp = startActionCommand.modelChangeList
-            .filterIsInstance<ActingPlayerSetStandingUp>()
-            .count { it.value } > 0
         if (playerStandingUp) {
             newActions.add(MoveTypeSelected(MoveType.STAND_UP), BlitzAction.MoveOrBlockOrEndAction)
         }
