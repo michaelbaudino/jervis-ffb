@@ -42,6 +42,7 @@ kotlin {
     wasmJs {
         outputModuleName.set("jervis-engine")
         browser()
+        binaries.executable()
     }
 
     sourceSets {
