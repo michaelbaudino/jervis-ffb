@@ -7,6 +7,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.CatchContext
+import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.DodgeRollContext
 import com.jervisffb.engine.model.context.JumpRollContext
 import com.jervisffb.engine.model.context.LandingRollContext
@@ -50,6 +51,7 @@ import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRoll
 import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRollContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireRoll
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChainsawRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.DauntlessRoll
@@ -82,6 +84,7 @@ import kotlin.time.ExperimentalTime
  * - BoneHead
  * - Breathe Fire
  * - Catch
+ * - Chainsaw
  * - Chomped
  * - Dauntless
  * - Dodge
@@ -183,6 +186,26 @@ object CatchWheelController : D6WithRerollWheelController() {
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<CatchContext>()
         return context.roll!!.originalRoll
+    }
+}
+
+/**
+ * Define the Action Wheel layout when rolling for Chainsaw.
+ */
+object ChainsawWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "chainsaw"
+    override val diceRollType: DiceRollType = DiceRollType.CHAINSAW
+    override val rollDiceNode: Node = ChainsawRoll.RollDie
+    override val chooseRerollSourceNode: Node = ChainsawRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = ChainsawRoll.ReRollDie
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<ChainsawContext>().attacker.coordinates
+    }
+
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<ChainsawContext>()
+        return context.kickbackRoll!!.originalRoll
     }
 }
 

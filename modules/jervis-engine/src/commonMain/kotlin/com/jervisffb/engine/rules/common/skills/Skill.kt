@@ -28,6 +28,7 @@ interface Skill<T> {
     val name: String
     // Whether this skill is required to be used.
     // In the rulebook, this means skilled marked with *.
+    // Note: This is only used by the UI. Mandatory special actions are marked as such independently.
     val compulsory: Boolean
     // Whether this skill count as being "used". The meaning of this is interpreted in the context it is used.
     // If the skill is always available, this should always be false.

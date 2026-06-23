@@ -19,9 +19,11 @@ import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.context.BB2020MultipleBlockContext
+import com.jervisffb.engine.model.context.FoulContext
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.inducements.Apothecary
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -51,6 +53,7 @@ enum class RiskingInjuryMode {
     BAD_LANDING,
     STAB, // Armour/Injury is rolled as part of a Stab
     PROJECTILE_VOMIT, // Armour/Injury is rolled as part of a Projectile Vomit attack
+    CHAINSAW, // Armour/Injury is rolled as part of a Chainsaw attack
 }
 
 // What do we need to track?
@@ -75,6 +78,9 @@ data class RiskingInjuryContext(
     val armourRoll: PersistentList<D6DieRoll> = persistentListOf(),
     val armourModifiers: PersistentList<DiceModifier> = persistentListOf(),
     val useClawsOnArmourRoll: Boolean = false,
+    // An effect caused the Armour Roll to be aborted.
+    // E.g. a Chainsaw player having a Kickback during a Foul.
+    val armourRollAborted: Boolean = false,
 
     // Injury roll
     val injuryRoll: PersistentList<D6Result> = persistentListOf(),
@@ -189,16 +195,18 @@ object RiskingInjuryRoll: Procedure() {
                 GotoNode(RollForInjury)
             } else {
                 // If Amour isn't broken, we have to consider a few special cases:
-                // - If Stab or Projectile Vomit caused the Amour Roll, nothing happens if it fails.
+                // - If Stab, Projectile Vomit or Chainsaw caused the Amour Roll, nothing happens if it fails.
                 // - If an Armour Roll was made against an already Stunned player (e.g. during Throw Team-mate), not
                 //   breaking armour will keep them Stunned.
                 val player = context.player
-                val standOnFailure = (context.mode in listOf(RiskingInjuryMode.STAB, RiskingInjuryMode.PROJECTILE_VOMIT))
+                val standOnFailure = (context.mode in listOf(RiskingInjuryMode.STAB, RiskingInjuryMode.PROJECTILE_VOMIT, RiskingInjuryMode.CHAINSAW))
                 val isStunned = (player.state == PlayerState.STUNNED)
+                val isFoul = (state.getContextOrNull<FoulContext>()?.victim == context.player)
                 compositeCommandOf(
                     when {
+                        context.armourRollAborted -> null // Player remains unaffected
                         isStunned -> SetPlayerIntermediateState(player, state = null) // Player remains Stunned
-                        standOnFailure -> null // Player remains Standing
+                        standOnFailure || isFoul -> null // Armour wasn't broken, so just keep the current player state (whatever it was)
                         else -> compositeCommandOf(
                             SetPlayerState(context.player, PlayerState.PRONE, hasTackleZones = false),
                             getResetChompedStateCommands(context.player, context.player.location, forceRemoveChompedByChomper = true)

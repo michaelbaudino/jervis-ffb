@@ -151,10 +151,20 @@ class FoulAppearanceTests: JervisGameBB2025Test() {
         defender.assertStanding()
     }
 
-    @Ignore
     @Test
     fun workOnChainsaw() {
-        TODO("Waiting for Chainsaw support")
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.CHAINSAW)
+        val defender = state.getPlayerById("H1".playerId)
+        defender.addSkill(SkillType.FOUL_APPEARANCE)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.CHAINSAW),
+            PlayerSelected(defender),
+            *foulAppearanceRoll(1.d6),
+        )
+        assertNull(state.activePlayer)
+        assertEquals(Availability.HAS_ACTIVATED, attacker.available)
+        defender.assertStanding()
     }
 
     @Ignore

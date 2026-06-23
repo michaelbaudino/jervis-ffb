@@ -109,7 +109,12 @@ object ActivatePlayer : Procedure() {
                     PlayerStandardActionType.SPECIAL -> null
                     PlayerSpecialActionType.BALL_AND_CHAIN -> TODO()
                     PlayerSpecialActionType.BOMBARDIER -> TODO()
-                    PlayerSpecialActionType.CHAINSAW -> TODO()
+                    PlayerSpecialActionType.CHAINSAW -> {
+                        compositeCommandOf(
+                            SetSpecialActionSkillUsed(player, player.getSkill(SkillType.CHAINSAW), true),
+                            SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.CHAINSAW)
+                        )
+                    }
                     PlayerSpecialActionType.HYPNOTIC_GAZE -> TODO()
                     PlayerSpecialActionType.KICK_TEAM_MATE -> TODO()
                     PlayerSpecialActionType.MULTIPLE_BLOCK -> {

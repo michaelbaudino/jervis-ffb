@@ -5,7 +5,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import com.jervisffb.shared.generated.resources.Res
 import com.jervisffb.shared.generated.resources.trump_town_pro
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.FontMgr

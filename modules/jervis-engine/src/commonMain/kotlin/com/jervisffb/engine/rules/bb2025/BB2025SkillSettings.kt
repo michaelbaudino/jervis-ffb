@@ -13,6 +13,7 @@ import com.jervisffb.engine.rules.bb2025.skills.BreatheFire
 import com.jervisffb.engine.rules.bb2025.skills.Bullseye
 import com.jervisffb.engine.rules.bb2025.skills.Cannoneer
 import com.jervisffb.engine.rules.bb2025.skills.CatchSkill
+import com.jervisffb.engine.rules.bb2025.skills.Chainsaw
 import com.jervisffb.engine.rules.bb2025.skills.Claws
 import com.jervisffb.engine.rules.bb2025.skills.CloudBurster
 import com.jervisffb.engine.rules.bb2025.skills.Dauntless
@@ -542,9 +543,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.CHAINSAW -> {
-                    // addEntry(type, SkillCategory.TRAITS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Chainsaw", type, SkillCategory.TRAITS) { player, category,expiresAt ->
+                        Chainsaw(player, category, expiresAt)
+                    }
                 }
                 SkillType.DECAY -> {
                     addNoValueEntry("Decay", type, SkillCategory.TRAITS) { player, category,expiresAt ->

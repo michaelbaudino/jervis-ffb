@@ -19,7 +19,7 @@ data class PlayerAction(
     // if type == BLOCK, this decides if this action also works during the blitz
     val worksDuringBlitz: Boolean,
     val procedure: Procedure,
-    val compulsory: Boolean, // If true, players must choose this action
+    val compulsory: Boolean, // If true, players must choose this action if posssible
 ) {
     val isSpecial = (type == PlayerStandardActionType.SPECIAL) || (countsAs == PlayerStandardActionType.SPECIAL)
 }

@@ -18,6 +18,7 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2025Test
 import com.jervisffb.test.SmartMoveTo
 import com.jervisffb.test.activatePlayer
+import com.jervisffb.test.chainsawRoll
 import com.jervisffb.test.dodge
 import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.followUp
@@ -29,6 +30,7 @@ import com.jervisffb.test.utils.assertActive
 import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.assertStanding
+import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
@@ -250,6 +252,69 @@ class IronHardSkinTests: JervisGameBB2025Test() {
         state.assertNoActivePlayer()
         awayTeam.assertActive()
         victim.assertProne()
+    }
+
+    @Test
+    fun doesNotWorkAgainstChainsawKickback() {
+        val attacker = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.CHAINSAW)
+            addSkill(SkillType.IRON_HARD_SKIN)
+        }
+        val defender = homeTeam["H1".playerId]
+        assertEquals(9, attacker.armorValue)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.CHAINSAW),
+            PlayerSelected(defender),
+            *chainsawRoll(1.d6),
+            DiceRollResults(5.d6, 2.d6),
+            DiceRollResults(1.d6, 1.d6),
+        )
+        state.assertNoActivePlayer()
+        homeTeam.assertActive()
+        defender.assertStanding()
+        attacker.assertStunned()
+    }
+
+    @Test
+    fun workAgainstChainsawSpecialAction() {
+        val attacker = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.CHAINSAW)
+            addSkill(SkillType.IRON_HARD_SKIN)
+        }
+        val defender = homeTeam["H1".playerId]
+        assertEquals(9, attacker.armorValue)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.CHAINSAW),
+            PlayerSelected(defender),
+            *chainsawRoll(1.d6),
+            DiceRollResults(5.d6, 2.d6),
+            DiceRollResults(1.d6, 1.d6),
+        )
+        state.assertNoActivePlayer()
+        homeTeam.assertActive()
+        defender.assertStanding()
+        attacker.assertStunned()
+    }
+
+    @Test
+    fun workAgainstChainsawFoul() {
+        val fouler = awayTeam["A1".playerId].apply {
+            addSkill(SkillType.CHAINSAW)
+        }
+        val victim = homeTeam["H1".playerId].apply {
+            addSkill(SkillType.IRON_HARD_SKIN)
+            putProne()
+        }
+        assertEquals(9, victim.armorValue)
+        controller.rollForward(
+            *activatePlayer(fouler, PlayerStandardActionType.FOUL),
+            PlayerSelected(victim),
+            DiceRollResults(2.d6, 5.d6),
+            Confirm, // Use Iron hard Skin
+        )
+        state.assertNoActivePlayer()
+        victim.assertProne()
+        fouler.assertStanding()
     }
 
     // First roll -> Lone Fouler -> 2nd Roll -> Iron Hard Skin prevents Dirty Player

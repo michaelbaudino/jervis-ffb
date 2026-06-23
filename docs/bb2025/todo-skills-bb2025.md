@@ -16,7 +16,7 @@ before being shown as a dialog to players.
 Skills should only be marked as completed here if they are implemented and have
 a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2025/skills`.
 
-## Agility Skills (DONE)
+## Agility Skills
 
 - [x] Catch
     - [x] Reroll catching the landing after kickoff
@@ -73,6 +73,8 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Ignores 4+ to stand up if < 3 moves
   - [x] Agility Roll + 1 to block
   - [x] Does not work on Special Actions when Prone (Stab, Projectile Vomit, Breathe Fire)
+  - [ ] Jump Up Block cannot be replaced by special actions, e.g Stab Projectile Vomit, Breathe Fire, Chainsaw
+  - [ ] Work on Special Actions with a move component (figure out the exact details): Kick Team-mate, Punt
   - [x] Free to stand up during Move
   - [x] Free to stand up during Blitz
   - [x] Free to stand up during Hand-off
@@ -327,13 +329,13 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Block
   - [x] Blitz
   - [x] Breathe Fire
-  - [ ] Chainsaw
   - [x] Chomp
   - [ ] Hypnotic Gaze
   - [ ] Multiple Block
   - [ ] Only stops one block during Multiple Block
   - [x] Projectile Vomit
   - [x] Stab
+  - [x] Chainsaw
 - [x] Horns
   - [x] Add +1 to ST for block action during Blitz
   - [x] Does not work on Block
@@ -578,8 +580,22 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
     - [x] -1 modifier to roll on 5+ ST
     - [x] Is not available when starting from Prone
     - [x] Is not available if not starting next to an opponent
-- [ ] Chainsaw*
-- [x] Decay*
+- [x] Chainsaw*
+    - [x] Special action replacing Block
+    - [x] Work during Blitz
+    - [x] Can be used during Foul
+    - [x] 2+ to work
+    - [x] Kickback on 1 (Knocked Down)
+    - [x] +3 armour if success
+    - [x] +3 on own armour if Knocked Down or Fall Over
+    - [x] Fail Dodge (Fall Over)
+    - [x] Fail Block (Knocked Down)
+    - [x] Thrown (Knocked Down
+    - [x] Abort Foul if failed during Foul
+    - [x] Chainsaw takes precedence over all other special actions
+    - [x] Steady Footing during Foul Step
+    - [x] Steady footing during Block Step
+- [x] Decy*
   - [x] +1 to Casualty Roll
   - [x] +1 to re-rolled casualty roll (apothecary)
 - [ ] Hypnotic Gaze

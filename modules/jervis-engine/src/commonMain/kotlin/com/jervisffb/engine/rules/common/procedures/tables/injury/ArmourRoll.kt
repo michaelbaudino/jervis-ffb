@@ -26,11 +26,13 @@ import com.jervisffb.engine.commands.fsm.GotoNode
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.ComputationNode
 import com.jervisffb.engine.fsm.Node
+import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.BlockContext
+import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.FoulContext
 import com.jervisffb.engine.model.context.UseRerollContext
 import com.jervisffb.engine.model.context.assertContext
@@ -38,6 +40,7 @@ import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.getSkill
+import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.ArmourModifier
 import com.jervisffb.engine.model.modifiers.MightyBlowArmourModifier
@@ -47,6 +50,7 @@ import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.skills.LoneFouler
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
+import com.jervisffb.engine.rules.common.procedures.actions.foul.ChainsawFoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
@@ -81,8 +85,9 @@ import kotlinx.collections.immutable.toPersistentList
  * 4. TBD: Chainsaw, Others?
  *
  * Foul:
- * 1. Dirty Player (AV Roll - Modifier)
- * 2. Lone Fouler (AV Roll - Reroll)
+ * 1. Chainsaw (Modifier)
+ * 1. Dirty Player (Modifier)
+ * 2. Lone Fouler (Reroll)
  *
  * Knocked Down (Throw Team-mate):
  * 1. Lethal Flight (Knocked Down)
@@ -91,7 +96,7 @@ import kotlinx.collections.immutable.toPersistentList
  * 1. Arm Bar (If in the middle of a Dodge, Jump or Leap)
  */
 object ArmourRoll: Procedure() {
-    override val initialNode: Node = RollDice
+    override val initialNode: Node = AddMandatoryModifiers
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val context = state.getContext<RiskingInjuryContext>()
         // According to the rules on page 37 (BB2025), it is always the opposing
@@ -117,6 +122,27 @@ object ArmourRoll: Procedure() {
     }
     override fun isValid(state: Game, rules: Rules) {
         state.assertContext<RiskingInjuryContext>()
+    }
+
+    object AddMandatoryModifiers: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+
+            // If the player being Knocked Down or Falls Over is holding a Chainsaw, the +3 modifier is always applied
+            val playerHasChainsaw = (context.player.hasSkill(SkillType.CHAINSAW) && (context.mode in listOf(RiskingInjuryMode.FALLING_OVER, RiskingInjuryMode.KNOCKED_DOWN, RiskingInjuryMode.BAD_LANDING)))
+
+            // If the opponent is holding a chainsaw (and is using it), add +3 to the armour roll
+            val chainsawContext = state.getContextOrNull<ChainsawContext>()
+            val attackerHasChainsaw= (chainsawContext != null && chainsawContext.attacker == context.causedBy && chainsawContext.isSuccess)
+
+            return compositeCommandOf(
+                when (playerHasChainsaw || attackerHasChainsaw) {
+                    true -> UpdateContext(context.copy(armourModifiers = context.armourModifiers.add(ArmourModifier.CHAINSAW)))
+                    false -> null
+                },
+                GotoNode(RollDice)
+            )
+        }
     }
 
     object RollDice : ActionNode() {
@@ -190,6 +216,7 @@ object ArmourRoll: Procedure() {
             val hasSkill = context.player.isSkillAvailable(SkillType.IRON_HARD_SKIN)
             val alreadyUsedIhs = context.usedIronHardSkin
             val ihsIsUseful = when (context.mode) {
+                RiskingInjuryMode.CHAINSAW -> true // The chainsaw modifier was already added,
                 RiskingInjuryMode.KNOCKED_DOWN -> {
                     val throwPlayerContext = state.getContextOrNull<ThrowTeamMateContext>()
                     val thrownPlayer = throwPlayerContext?.thrownPlayer
@@ -206,7 +233,7 @@ object ArmourRoll: Procedure() {
                     }
                 }
                 RiskingInjuryMode.FOUL -> {
-                    isDirtyPlayerAvailableAndUseful(context)
+                    foulModifiersCanHelpWithBreakingArmour(context)
                 }
                 RiskingInjuryMode.FALLING_OVER -> {
                     isArmBarAvailableAndUseful(state, context)
@@ -226,7 +253,10 @@ object ArmourRoll: Procedure() {
             return when (useIronHardSkin) {
                 true -> compositeCommandOf(
                     ReportSkillUsed(context.player, SkillType.IRON_HARD_SKIN),
-                    UpdateContext(context.copy(usedIronHardSkin = true)),
+                    UpdateContext(context.copy(
+                        armourModifiers = if (context.mode == RiskingInjuryMode.CHAINSAW) context.armourModifiers.remove(ArmourModifier.CHAINSAW) else context.armourModifiers,
+                        usedIronHardSkin = true
+                    )),
                     GotoNode(DecideOnModifierPath)
                 )
                 false -> GotoNode(DecideOnModifierPath)
@@ -247,7 +277,7 @@ object ArmourRoll: Procedure() {
                         GotoNode(CheckIfClawsIsApplicable)
                     }
                 }
-                RiskingInjuryMode.FOUL -> GotoNode(ChooseToUseDirtyPlayer)
+                RiskingInjuryMode.FOUL -> GotoNode(ChooseTouseChainsaw)
                 RiskingInjuryMode.FALLING_OVER -> GotoNode(CheckIfArmBarIsApplicable)
                 // None of these have skills that can affect the armour roll
                 RiskingInjuryMode.BAD_LANDING,
@@ -255,6 +285,7 @@ object ArmourRoll: Procedure() {
                 RiskingInjuryMode.PLACED_PRONE,
                 RiskingInjuryMode.PROJECTILE_VOMIT,
                 RiskingInjuryMode.PUSHED_INTO_CROWD,
+                RiskingInjuryMode.CHAINSAW, // Attacked by the Chainsaw. Modifier was added in `AddMandatoryModifiers`
                 RiskingInjuryMode.STAB -> ExitProcedure()
             }
         }
@@ -405,18 +436,47 @@ object ArmourRoll: Procedure() {
     }
 
     // Only on Fouls
+    object ChooseTouseChainsaw: ParentNode() {
+        override fun skipNodeFor(state: Game, rules: Rules): Node? {
+            val context = state.getContext<RiskingInjuryContext>()
+
+            val hasChainsaw = (context.causedBy?.isSkillAvailable(SkillType.CHAINSAW) == true)
+            val isUseful = foulModifiersCanHelpWithBreakingArmour(context)
+            return when (hasChainsaw && isUseful) {
+                true -> null
+                false -> ChooseToUseDirtyPlayer
+            }
+        }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = ChainsawFoulStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            // Turnover can happen if the Chainsaw has a Kickback, but even for a Kickback, the player might be
+            // left standing (by using Steady Footing). These details, including adding armour modifiers, or not,
+            // have already been handled, so here we just determine next steps.
+            return when (state.isTurnOver()) {
+                true -> ExitProcedure()
+                false -> GotoNode(ChooseToUseDirtyPlayer)
+            }
+        }
+    }
+
+    // Only on Fouls
     object ChooseToUseDirtyPlayer: ActionNode() {
         override fun actionOwner(state: Game, rules: Rules): Team {
             return state.getContext<RiskingInjuryContext>().player.team.otherTeam()
         }
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
-            val dirtyPlayerWillHaveImpact = isDirtyPlayerAvailableAndUseful(context)
+            val hasDirtyPlayer = (context.causedBy?.isSkillAvailable(SkillType.DIRTY_PLAYER) == true)
+            val target = context.player.armorValue
+            val roll = context.armourResult
+            val dirtyPlayerWillHaveImpact= hasDirtyPlayer
+                && roll < target
+                && (roll + context.armourModifiers.sum() + ArmourModifier.DIRTY_PLAYER.modifier) >= target
+                && !context.usedIronHardSkin
 
-            return if (dirtyPlayerWillHaveImpact) {
-                listOf(ConfirmWhenReady, CancelWhenReady)
-            } else {
-                listOf(ContinueWhenReady)
+            return when (dirtyPlayerWillHaveImpact) {
+                true -> listOf(ConfirmWhenReady, CancelWhenReady)
+                false -> listOf(ContinueWhenReady)
             }
         }
 
@@ -438,6 +498,7 @@ object ArmourRoll: Procedure() {
         }
     }
 
+    // Only on Fouls
     object ChooseToUseLoneFouler: ActionNode() {
         override fun actionOwner(state: Game, rules: Rules): Team {
             val context = state.getContext<RiskingInjuryContext>()
@@ -619,14 +680,18 @@ object ArmourRoll: Procedure() {
         }
     }
 
-    private fun isDirtyPlayerAvailableAndUseful(context: RiskingInjuryContext): Boolean {
-        if (context.causedBy?.isSkillAvailable(SkillType.DIRTY_PLAYER) != true) return false
-        if (context.mode != RiskingInjuryMode.FOUL) return false
-
+    // Returns `true` if an optimal use of Fouling modifiers will break the amour. I.e:
+    // - If the armour roll is above target armour. Using modifiers does not make a difference
+    // - If rolling too low, so even using all modifiers will not make a difference
+    private fun foulModifiersCanHelpWithBreakingArmour(context: RiskingInjuryContext): Boolean {
+        val potentialModifiers = buildList {
+            add(if (context.causedBy?.isSkillAvailable(SkillType.DIRTY_PLAYER) != true) 0 else ArmourModifier.DIRTY_PLAYER.modifier)
+            add(if (context.causedBy?.isSkillAvailable(SkillType.CHAINSAW) != true) 0 else ArmourModifier.CHAINSAW.modifier)
+        }
         val target = context.player.armorValue
         val roll = context.armourResult
         return roll < target
-            && (roll + ArmourModifier.DIRTY_PLAYER.modifier) >= target
+            && (roll + potentialModifiers.sum() >= target)
             && !context.usedIronHardSkin
     }
 }

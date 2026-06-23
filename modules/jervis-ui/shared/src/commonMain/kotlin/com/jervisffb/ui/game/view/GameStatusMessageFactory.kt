@@ -69,6 +69,7 @@ import com.jervisffb.engine.rules.common.procedures.UnchannelledFuryRoll
 import com.jervisffb.engine.rules.common.procedures.WeatherRoll
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireRoll
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChainsawRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.DauntlessRoll
 import com.jervisffb.engine.rules.common.procedures.actions.block.FoulAppearanceRoll
@@ -76,6 +77,7 @@ import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomi
 import com.jervisffb.engine.rules.common.procedures.actions.foul.ArgueTheCallRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BribeRoll
+import com.jervisffb.engine.rules.common.procedures.actions.foul.ChainsawFoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.DodgeRoll
 import com.jervisffb.engine.rules.common.procedures.actions.move.JumpRoll
@@ -159,6 +161,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             SwoopStep.ChooseToUseSwoop to SkillType.SWOOP,
             ArmourRoll.ChooseToUseClaws to SkillType.CLAWS,
             ArmourRoll.ChooseToUseIronHardSkin to SkillType.IRON_HARD_SKIN,
+            ChainsawFoulStep.ChooseToUseChainsaw to SkillType.CHAINSAW
         )
 
         return skills.toList().associate {
@@ -189,6 +192,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             BrilliantCoaching.ReceivingTeamRollDie to "Roll D6 for Brilliant Coaching",
             CatchRoll.ReRollDie to "Re-roll D6 to Catch the Ball",
             CatchRoll.RollDie to "Roll D6 to Catch the Ball",
+            ChainsawRoll.RollDie to "Roll D6 to use Chainsaw",
+            ChainsawRoll.ReRollDie to "Re-roll D6 to use Chainsaw",
             ChompRoll.ReRollDie to "Re-roll D6 to Chomp the opponent",
             ChompRoll.RollDie to "Roll D6 to Chomp the opponent",
             Charge.RollForPlayers to "Roll D3 + 3 for Number of Players to be used during Charge",
@@ -267,37 +272,38 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
         )
         val askForRerollScenarios = listOf(
             AccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
-            com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassAccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
+            BoneHeadRoll.ChooseReRollSource to "Accept Bone Head Result or Reroll D6?",
+            BreatheFireRoll.ChooseReRollSource to "Accept Breathe Fire Result or Reroll D6?",
             CatchRoll.ChooseReRollSource to "Accept Catch Result or Reroll D6?",
+            ChainsawRoll.ChooseReRollSource to "Accept Chainsaw Result or Reroll D6?",
             ChompRoll.ChooseReRollSource to "Accept Chomp Result or Reroll D6?",
+            DauntlessRoll.ChooseReRollSource to "Accept Dauntless Result or Reroll D6?",
             DodgeRoll.ChooseReRollSource to "Accept Dodge Result or Reroll D6?",
+            FoulAppearanceRoll.ChooseReRollSource to "Accept Foul Appearance Result or Reroll D6?",
+            JumpRoll.ChooseReRollSource to "Accept Jump Result or Reroll D6?",
+            JumpUpRoll.ChooseReRollSource to "Accept Jump Up Result or Reroll D6?",
+            LandingRoll.ChooseReRollSource to "Accept Landing Result or Reroll D6?",
+            LeapRoll.ChooseReRollSource to "Accept Leap Result or Reroll D6?",
+            LonerRoll.ChooseReRollSource to "Accept Loner Result or Re-roll D6?",
             PickupRoll.ChooseReRollSource to "Accept Pickup Result or Reroll D6?",
+            PogoRoll.ChooseReRollSource to "Accept Pogo-stick Result or Reroll D6?",
+            ProRoll.ChooseReRollSource to "Accept Pro Result or Re-roll D6?",
+            ProjectileVomitRoll.ChooseReRollSource to "Accept Projectile Vomit Result or Reroll D6?",
+            ReallyStupidRoll.ChooseReRollSource to "Accept Really Stupid Result or Reroll D6?",
             RushRoll.ChooseReRollSource to "Accept Rush Result or Reroll D6?",
             SecureTheBallRoll.ChooseReRollSource to "Accept Secure the Ball Result or Reroll D6?",
             ShadowingRoll.ChooseReRollSource to "Accept Shadowing Result or Reroll D6?",
-            BoneHeadRoll.ChooseReRollSource to "Accept Bone Head Result or Reroll D6?",
-            ReallyStupidRoll.ChooseReRollSource to "Accept Really Stupid Result or Reroll D6?",
-            UnchannelledFuryRoll.ChooseReRollSource to "Accept Unchannelled Fury Result or Reroll D6?",
-            JumpRoll.ChooseReRollSource to "Accept Jump Result or Reroll D6?",
-            LeapRoll.ChooseReRollSource to "Accept Leap Result or Reroll D6?",
-            PogoRoll.ChooseReRollSource to "Accept Pogo-stick Result or Reroll D6?",
             SteadyFootingRoll.ChooseReRollSource to "Accept Steady Footing Result or Reroll D6?",
-            ThrowTeammateAccuracyRoll.ChooseReRollSource to "Accept Accuracy Result or Reroll D6?",
-            LandingRoll.ChooseReRollSource to "Accept Landing Result or Reroll D6?",
-            ProjectileVomitRoll.ChooseReRollSource to "Accept Projectile Vomit Result or Reroll D6?",
-            BreatheFireRoll.ChooseReRollSource to "Accept Breathe Fire Result or Reroll D6?",
-            DauntlessRoll.ChooseReRollSource to "Accept Dauntless Result or Reroll D6?",
-            FoulAppearanceRoll.ChooseReRollSource to "Accept Foul Appearance Result or Reroll D6?",
-            TakeRootRoll.ChooseReRollSource to "Accept Take Root Result or Reroll D6?",
-            JumpUpRoll.ChooseReRollSource to "Accept Jump Up Result or Reroll D6?",
             SwoopDirectionRoll.ChooseReRollSource to "Accept Swoop Direction Result or Re-roll D3?",
             SwoopDistanceRoll.ChooseReRollSource to "Accept Swoop Distance Result or Re-roll D6?",
-            LonerRoll.ChooseReRollSource to "Accept Loner Result or Re-roll D6?",
+            TakeRootRoll.ChooseReRollSource to "Accept Take Root Result or Reroll D6?",
+            TeamCaptainRoll.ChooseReRollSource to "Accept Team Captain Result or Re-roll D6?",
             TeamMascotRoll.ChooseReRollSource to "Accept Mascot Result or Re-roll D6?",
             TeamMascotStep.ChooseAnotherReroll to "Team Mascot Failed, Choose Another Team Re-roll?",
-            TeamCaptainRoll.ChooseReRollSource to "Accept Team Captain Result or Re-roll D6?",
             TentaclesRoll.ChooseReRollSource to "Accept Tentacles Result or Re-roll D6?",
-            ProRoll.ChooseReRollSource to "Accept Pro Result or Re-roll D6?",
+            ThrowTeammateAccuracyRoll.ChooseReRollSource to "Accept Accuracy Result or Reroll D6?",
+            UnchannelledFuryRoll.ChooseReRollSource to "Accept Unchannelled Fury Result or Reroll D6?",
+            com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassAccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
         )
 
         val rollMessages: Map<Node, (Boolean, Boolean, Game) -> String?> = rollDiceScenarios.associate { data ->

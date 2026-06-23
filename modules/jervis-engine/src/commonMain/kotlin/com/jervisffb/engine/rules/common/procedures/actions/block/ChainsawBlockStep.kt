@@ -23,21 +23,19 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlitzActionContext
-import com.jervisffb.engine.model.context.ProcedureContext
+import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.hasContext
 import com.jervisffb.engine.model.isSkillAvailable
-import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BlockAction
+import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025KnockedDown
 import com.jervisffb.engine.rules.common.procedures.Bounce
-import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryMode
@@ -46,37 +44,28 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.utils.INVALID_ACTION
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
 
-data class ProjectileVomitContext(
-    val attacker: Player,
-    val attackerOriginalCoordinates: PitchCoordinate,
-    val defender: Player? = null,
-    val defenderOriginalCoordinates: PitchCoordinate? = null,
-    val vomitRoll: D6DieRoll? = null,
-    val injuryResult: RiskingInjuryContext? = null,
-    val isSuccess: Boolean = false,
-): ProcedureContext
-
 /**
- * Procedure for handling the "Vomit"-part of a Projectile Vomit Special Action.
- * It is in its own procedure, so we can more easily support Block, Blitz and
- * Frenzy.
+ * Procedure for handling the "Chainsaw"-part of a Chainsaw Special
+ * Action. It is in its own procedure, so we can more easily support Block,
+ * Blitz, and Frenzy.
  *
- * See [ProjectileVomitAction], [BlockAction] and [BlitzAction].
+ * See [ChainsawAction], [BlockAction] and [BlitzAction].
+ * Using Chainsaw for fouling is handled in [ChainsawFoulStep]
  */
-object ProjectileVomitStep: Procedure() {
+object ChainsawBlockStep: Procedure() {
     override val initialNode: Node = DecideOnFirstStep
     override fun onEnterProcedure(state: Game, rules: Rules): Command? {
-        val context = state.getContext<ProjectileVomitContext>()
+        val context = state.getContext<ChainsawContext>()
         val isBlitz = state.hasContext<BlitzActionContext>()
         return when (isBlitz) {
-            true -> ReportSkillUsed(context.attacker, SkillType.PROJECTILE_VOMIT)
+            true -> ReportSkillUsed(context.attacker, SkillType.CHAINSAW)
             false -> null
         }
     }
     override fun onExitProcedure(state: Game, rules: Rules): Command? {
-        val context = state.getContext<ProjectileVomitContext>()
+        val context = state.getContext<ChainsawContext>()
         val activateContext = state.getContext<ActivatePlayerContext>()
-        return if (context.injuryResult != null) {
+        return if (context.kickbackRoll != null) {
             // For a Block, this doesn't matter, but during a Blitz, the player is not
             // allowed to move further.
             UpdateContext(activateContext.copy(activationEndsImmediately = true))
@@ -85,13 +74,13 @@ object ProjectileVomitStep: Procedure() {
         }
     }
     override fun isValid(state: Game, rules: Rules) {
-        state.assertContext<ProjectileVomitContext>()
+        state.assertContext<ChainsawContext>()
     }
 
     // During a Blitz or Frenzy, the target is pre-defined, so we can skip this step
     object DecideOnFirstStep: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
-            val context = state.getContext<ProjectileVomitContext>()
+            val context = state.getContext<ChainsawContext>()
             return when (context.defender != null) {
                 true -> GotoNode(CheckForFoulAppearance)
                 false -> GotoNode(SelectDefenderOrEndAction)
@@ -116,12 +105,12 @@ object ProjectileVomitStep: Procedure() {
             return when (action) {
                 EndAction -> ExitProcedure()
                 is PlayerSelected -> {
-                    val context = state.getContext<ProjectileVomitContext>()
-                    val player = action.getPlayer(state)
+                    val context = state.getContext<ChainsawContext>()
+                    val selectedPlayer = action.getPlayer(state)
                     compositeCommandOf(
                         UpdateContext(context.copy(
-                            defender = player,
-                            defenderOriginalCoordinates = player.coordinates
+                            defender = selectedPlayer,
+                            defenderOriginalCoordinates = selectedPlayer.coordinates
                         )),
                         GotoNode(CheckForFoulAppearance),
                     )
@@ -133,15 +122,15 @@ object ProjectileVomitStep: Procedure() {
 
     object CheckForFoulAppearance: ParentNode() {
         override fun skipNodeFor(state: Game, rules: Rules): Node? {
-            val context = state.getContext<ProjectileVomitContext>()
+            val context = state.getContext<ChainsawContext>()
             val hasFoulAppearance = context.defender?.isSkillAvailable(SkillType.FOUL_APPEARANCE) ?: error("Missing defender: $context")
             return when (hasFoulAppearance) {
                 true -> null
-                false -> RollForProjectileVomit
+                false -> RollForChainsaw
             }
         }
         override fun onEnterNode(state: Game, rules: Rules): Command {
-            val breatheContext = state.getContext<ProjectileVomitContext>()
+            val breatheContext = state.getContext<ChainsawContext>()
             val foulAppearanceContext = FoulAppearanceContext(breatheContext.attacker, breatheContext.defender!!)
             return AddContext(foulAppearanceContext)
         }
@@ -152,8 +141,8 @@ object ProjectileVomitStep: Procedure() {
             return buildCompositeCommand {
                 add(RemoveContext<FoulAppearanceContext>())
                 when (context.isSuccess) {
-                    true -> add(GotoNode(RollForProjectileVomit))
-                    // Projectile Vomit ends the Action immediately, regardless of a failed Foul Appearance roll or not.
+                    true -> add(GotoNode(RollForChainsaw))
+                    // Chainsaw ends the Action immediately, regardless of a failed Foul Appearance roll or not.
                     false -> addAll(
                         UpdateContext(activePlayerContext.copy(activationEndsImmediately = true)),
                         ExitProcedure()
@@ -163,101 +152,78 @@ object ProjectileVomitStep: Procedure() {
         }
     }
 
-    object RollForProjectileVomit: ParentNode() {
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = ProjectileVomitRoll
+    object RollForChainsaw: ParentNode() {
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = ChainsawRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
-            val context = state.getContext<ProjectileVomitContext>()
-            val result = context.vomitRoll?.result ?: error("Missing die roll: $context")
-            val success = (result.value > 1)
-            return when (success) {
-                true -> GotoNode(ResolveDefenderHitByChainsaw)
-                false -> GotoNode(RollArmourAndInjuryForAttacker)
+            val context = state.getContext<ChainsawContext>()
+            return when (context.isSuccess) {
+                true -> GotoNode(ResolveChainsawHittingDefender)
+                false -> GotoNode(ResolveAttackerKnockedDown)
             }
         }
     }
 
-    object RollArmourAndInjuryForAttacker: ParentNode() {
+    object ResolveAttackerKnockedDown: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
-            val context = state.getContext<ProjectileVomitContext>()
+            val context = state.getContext<ChainsawContext>()
             val injuryContext = RiskingInjuryContext(
                 player = context.attacker,
                 causedBy = null,
-                mode = RiskingInjuryMode.PROJECTILE_VOMIT
+                mode = RiskingInjuryMode.KNOCKED_DOWN
             )
             return AddContext(injuryContext)
         }
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = RiskingInjuryRoll
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = BB2025KnockedDown
         override fun onExitNode(state: Game, rules: Rules): Command {
-            val injuryContext = state.getContext<RiskingInjuryContext>()
-            val vomitContext = state.getContext<ProjectileVomitContext>()
-            val attacker = vomitContext.attacker
-            val attackCoordinates = vomitContext.attackerOriginalCoordinates
-            val nextNode = calculateNextNodeAfterInjury(attacker, attackCoordinates)
-
             return compositeCommandOf(
-                UpdateContext(vomitContext.copy(
-                    injuryResult = injuryContext
-                )),
                 RemoveContext<RiskingInjuryContext>(),
-                nextNode
-            )
-        }
-    }
-
-    object ResolveDefenderHitByChainsaw: ParentNode() {
-        override fun onEnterNode(state: Game, rules: Rules): Command {
-            val context = state.getContext<ProjectileVomitContext>()
-            val injuryContext = RiskingInjuryContext(
-                player = context.defender!!,
-                causedBy = null,
-                mode = RiskingInjuryMode.PROJECTILE_VOMIT
-            )
-            return AddContext(injuryContext)
-        }
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = RiskingInjuryRoll
-        override fun onExitNode(state: Game, rules: Rules): Command {
-            val injuryContext = state.getContext<RiskingInjuryContext>()
-            val vomitContext = state.getContext<ProjectileVomitContext>()
-            val defender = vomitContext.defender ?: INVALID_GAME_STATE("Missing defender: $vomitContext")
-            val defenderCoordinates = vomitContext.defenderOriginalCoordinates ?: INVALID_GAME_STATE("Missing defender coordinates: $vomitContext")
-            val nextNode = calculateNextNodeAfterInjury(defender, defenderCoordinates)
-
-            return compositeCommandOf(
-                UpdateContext(vomitContext.copy(
-                    injuryResult = injuryContext
-                )),
-                RemoveContext<RiskingInjuryContext>(),
-                nextNode
-            )
-        }
-    }
-
-    object BounceBall: ParentNode() {
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
-        override fun onExitNode(state: Game, rules: Rules): Command {
-            return compositeCommandOf(
-                SetCurrentBall(null),
                 ExitProcedure()
             )
         }
     }
 
-    // --- HELPER METHODS ---
-
-    private fun calculateNextNodeAfterInjury(player: Player, originalPlayerCoordinates: PitchCoordinate): Command {
-        val rules = player.team.game.rules
-        return if (player.hasBall() && (!player.location.isOnPitch(rules) || !rules.isStanding(player))) {
-            val ball = player.ball ?: INVALID_GAME_STATE("Missing ball: $player")
-            compositeCommandOf(
-                SetBallState.bouncing(ball),
-                SetBallLocation(ball, originalPlayerCoordinates),
-                SetCurrentBall(ball),
-                GotoNode(BounceBall)
+    object ResolveChainsawHittingDefender: ParentNode() {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<ChainsawContext>()
+            val target = context.defender ?: INVALID_GAME_STATE("Missing target: $context")
+            val injuryContext = RiskingInjuryContext(
+                player = target,
+                causedBy = context.attacker,
+                mode = RiskingInjuryMode.CHAINSAW
             )
-        } else {
-            ExitProcedure()
+            return AddContext(injuryContext)
         }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = RiskingInjuryRoll
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+            return compositeCommandOf(
+                RemoveContext(context),
+                when (context.player.hasBall()) {
+                    true -> GotoNode(BounceBall)
+                    false -> ExitProcedure()
+                }
+            )
+        }
+    }
 
-
+    object BounceBall: ParentNode() {
+        override fun onEnterNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<ChainsawContext>()
+            val defender = context.defender ?: INVALID_GAME_STATE("Missing defender: $context")
+            val ball = defender.ball ?: INVALID_GAME_STATE("Defender did not have a ball: $context")
+            val ballCoordinates = context.defenderOriginalCoordinates ?: INVALID_GAME_STATE("Missing ball coordinates: $context")
+            return compositeCommandOf(
+                SetBallState.bouncing(ball),
+                SetBallLocation(ball, ballCoordinates),
+                SetCurrentBall(ball),
+            )
+        }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = Bounce
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            return compositeCommandOf(
+                SetCurrentBall(null),
+                ExitProcedure(),
+            )
+        }
     }
 }

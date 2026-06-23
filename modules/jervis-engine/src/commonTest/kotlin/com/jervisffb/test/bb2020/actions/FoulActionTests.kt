@@ -24,6 +24,7 @@ import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.moveTo
 import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.assertStunned
+import com.jervisffb.test.utils.putProne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -46,7 +47,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun selectPronePlayer() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
         )
@@ -68,7 +69,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun canOnlyFoulSelectedPlayer() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         homeTeam["H2".playerId].state = PlayerState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
@@ -115,7 +116,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun offensiveAssists() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         homeTeam["H2".playerId].state = PlayerState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
@@ -132,10 +133,10 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun defensiveAssists() {
-        awayTeam["A1".playerId].state = PlayerState.PRONE
-        awayTeam["A2".playerId].state = PlayerState.PRONE
-        awayTeam["A3".playerId].state = PlayerState.PRONE
-        homeTeam["H2".playerId].state = PlayerState.PRONE
+        awayTeam["A1".playerId].putProne()
+        awayTeam["A2".playerId].putProne()
+        awayTeam["A3".playerId].putProne()
+        homeTeam["H2".playerId].putProne()
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
@@ -150,7 +151,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun sentOffDoubleArmourRoll() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         assertEquals(1, awayTeam.turnData.foulActions)
         assertEquals(awayTeam, state.activeTeam)
         controller.rollForward(
@@ -169,7 +170,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun sentOffDoubleInjuryRoll() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         assertEquals(1, awayTeam.turnData.foulActions)
         assertEquals(awayTeam, state.activeTeam)
         controller.rollForward(
@@ -189,7 +190,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun actionEndsAfterFoul() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
@@ -211,7 +212,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun foulDoesNotRequireMove() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -224,7 +225,7 @@ class FoulActionTests: JervisGameBB2020Test() {
 
     @Test
     fun ballBounceIfBanned() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A10", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),

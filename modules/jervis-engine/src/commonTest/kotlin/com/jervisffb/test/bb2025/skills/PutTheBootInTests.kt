@@ -5,7 +5,6 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.getSkill
 import com.jervisffb.engine.rules.bb2025.skills.PutTheBootIn
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -41,7 +40,7 @@ class PutTheBootInTests: JervisGameBB2025Test() {
 
     @Test
     fun automaticallyUsePutTheBootIn() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -55,9 +54,9 @@ class PutTheBootInTests: JervisGameBB2025Test() {
 
     @Test
     fun doesNotDoubleCountIfPlayerIsFree() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
-        homeTeam["H2".playerId].state = PlayerState.PRONE
-        homeTeam["H3".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
+        homeTeam["H2".playerId].putProne()
+        homeTeam["H3".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -74,7 +73,7 @@ class PutTheBootInTests: JervisGameBB2025Test() {
         awayTeam["A1".playerId].addSkill(SkillType.PUT_THE_BOOT_IN.id())
         awayTeam["A2".playerId].removeSkill(awayTeam["A2".playerId].getSkill<PutTheBootIn>())
         awayTeam["A3".playerId].addSkill(SkillType.PUT_THE_BOOT_IN.id())
-        homeTeam["H2".playerId].state = PlayerState.PRONE
+        homeTeam["H2".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A2", PlayerStandardActionType.FOUL),
             PlayerSelected("H2".playerId),
@@ -88,7 +87,7 @@ class PutTheBootInTests: JervisGameBB2025Test() {
 
     @Test
     fun skillOnFoulerDoesNotCount() {
-        homeTeam["H2".playerId].state = PlayerState.PRONE
+        homeTeam["H2".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A2", PlayerStandardActionType.FOUL),
             PlayerSelected("H2".playerId),
@@ -115,8 +114,8 @@ class PutTheBootInTests: JervisGameBB2025Test() {
 
     @Test
     fun cannotUseItIfProne() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
-        awayTeam["A2".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
+        awayTeam["A2".playerId].putProne()
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -129,7 +128,7 @@ class PutTheBootInTests: JervisGameBB2025Test() {
 
     @Test
     fun onlyWorksOnOffensiveAssists() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].putProne()
         homeTeam["H2".playerId].addSkill(SkillType.PUT_THE_BOOT_IN)
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),

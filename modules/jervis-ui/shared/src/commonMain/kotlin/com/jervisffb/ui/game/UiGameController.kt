@@ -49,6 +49,7 @@ import com.jervisffb.ui.game.state.actionwheel.BribeRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BrilliantCoachingKickingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BrilliantCoachingReceivingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CatchWheelController
+import com.jervisffb.ui.game.state.actionwheel.ChainsawWheelController
 import com.jervisffb.ui.game.state.actionwheel.ChargePlayersRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CheeringFansKickingTeamRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.CheeringFansReceivingTeamRollWheelController
@@ -112,6 +113,7 @@ import com.jervisffb.ui.game.state.actionwheel.UseBigHandWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBlockWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBribeWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseBullseyeWheelController
+import com.jervisffb.ui.game.state.actionwheel.UseChainsawWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseClawsWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDirtyPlayerWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseDivingCatchWheelController
@@ -238,6 +240,7 @@ class UiGameController(
         BoneHeadWheelController,
         BreatheFireWheelController,
         CatchWheelController,
+        ChainsawWheelController,
         ChompWheelController,
         DauntlessWheelController,
         DeviateRollWheelController,
@@ -280,6 +283,7 @@ class UiGameController(
         UseBigHandWheelController,
         UseBlockWheelController,
         UseBullseyeWheelController,
+        UseChainsawWheelController,
         UseClawsWheelController,
         UseDirtyPlayerWheelController,
         UseDivingCatchWheelController,

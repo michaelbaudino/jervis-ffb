@@ -187,8 +187,12 @@ fun Player.assertProne() {
 /**
  * Test Helper, checking if a player is Stunned
  */
-fun Player.assertStunned() {
-    assertEquals(PlayerState.STUNNED, state)
+fun Player.assertStunned(ownTeamTurn: Boolean = false) {
+    val expectedState = when (ownTeamTurn) {
+        true -> PlayerState.STUNNED_OWN_TURN
+        false -> PlayerState.STUNNED
+    }
+    assertEquals(expectedState, state)
     assertNull(intermediateState)
     assertFalse(hasTackleZones, "Stunned players should not have tackle zones")
     assertTrue(location.isOnPitch(team.game.rules), "Stunned players should be on the Pitch")

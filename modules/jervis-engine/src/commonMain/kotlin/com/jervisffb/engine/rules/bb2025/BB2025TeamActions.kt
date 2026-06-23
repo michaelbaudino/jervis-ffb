@@ -10,6 +10,7 @@ import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.actions.TeamActions
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireAction
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChainsawAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitAction
 import com.jervisffb.engine.rules.common.procedures.actions.block.StabAction
@@ -115,7 +116,17 @@ class BB2025TeamActions : TeamActions() {
             val action = when (it) {
 //                PlayerSpecialActionType.BALL_AND_CHAIN -> TODO()
 //                PlayerSpecialActionType.BOMBARDIER -> TODO()
-//                PlayerSpecialActionType.CHAINSAW -> TODO()
+                PlayerSpecialActionType.CHAINSAW -> {
+                    PlayerAction(
+                        name = "Chainsaw",
+                        type = PlayerSpecialActionType.CHAINSAW,
+                        countsAs = null,
+                        availablePrTurn = Int.MAX_VALUE,
+                        procedure = ChainsawAction,
+                        worksDuringBlitz = true,
+                        compulsory = false,
+                    )
+                }
 //                PlayerSpecialActionType.HYPNOTIC_GAZE -> TODO()
 //                PlayerSpecialActionType.KICK_TEAM_MATE -> TODO()
                 PlayerSpecialActionType.MULTIPLE_BLOCK -> {

@@ -69,6 +69,46 @@ is at max range.
 
 This behavior can be disabled in the Auto Actions menu.
 
+## Page 126 - Chainsaw
+
+Chainsaw has changed since BB2020, so there have been a few questions about how
+it works. 
+
+Jervis are using the following semantics, which are in line with the extra 
+clarifications provided by NAF:
+
+- While the Trait is marked as mandatory, the NAF Discord seems to have the
+  consensus that it applies only to the AV modifier and not the skill itself. 
+  This means that a Chainsaw player is allowed to declare e.g. Move or Pass 
+  actions and isn't restricted to only the Chainsaw Special Action and Blitz.
+- Mighty Blow can be combined with Chainsaw on Armour Rolls.
+- The Chainsaw modifier cannot be applied if an attacker blocks and rolls 
+  "Player Down". It only works when the player with Chainsaw performs the Block
+  Action.
+- A Prone player can declare a Blitz, stand up and replace the Block with a 
+  Chainsaw Special Action.
+- A Prone player cannot use Jump Up and replace the Block with a Chainsaw 
+  Special Action. The reason being that Jump Up specifically calls out that you
+  are declaring a Block Action.
+- During a Foul, using a Chainsaw is optional ("...Should they wish..."), and it
+  can be used after rolling the dice. 
+- If a Kickback is rolled during a Foul, the Foul is canceled, and we only roll
+  for Armour for the Chainsaw player. This interaction is not described in the 
+  rulebook, but seems the natural consequence of the Fouler being Knocked Down. 
+
+!!! naf "NAF"
+
+    Mighty Blow can be applied to armor or injury roll when blocking a player 
+    with Chainsaw, in addition to +3 modifier.
+
+!!! naf "NAF"
+
+    No +3 modifier applies on a failed Block against a Chainsaw player.
+
+!!! naf "NAF"
+
+    The Jump Up Block cannot be replaced with a Special Action.
+
 ## Page 127 - Cloud Burster
 Technically, this skill is optional, but you would only want to disable it if 
 you wanted the opponent to "accidentally" catch the ball, but in that case

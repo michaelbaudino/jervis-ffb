@@ -50,6 +50,7 @@ import com.jervisffb.engine.rules.common.procedures.TheKickOff
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOffContext
+import com.jervisffb.engine.rules.common.procedures.actions.foul.ChainsawFoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.foul.FoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.move.StandardMoveStep
 import com.jervisffb.engine.rules.common.procedures.actions.pass.PassContext
@@ -79,6 +80,7 @@ import kotlin.time.ExperimentalTime
  * During Block action:
  * - Block (skill usage)
  * - Bullseye (skill usage)
+ * - Chainsaw (skill usage)
  * - Claws (skill usage)
  * - Diving Catch (ball on target)
  * - Dodge (skill usage)
@@ -640,5 +642,15 @@ object UseIronHardSkinWheelController: UseSkillWheelController(SkillType.IRON_HA
     override fun getActionWheelCenter(state: Game): PitchCoordinate {
         val context = state.getContext<RiskingInjuryContext>()
         return context.player.coordinates
+    }
+}
+
+object UseChainsawWheelController: UseSkillWheelController(SkillType.CHAINSAW) {
+    override val nodes: Set<Node> = setOf(
+        ChainsawFoulStep.ChooseToUseChainsaw,
+    )
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        val context = state.getContext<FoulContext>()
+        return context.fouler.coordinates
     }
 }

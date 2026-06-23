@@ -344,6 +344,11 @@ fun catch(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arr
     reroll,
 )
 
+fun chainsawRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
 fun pickup(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
     roll,
     reroll,

@@ -15,6 +15,7 @@ import com.jervisffb.test.ext.rollForward
 import com.jervisffb.test.utils.assertProne
 import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.makeDistracted
+import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -117,7 +118,7 @@ class DefensiveTests: JervisGameBB2025Test() {
         assertTrue(rules.isDistracted(assister))
 
         val foulTarget = homeTeam["H1".playerId]
-        foulTarget.state = PlayerState.PRONE
+        foulTarget.putProne()
 
         val fouler = awayTeam["A1".playerId]
         fouler.addSkill(SkillType.DEFENSIVE)
