@@ -19,7 +19,7 @@ actual fun startEmbeddedServer(
     newConnectionHandler: suspend (DefaultWebSocketSession, GameId) -> Unit,
 ): Any {
     val LOG = jervisLogger()
-    val platformServer = embeddedServer(Netty,8080) {
+    val platformServer = embeddedServer(Netty, port = server.port) {
         install(WebSockets)
         {
             pingPeriod = 15.seconds
@@ -61,4 +61,3 @@ actual fun stopEmbeddedServer(server: Any, immediately: Boolean) {
         throw IllegalArgumentException("Invalid server type: $server")
     }
 }
-

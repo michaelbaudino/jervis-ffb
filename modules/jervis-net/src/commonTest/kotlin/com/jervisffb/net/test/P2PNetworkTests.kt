@@ -45,6 +45,9 @@ import com.jervisffb.utils.runBlocking
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.withTimeout
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -58,8 +61,14 @@ import kotlin.time.Duration.Companion.seconds
  * Note, P2P hosts are not available on WASM due to restrictions in the
  * server sandbox.
  */
+@OptIn(ExperimentalAtomicApi::class)
 class P2PNetworkTests {
 
+    companion object {
+        private val nextServerPort = AtomicInt(18_080)
+    }
+
+    private val serverPort = nextServerPort.fetchAndIncrement()
     val rules = StandardBB2020Rules().toBuilder().run {
         diceRollsOwner = DiceRollOwner.ROLL_ON_CLIENT
         undoActionBehavior = UndoActionBehavior.ALLOWED
@@ -73,17 +82,24 @@ class P2PNetworkTests {
         hostTeam = createDefaultHomeTeamBB2020(rules),
         clientCoach = null,
         clientTeam = null,
-        testMode = true
+        testMode = true,
+        port = serverPort
     )
 
+    private fun runP2PNetworkTest(block: suspend () -> Unit) = runBlocking {
+        block()
+    }
+
+    private fun joinGameUrl(gameId: String = "test"): String = "ws://localhost:$serverPort/joinGame?id=$gameId"
+
     @Test
-    fun startP2PGame() = runBlocking {
+    fun startP2PGame() = runP2PNetworkTest {
         // Start server
         server.start()
 
-        val conn1 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn1 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn1.start()
-        val conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "client")
+        val conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "client")
         conn2.start()
 
         // Host Joins
@@ -185,13 +201,13 @@ class P2PNetworkTests {
     // Test for a Host starting a game, a Client joins, selects a team, regrets the choice
     // and then submit another team that gets accepted
     @Test
-    fun clientRejectsGame() = runBlocking {
+    fun clientRejectsGame() = runP2PNetworkTest {
         // Start server
         server.start()
 
-        val conn1 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn1 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn1.start()
-        var conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "client")
+        var conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "client")
         conn2.start()
 
         hostAndClientSelectTeams(conn1, conn2)
@@ -211,7 +227,7 @@ class P2PNetworkTests {
         consumeServerMessage<CoachLeftMessage>(conn1)
 
         // Client reconnects
-        conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "client")
+        conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "client")
         conn2.start()
         val join2 = JoinGameAsCoachMessage(
             GameId("test"),
@@ -256,13 +272,13 @@ class P2PNetworkTests {
     // Test a Host setting up a game, a Client joins and selects a team
     // When we get to accepting the game, the Host rejects.
     @Test
-    fun hostRejectsGame() = runBlocking {
+    fun hostRejectsGame() = runP2PNetworkTest {
         // Start server
         server.start()
 
-        val conn1 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn1 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn1.start()
-        var conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "client")
+        var conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "client")
         conn2.start()
 
         hostAndClientSelectTeams(conn1, conn2)
@@ -286,10 +302,10 @@ class P2PNetworkTests {
 
 
     @Test
-    fun closeSessionWithoutSendingData() = runBlocking {
+    fun closeSessionWithoutSendingData() = runP2PNetworkTest {
         server.start()
         try {
-            val conn = JervisClientWebSocketConnection("test".gameId, "ws://localhost:8080/joinGame?id=test", "host")
+            val conn = JervisClientWebSocketConnection("test".gameId, joinGameUrl(), "host")
             conn.start()
             conn.close()
             assertEquals(JervisExitCode.CLIENT_CLOSING.code, conn.getCloseReason()?.code)
@@ -301,10 +317,10 @@ class P2PNetworkTests {
     // This is only possible when working around the current APIs. But since we do not control the
     // Client connecting, we need to verify this case as well.
     @Test
-    fun sendingUnsupportedMessageStopsConnection() = runBlocking {
+    fun sendingUnsupportedMessageStopsConnection() = runP2PNetworkTest {
         server.start()
         val client = getHttpClient()
-        val session = client.webSocketSession("ws://localhost:8080/joinGame?id=test")
+        val session = client.webSocketSession(joinGameUrl())
         try {
             session.send(Frame.Text("Hello World"))
             val closeReason = session.closeReason.await()
@@ -319,9 +335,9 @@ class P2PNetworkTests {
     }
 
     @Test
-    fun sendingWrongInitialMessageTerminatesConnection() = runBlocking {
+    fun sendingWrongInitialMessageTerminatesConnection() = runP2PNetworkTest {
         server.start()
-        val conn = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn.start()
         try {
             // Sending a message that is not a JoinAs* message.
@@ -338,9 +354,9 @@ class P2PNetworkTests {
     }
 
     @Test
-    fun sendingWrongGameIdTerminatesConnection() = runBlocking {
+    fun sendingWrongGameIdTerminatesConnection() = runP2PNetworkTest {
         server.start()
-        val conn = JervisClientWebSocketConnection(GameId("wrongGameId"), "ws://localhost:8080/joinGame?id=wrongGameId", "host")
+        val conn = JervisClientWebSocketConnection(GameId("wrongGameId"), joinGameUrl("wrongGameId"), "host")
         conn.start()
         try {
             withTimeout(5.seconds) {
@@ -359,13 +375,13 @@ class P2PNetworkTests {
     // to send another message. This is a good behavior for development, but maybe we should consider
     // terminating the connection in "prod" mode.
     @Test
-    fun sendingWrongMessageAfterInitialJoinDoesNotTerminateSession() = runBlocking {
+    fun sendingWrongMessageAfterInitialJoinDoesNotTerminateSession() = runP2PNetworkTest {
         // Start server
         server.start()
 
-        val conn1 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn1 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn1.start()
-        val conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn2.start()
 
         // Host Joins
@@ -517,11 +533,11 @@ class P2PNetworkTests {
 
     // Helper method that starts a came and puts it at the "Waiting for first action" stage.
     // Connections and server will be closed regardless if any exception is thrown.
-    private fun startGame(block: suspend (JervisClientWebSocketConnection, JervisClientWebSocketConnection) -> Unit) = runBlocking {
+    private fun startGame(block: suspend (JervisClientWebSocketConnection, JervisClientWebSocketConnection) -> Unit) = runP2PNetworkTest {
         server.start()
-        val conn1 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "host")
+        val conn1 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "host")
         conn1.start()
-        val conn2 = JervisClientWebSocketConnection(GameId("test"), "ws://localhost:8080/joinGame?id=test", "client")
+        val conn2 = JervisClientWebSocketConnection(GameId("test"), joinGameUrl(), "client")
         conn2.start()
         val join1 = JoinGameAsCoachMessage(
             GameId("test"),

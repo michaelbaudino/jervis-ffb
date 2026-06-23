@@ -26,6 +26,7 @@ class LightServer(
     initialActions: List<GameAction> = emptyList(),
     testMode: Boolean = false, // If `true`, event handling is done in a deterministic manner
     random: Random = Random.Default,
+    val port: Int = 8080,
 ) {
     companion object {
         val LOG = jervisLogger()
@@ -69,4 +70,3 @@ class LightServer(
         LOG.i { "[Server] Server stopped" }
     }
 }
-
