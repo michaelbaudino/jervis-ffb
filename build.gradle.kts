@@ -283,3 +283,19 @@ tasks.register<Copy>("updateFFBResources") {
     }
     into(targetDir) // Move files into the final destination
 }
+
+// HACK: The Kotlin WASM plugin generates a root package.json with
+// "packageManager": "yarn@4.10.2". Yarn 1.22.22 rejects this since it
+// only accepts yarn@0.x or yarn@1.x. We pre-patch the generated file.
+tasks.matching { it.name == "wasmRootPackageJson" }.configureEach {
+    doLast {
+        val pkgFile = file("${layout.buildDirectory.get().asFile}/wasm/package.json")
+        if (pkgFile.exists()) {
+            val content = pkgFile.readText()
+            val fixed = content.replace(Regex("\"packageManager\"\\s*:\\s*\"[^\"]*\"\\s*,?\\s*"), "")
+            if (fixed != content) {
+                pkgFile.writeText(fixed)
+            }
+        }
+    }
+}

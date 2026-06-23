@@ -19,6 +19,7 @@ import com.jervisffb.resources.bb2020.CHAOS_DWARF_TEAM_BB2020
 import com.jervisffb.resources.bb2020.ELVEN_UNION_TEAM_BB2020
 import com.jervisffb.resources.bb2020.HUMAN_TEAM_BB2020
 import com.jervisffb.resources.bb2020.KHORNE_TEAM_BB2020
+import com.jervisffb.resources.bb2020.LIZARDMEN_TEAM_BB2020
 import com.jervisffb.resources.bb2020.SKAVEN_TEAM_BB2020
 
 typealias FumbblGame = com.jervisffb.fumbbl.net.model.Game
@@ -85,6 +86,13 @@ private fun extractTeam(rules: Rules, team: FumbblTeam): Team {
                 throw IllegalStateException("Could not find matching position: ${fumbblPlayer.positionId}")
             }
             val position = roster.positions.firstOrNull { it.titleSingular == fumbblPosition.positionName }
+                ?: run {
+                    val mappedName = when (fumbblPosition.positionName) {
+                        "Skink Lineman" -> "Skink Runner Lineman"
+                        else -> null
+                    }
+                    if (mappedName != null) roster.positions.firstOrNull { it.titleSingular == mappedName } else null
+                }
             if (position == null) {
                 throw IllegalStateException(
                     "Could not find position '${fumbblPosition.positionName}' in '${team.roster.rosterName}'",
@@ -113,6 +121,7 @@ private fun extractRoster(roster: FumbblRoster): Roster {
         "Human" -> HUMAN_TEAM_BB2020
         "Khorne" -> KHORNE_TEAM_BB2020
         "Elven Union" -> ELVEN_UNION_TEAM_BB2020
+        "Lizardmen" -> LIZARDMEN_TEAM_BB2020
         "Skaven" -> SKAVEN_TEAM_BB2020
         else -> TODO("Missing team: ${roster.rosterName}")
     }
