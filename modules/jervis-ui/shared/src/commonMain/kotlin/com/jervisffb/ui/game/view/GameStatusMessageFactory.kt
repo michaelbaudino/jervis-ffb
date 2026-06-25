@@ -45,6 +45,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesStep
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.Charge
 import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.DodgySnack
 import com.jervisffb.engine.rules.builder.DiceRollOwner
+import com.jervisffb.engine.rules.common.procedures.AnimalSavageryRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRoll
 import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.Catch
@@ -179,6 +180,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
         val rollDiceScenarios = listOf(
             AccuracyRoll.ReRollDie to "Re-roll D6 to Pass the Ball",
             AccuracyRoll.RollDie to "Roll D6 to Pass the Ball",
+            AnimalSavageryRoll.RollDie to "Roll D6 for Animal Savagery",
+            AnimalSavageryRoll.ReRollDie to "Re-roll D6 for Animal Savagery",
             ArgueTheCallRoll.RollDie to "Roll D6 to Argue the Call",
             BB2020CheeringFans.KickingTeamRollDie to "Roll D6 for Cheering Fans",
             BB2020CheeringFans.ReceivingTeamRollDie to "Roll D6 for Cheering Fans",
@@ -272,6 +275,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
         )
         val askForRerollScenarios = listOf(
             AccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
+            AnimalSavageryRoll.ChooseReRollSource to "Accept Animal Savagery Result or Reroll D6?",
             BoneHeadRoll.ChooseReRollSource to "Accept Bone Head Result or Reroll D6?",
             BreatheFireRoll.ChooseReRollSource to "Accept Breathe Fire Result or Reroll D6?",
             CatchRoll.ChooseReRollSource to "Accept Catch Result or Reroll D6?",

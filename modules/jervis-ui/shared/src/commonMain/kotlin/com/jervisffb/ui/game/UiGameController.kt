@@ -39,6 +39,7 @@ import com.jervisffb.ui.game.state.UiActionProviderGroup
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2020WheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025PassWheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025ThrowTeamMateWheelController
+import com.jervisffb.ui.game.state.actionwheel.AnimalSavageryWheelController
 import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallWheelController
 import com.jervisffb.ui.game.state.actionwheel.AwayTeamFanFactorRoll
@@ -236,6 +237,7 @@ class UiGameController(
         AccuracyBB2020WheelController,
         AccuracyBB2025PassWheelController,
         AccuracyBB2025ThrowTeamMateWheelController,
+        AnimalSavageryWheelController,
         BounceRollWheelController,
         BoneHeadWheelController,
         BreatheFireWheelController,

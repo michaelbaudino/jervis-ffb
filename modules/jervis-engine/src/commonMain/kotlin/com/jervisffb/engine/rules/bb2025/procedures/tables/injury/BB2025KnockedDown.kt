@@ -32,12 +32,14 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.SteadyFootingRollContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.reports.ReportSteadyFootingResult
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.skills.SafePairOfHandsStep
+import com.jervisffb.engine.rules.common.procedures.AnimalSavageryContext
 import com.jervisffb.engine.rules.common.procedures.Bounce
 import com.jervisffb.engine.rules.common.procedures.SteadyFootingRoll
 import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
@@ -138,8 +140,15 @@ object BB2025KnockedDown: Procedure() {
                 // Note, in BB2020, thrown players where knocked down after landing on other players,
                 // but this was explicitly not a turnover (after errata). The wording in BB2025
                 // is the original wording, so landing on your team players is always a turnover for now.
+                //
+                // If the player was Knocked Down by a player with Animal Savagery, it is never a turn-over
+                // unless the player was holding the ball.
                 val isOnActiveTeam = (context.player.team == state.activeTeam)
-                if (isOnActiveTeam) {
+                val isAnimalSavageryBlock = (state.getContextOrNull<AnimalSavageryContext>()?.selectedAdjacentPlayer == context.player)
+                val hasBall = context.player.hasBall()
+                if (isOnActiveTeam && !isAnimalSavageryBlock) {
+                    add(SetTurnOver(TurnOver.STANDARD))
+                } else if (isAnimalSavageryBlock && hasBall) {
                     add(SetTurnOver(TurnOver.STANDARD))
                 }
                 if (player.hasBall()) {

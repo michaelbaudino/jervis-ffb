@@ -38,6 +38,8 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopD
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesRoll
+import com.jervisffb.engine.rules.common.procedures.AnimalSavageryContext
+import com.jervisffb.engine.rules.common.procedures.AnimalSavageryRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRoll
 import com.jervisffb.engine.rules.common.procedures.BoneHeadRollContext
 import com.jervisffb.engine.rules.common.procedures.CatchRoll
@@ -81,6 +83,7 @@ import kotlin.time.ExperimentalTime
  * Abstract class for handling all single D6 with a potential reroll like:
  *
  * - Accuracy
+ * - Animal Savagery
  * - BoneHead
  * - Breathe Fire
  * - Catch
@@ -469,6 +472,24 @@ object BoneHeadWheelController : D6WithRerollWheelController() {
     }
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<BoneHeadRollContext>()
+        return context.roll?.originalRoll ?: error("No roll found in context")
+    }
+}
+
+/**
+ * Define the Action-Wheel layout when rolling for Animal Savagery.
+ */
+object AnimalSavageryWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "animal-savagery"
+    override val diceRollType: DiceRollType = DiceRollType.ANIMAL_SAVAGERY
+    override val rollDiceNode: Node = AnimalSavageryRoll.RollDie
+    override val chooseRerollSourceNode: Node = AnimalSavageryRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = AnimalSavageryRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<AnimalSavageryContext>().player.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<AnimalSavageryContext>()
         return context.roll?.originalRoll ?: error("No roll found in context")
     }
 }

@@ -19,6 +19,7 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffect
+import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.rerolls.TeamReroll
 import com.jervisffb.engine.rules.common.skills.Skill
@@ -177,10 +178,19 @@ fun Player.assertStanding() {
 /**
  * Test Helper, checking if a player is Prone
  */
+fun Player.assertDistracted() {
+    assertNull(intermediateState)
+    assertFalse(hasTackleZones, "Distracted players should not have tackle zones")
+    assertTrue(statusEffects.any { it.type == PlayerStatusEffectType.DISTRACTED })
+}
+
+/**
+ * Test Helper, checking if a player is Prone
+ */
 fun Player.assertProne() {
     assertEquals(PlayerState.PRONE, state)
     assertNull(intermediateState)
-    assertFalse(hasTackleZones, "Stunned players should not have tackle zones")
+    assertFalse(hasTackleZones, "Prone players should not have tackle zones")
     assertTrue(location.isOnPitch(team.game.rules), "Prone players should be on the Pitch")
 }
 

@@ -344,7 +344,6 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
    - [x] Work on Foul
    - [x] Work on Stab/Projectile Vomit (but no modifiers apply)
    - [x] Work on Projectil Vomit
-   - [x] Work on Animal Savagery
    - [x] Works against Claws
    - [x] Mighty Blow
    - [x] Lethal Flight
@@ -541,11 +540,13 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 
 ## Traits
 
-- [ ] Animal Savagery*
-  - [ ] Becomes Distracted on a failure
-  - [ ] Must use Mighty Blow on Armour 
-  - [ ] Must use Claw
-  - [ ] Can continue action if not distracted or a turnover happend (FAQ May 2026)
+- [x] Animal Savagery*
+  - [x] Becomes Distracted on a failure
+  - [x] Must use Mighty Blow on Armour 
+  - [x] Must use Claw
+  - [x] Can continue action if not distracted or a turnover happend (FAQ May 2026)
+  - [x] +2 modifier on Block/Blitz
+  - [x] Iron Hard Skin does not work (Not opponent player)
 - [ ] Animosity (X)*
 - [ ] Always Hungry*
   - [ ] Eating a player only causes turnover if it was holding the ball (FAQ May 2026)

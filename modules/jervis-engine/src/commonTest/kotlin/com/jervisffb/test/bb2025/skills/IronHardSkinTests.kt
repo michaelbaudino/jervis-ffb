@@ -33,7 +33,6 @@ import com.jervisffb.test.utils.assertStanding
 import com.jervisffb.test.utils.assertStunned
 import com.jervisffb.test.utils.putProne
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -146,12 +145,6 @@ class IronHardSkinTests: JervisGameBB2025Test() {
         )
         state.assertNoActivePlayer()
         defender.assertStanding()
-    }
-
-    @Ignore
-    @Test
-    fun workOnAnimalSavagery() {
-        // Wait for Animal Savagery support
     }
 
     @Test

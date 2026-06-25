@@ -43,12 +43,14 @@ import com.jervisffb.engine.model.getSkill
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.ArmourModifier
+import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.model.modifiers.MightyBlowArmourModifier
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportSkillUsed
 import com.jervisffb.engine.rules.DiceRollType
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.skills.LoneFouler
+import com.jervisffb.engine.rules.common.procedures.AnimalSavageryContext
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.ChainsawFoulStep
 import com.jervisffb.engine.rules.common.procedures.actions.throwteammate.ThrowTeamMateContext
@@ -96,7 +98,7 @@ import kotlinx.collections.immutable.toPersistentList
  * 1. Arm Bar (If in the middle of a Dodge, Jump or Leap)
  */
 object ArmourRoll: Procedure() {
-    override val initialNode: Node = AddMandatoryModifiers
+    override val initialNode: Node = RollDice
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         val context = state.getContext<RiskingInjuryContext>()
         // According to the rules on page 37 (BB2025), it is always the opposing
@@ -122,27 +124,6 @@ object ArmourRoll: Procedure() {
     }
     override fun isValid(state: Game, rules: Rules) {
         state.assertContext<RiskingInjuryContext>()
-    }
-
-    object AddMandatoryModifiers: ComputationNode() {
-        override fun apply(state: Game, rules: Rules): Command {
-            val context = state.getContext<RiskingInjuryContext>()
-
-            // If the player being Knocked Down or Falls Over is holding a Chainsaw, the +3 modifier is always applied
-            val playerHasChainsaw = (context.player.hasSkill(SkillType.CHAINSAW) && (context.mode in listOf(RiskingInjuryMode.FALLING_OVER, RiskingInjuryMode.KNOCKED_DOWN, RiskingInjuryMode.BAD_LANDING)))
-
-            // If the opponent is holding a chainsaw (and is using it), add +3 to the armour roll
-            val chainsawContext = state.getContextOrNull<ChainsawContext>()
-            val attackerHasChainsaw= (chainsawContext != null && chainsawContext.attacker == context.causedBy && chainsawContext.isSuccess)
-
-            return compositeCommandOf(
-                when (playerHasChainsaw || attackerHasChainsaw) {
-                    true -> UpdateContext(context.copy(armourModifiers = context.armourModifiers.add(ArmourModifier.CHAINSAW)))
-                    false -> null
-                },
-                GotoNode(RollDice)
-            )
-        }
     }
 
     object RollDice : ActionNode() {
@@ -203,7 +184,6 @@ object ArmourRoll: Procedure() {
         }
     }
 
-
     object ChooseToUseIronHardSkin: ActionNode() {
         override fun actionOwner(state: Game, rules: Rules): Team {
             return state.getContext<RiskingInjuryContext>().player.team
@@ -215,8 +195,9 @@ object ArmourRoll: Procedure() {
 
             val hasSkill = context.player.isSkillAvailable(SkillType.IRON_HARD_SKIN)
             val alreadyUsedIhs = context.usedIronHardSkin
+            val attackedByOwnTeam = (context.causedBy?.team == context.player.team)
             val ihsIsUseful = when (context.mode) {
-                RiskingInjuryMode.CHAINSAW -> true // The chainsaw modifier was already added,
+                RiskingInjuryMode.CHAINSAW -> true
                 RiskingInjuryMode.KNOCKED_DOWN -> {
                     val throwPlayerContext = state.getContextOrNull<ThrowTeamMateContext>()
                     val thrownPlayer = throwPlayerContext?.thrownPlayer
@@ -241,7 +222,7 @@ object ArmourRoll: Procedure() {
                 else -> false
             }
 
-            return when (hasSkill && ihsIsUseful && !alreadyUsedIhs) {
+            return when (hasSkill && ihsIsUseful && !alreadyUsedIhs && !attackedByOwnTeam) {
                 true -> listOf(ConfirmWhenReady, CancelWhenReady)
                 false -> listOf(ContinueWhenReady)
             }
@@ -253,14 +234,61 @@ object ArmourRoll: Procedure() {
             return when (useIronHardSkin) {
                 true -> compositeCommandOf(
                     ReportSkillUsed(context.player, SkillType.IRON_HARD_SKIN),
-                    UpdateContext(context.copy(
-                        armourModifiers = if (context.mode == RiskingInjuryMode.CHAINSAW) context.armourModifiers.remove(ArmourModifier.CHAINSAW) else context.armourModifiers,
-                        usedIronHardSkin = true
-                    )),
-                    GotoNode(DecideOnModifierPath)
+                    UpdateContext(context.copy(usedIronHardSkin = true)),
+                    GotoNode(AddMandatoryModifiers)
                 )
-                false -> GotoNode(DecideOnModifierPath)
+                false -> GotoNode(AddMandatoryModifiers)
             }
+        }
+    }
+
+    object AddMandatoryModifiers: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+            val modifiers = mutableSetOf<DiceModifier>()
+
+            // If the player being Knocked Down or Falls Over is holding a Chainsaw, the +3 modifier is always applied
+            val playerHasChainsaw = (context.player.hasSkill(SkillType.CHAINSAW) && (context.mode in listOf(RiskingInjuryMode.FALLING_OVER, RiskingInjuryMode.KNOCKED_DOWN, RiskingInjuryMode.BAD_LANDING)))
+            // If the opponent is holding a chainsaw (and is using it), add +3 to the armour roll
+            val chainsawContext = state.getContextOrNull<ChainsawContext>()
+            val attackerHasChainsaw= (chainsawContext != null && chainsawContext.attacker == context.causedBy && chainsawContext.isSuccess)
+            if ((playerHasChainsaw || attackerHasChainsaw) && !context.usedIronHardSkin) {
+                modifiers.add(ArmourModifier.CHAINSAW)
+            }
+
+            // If this is during an Animal Savagery Block, we must use Claws/Mighty blow
+            // The exact decision isn't defined by the rulebook, but since it is optional
+            // to use Mighty Blow on the Injury Roll, it seems fine to just use the rule
+            // that any role above 8 will use Claw over Mighty Blow
+            val animalSavageryContext = state.getContextOrNull<AnimalSavageryContext>()
+            var forceUseClaws = false
+            var forceUseMightyBlow = false
+            if (animalSavageryContext != null) {
+                if (
+                    animalSavageryContext.player == context.causedBy
+                    && animalSavageryContext.player.isSkillAvailable(SkillType.CLAWS)
+                    && context.player.armorValue > 8
+                    && !context.usedIronHardSkin
+                ) {
+                    forceUseClaws = true
+                }
+                if (animalSavageryContext.player.isSkillAvailable(SkillType.MIGHTY_BLOW)
+                    && !forceUseClaws
+                    && !context.usedIronHardSkin
+                ) {
+                    forceUseMightyBlow = true
+                    modifiers.add(MightyBlowArmourModifier(modifier = 1))
+                }
+            }
+            return compositeCommandOf(
+                if (forceUseClaws) ReportSkillUsed(context.causedBy!!, SkillType.CLAWS) else null,
+                if (forceUseMightyBlow) ReportSkillUsed(context.causedBy!!, SkillType.MIGHTY_BLOW) else null,
+                UpdateContext(context.copy(
+                    armourModifiers = context.armourModifiers.addAll(modifiers),
+                    useClawsOnArmourRoll = forceUseClaws || context.useClawsOnArmourRoll
+                )),
+                GotoNode(DecideOnModifierPath)
+            )
         }
     }
 

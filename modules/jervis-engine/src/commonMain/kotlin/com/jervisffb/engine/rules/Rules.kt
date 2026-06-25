@@ -703,6 +703,7 @@ abstract class Rules(
 
             // All of these should be allowed
             DiceRollType.ACCURACY,
+            DiceRollType.ANIMAL_SAVAGERY,
             DiceRollType.BLOCK,
             DiceRollType.BLOODLUST,
             DiceRollType.BONE_HEAD,

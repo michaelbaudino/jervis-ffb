@@ -21,6 +21,26 @@ rolled, not the final result, so Dauntless is always used.
 
 These cases will be spelled out for the relevant skills below.
 
+## Page 123 - Animal Savagery
+
+Reading the rules in the rulebook, it was unclear how Animal Savagery behaved
+if failing the roll and then blocking an adjacent player. 
+
+This was clarified in the Designer's Commentary, meaning that the Animal 
+Savagery player is allowed to continue their action.
+
+It is also important to point out that Iron Hard Skin cannot be used to protect
+against Claws or Mighty Blow from the Animal Savagery player as Iron Hard Skin
+uses the wording "Opposition players cannot apply any modifiers...".
+
+!!! bloodbowl "May 2026 FAQ"
+
+    Q: If a player with Animal Savagery lashes out due to rolling a 1-3, can 
+       that player then continue its activation afterwards?
+
+    A: Yes. So long as it does not become Distracted (which ends the activation)
+       or cause a Turnover, the player may complete their activation.
+
 ## Page 123 - Arm Bar
 Similar to Tentacles, Arm Bar does not specifically mention Pogo, so Jervis
 assumes that Arm Bar does not work when a player uses Pogo either. NAF is 

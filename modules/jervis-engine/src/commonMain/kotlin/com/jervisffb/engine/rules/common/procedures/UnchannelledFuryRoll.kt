@@ -103,7 +103,6 @@ object UnchannelledFuryRoll: D6WithRerollProcedure() {
         val modifier = when (context.declaredAction!!.type) {
             PlayerStandardActionType.BLOCK,
             PlayerStandardActionType.BLITZ -> 2
-            // TODO How to detect special actions that replaces Blitz/Block actions
             else -> 0
         }
         val isSuccess = (d6.value + modifier >= 4)

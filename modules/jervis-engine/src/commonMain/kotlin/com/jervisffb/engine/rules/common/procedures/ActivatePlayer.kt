@@ -242,7 +242,7 @@ object ActivatePlayer : Procedure() {
                         if (hasNegaTrait) {
                             GotoNode(CheckForTakeRoot)
                         } else {
-                            GotoNode(CheckForOpponentInterruptSkills)
+                            GotoNode(CheckForAbortingAction)
                         }
                     )
                 }
@@ -327,7 +327,7 @@ object ActivatePlayer : Procedure() {
         override fun skipNodeFor(state: Game, rules: Rules): Node? {
             return when (state.activePlayer!!.isSkillAvailable(SkillType.UNCHANNELLED_FURY)) {
                 true -> null
-                false -> CheckForBloodLust
+                false -> CheckForAnimalSavagery
             }
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = UnchannelledFuryRoll
@@ -353,7 +353,7 @@ object ActivatePlayer : Procedure() {
                 false -> CheckForBloodLust
             }
         }
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = AnimalSavageryRoll
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = AnimalSavageryStep
         override fun onExitNode(state: Game, rules: Rules): Command {
             val context = state.getContext<ActivatePlayerContext>()
             return if (context.activationEndsImmediately) {
@@ -371,26 +371,21 @@ object ActivatePlayer : Procedure() {
         override fun skipNodeFor(state: Game, rules: Rules): Node? {
             return when (state.activePlayer!!.isSkillAvailable(SkillType.BLOOD_LUST)) {
                 true -> null
-                false -> CheckForOpponentInterruptSkills
+                false -> CheckForAbortingAction
             }
         }
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = BloodLustRoll
         override fun onExitNode(state: Game, rules: Rules): Command {
             // Blood Lust does not cause the activation to end, it only goes into affect
             // at the end of the activation
-            return GotoNode(CheckForOpponentInterruptSkills)
+            return GotoNode(CheckForAbortingAction)
         }
     }
 
-    /**
-     * Some skills trigger when an opponent player are about to start their action,
-     * like Dump-off. This step checks for these cases
-     */
-    object CheckForOpponentInterruptSkills: ParentNode() {
-        override fun getChildProcedure(state: Game, rules: Rules): Procedure = CheckForActionInterruptSkills
-        override fun onExitNode(state: Game, rules: Rules): Command {
+    object CheckForAbortingAction: ComputationNode() {
+        override fun apply(state: Game, rules: Rules): Command {
             val context = state.getContext<ActivatePlayerContext>()
-            return if (context.activationEndsImmediately) {
+            return if (context.activationEndsImmediately || state.isTurnOver()) {
                 ExitProcedure()
             } else {
                 GotoNode(ResolveSelectedAction)

@@ -5,6 +5,7 @@ package com.jervisffb.engine.rules
  */
 enum class DiceRollType(val description: String) {
     ACCURACY("Accuracy"), // For passing and Throw Teammate (in BB2025)
+    ANIMAL_SAVAGERY("Animal Savagery"),
     ARGUE_THE_CALL("Argue the Call"),
     ARMOUR("Armour"),
     BAD_HABITS("Bad Habits"),

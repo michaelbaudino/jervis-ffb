@@ -8,7 +8,7 @@ import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
 
 /**
- * Representation of the Animal Savagery* (Passive) skill.
+ * Representation of the "Animal Savagery* (Passive)@ skill.
  *
  * See page 123 in the BB2025 rulebook.
  */

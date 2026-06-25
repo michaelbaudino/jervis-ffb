@@ -284,6 +284,11 @@ fun blitzBlock(target: String, die: DBlockResult) = arrayOf(
     SelectSingleBlockDieResult(),
 )
 
+fun animalSavagery(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
 fun boneHead(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
     roll,
     reroll,
