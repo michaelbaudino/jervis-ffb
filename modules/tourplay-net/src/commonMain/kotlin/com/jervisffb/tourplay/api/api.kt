@@ -166,7 +166,7 @@ public data class StarPlayersMaster(
 public data class Player(
     public val applicationUserId: String,
     public val userNameToShow: String,
-    public val pictureFileName: String,
+    public val pictureFileName: String? = null,
     public val country: String,
 )
 

@@ -19,7 +19,7 @@ class TourPlayRestApiTests {
     }
 
     @Test
-    fun teamLoader() = runBlocking<Unit> {
+    fun teamLoader() = runBlocking {
         val rules = FumbblBB2020Rules()
         val file = api.loadRoster(44442, rules)
         val team = SerializedTeam.deserialize(rules, file.getOrThrow().team, Coach.UNKNOWN)
@@ -27,7 +27,7 @@ class TourPlayRestApiTests {
     }
 
     @Test
-    fun teamLoader2() = runBlocking<Unit> {
+    fun teamLoader2() = runBlocking {
         val rules = FumbblBB2020Rules()
         val file = api.loadRoster(131784, rules)
         val team = SerializedTeam.deserialize(rules, file.getOrThrow().team, Coach.UNKNOWN)
