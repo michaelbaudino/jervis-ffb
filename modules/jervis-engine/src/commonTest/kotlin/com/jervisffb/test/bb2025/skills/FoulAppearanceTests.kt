@@ -25,6 +25,7 @@ import com.jervisffb.test.foulAppearanceRoll
 import com.jervisffb.test.utils.SelectSingleBlockDieResult
 import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertCoordinates
+import com.jervisffb.test.utils.assertNoActivePlayer
 import com.jervisffb.test.utils.assertStanding
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
@@ -167,10 +168,20 @@ class FoulAppearanceTests: JervisGameBB2025Test() {
         defender.assertStanding()
     }
 
-    @Ignore
     @Test
     fun workOnHypnoticGaze() {
-        TODO("Waiting for Hypnotic Gaze support")
+        val attacker = state.getPlayerById("A1".playerId)
+        attacker.addSkill(SkillType.HYPNOTIC_GAZE)
+        val defender = state.getPlayerById("H1".playerId)
+        defender.addSkill(SkillType.FOUL_APPEARANCE)
+        controller.rollForward(
+            *activatePlayer(attacker, PlayerSpecialActionType.HYPNOTIC_GAZE),
+            PlayerSelected(defender),
+            *foulAppearanceRoll(1.d6),
+        )
+        state.assertNoActivePlayer()
+        assertEquals(Availability.HAS_ACTIVATED, attacker.available)
+        defender.assertStanding()
     }
 
     @Ignore

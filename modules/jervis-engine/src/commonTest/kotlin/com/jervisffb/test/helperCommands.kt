@@ -369,6 +369,11 @@ fun chainsawRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()
     reroll,
 )
 
+fun hypnoticGazeRoll(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
+    roll,
+    reroll,
+)
+
 fun pickup(roll: D6Result = 6.d6, reroll: GameAction? = NoRerollSelected()) = arrayOf(
     roll,
     reroll,

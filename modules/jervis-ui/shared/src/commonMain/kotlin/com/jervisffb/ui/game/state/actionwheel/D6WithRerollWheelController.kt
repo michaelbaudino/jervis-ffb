@@ -9,6 +9,7 @@ import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.CatchContext
 import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.DodgeRollContext
+import com.jervisffb.engine.model.context.HypnoticGazeContext
 import com.jervisffb.engine.model.context.JumpRollContext
 import com.jervisffb.engine.model.context.LandingRollContext
 import com.jervisffb.engine.model.context.LeapRollContext
@@ -38,6 +39,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.Always
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungrySquirmFreeRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopContext
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDistanceRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.HypnoticGazeRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.ShadowingRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.TentaclesRoll
@@ -97,6 +99,7 @@ import kotlin.time.ExperimentalTime
  * - Dauntless
  * - Dodge
  * - Foul Appearance
+ * - Hypnotic Gaze
  * - Interception
  * - Jump
  * - Jump Up
@@ -661,6 +664,21 @@ object ProjectileVomitWheelController : D6WithRerollWheelController() {
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<ProjectileVomitContext>()
         return context.vomitRoll?.originalRoll!!
+    }
+}
+
+object HypnoticGazeWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "hypnotic-gaze"
+    override val diceRollType: DiceRollType = DiceRollType.HYPNOTIC_GAZE
+    override val rollDiceNode: Node = HypnoticGazeRoll.RollDie
+    override val chooseRerollSourceNode: Node = HypnoticGazeRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = HypnoticGazeRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<HypnoticGazeContext>().gazer.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<HypnoticGazeContext>()
+        return context.roll?.originalRoll!!
     }
 }
 

@@ -71,6 +71,7 @@ import com.jervisffb.ui.game.state.actionwheel.DodgySnackReceivingTeamRollWheelC
 import com.jervisffb.ui.game.state.actionwheel.FollowUpWheelController
 import com.jervisffb.ui.game.state.actionwheel.FoulAppearanceWheelController
 import com.jervisffb.ui.game.state.actionwheel.HomeTeamFanFactorRoll
+import com.jervisffb.ui.game.state.actionwheel.HypnoticGazeWheelController
 import com.jervisffb.ui.game.state.actionwheel.InterceptionWheelController
 import com.jervisffb.ui.game.state.actionwheel.JumpUpWheelController
 import com.jervisffb.ui.game.state.actionwheel.JumpWheelController
@@ -254,6 +255,7 @@ class UiGameController(
         DeviateRollWheelController,
         DodgeWheelController,
         FoulAppearanceWheelController,
+        HypnoticGazeWheelController,
         InterceptionWheelController,
         JumpWheelController,
         JumpUpWheelController,

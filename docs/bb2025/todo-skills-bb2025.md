@@ -604,8 +604,13 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
 - [x] Decy*
   - [x] +1 to Casualty Roll
   - [x] +1 to re-rolled casualty roll (apothecary)
-- [ ] Hypnotic Gaze
-  - [ ] Becomes Distracted 
+- [x] Hypnotic Gaze
+  - [x] Is its own special action
+  - [x] Can be declared from Prone
+  - [x] Requires 3+
+  - [x] Distract opponent on success
+  - [x] Nothing happens on failure
+  - [x] Action ends after rolling for the gaze
 - [x] Insignificant*
 - [ ] Kick Team-mate
 - [x] Loner (X+)*

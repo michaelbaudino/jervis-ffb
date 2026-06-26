@@ -365,6 +365,18 @@ Another question is whether Horns will automatically be applied to the 2nd block
 when using Frenzy. The skill wording doesn't make this 100% clear, but given
 that Horns are always applied, this doesn't matter (for now).
 
+## Page 129 - Hypnotic Gaze
+Just by reading the rulebook, it wasn't allowed to declare a Hypnotic Gaze
+Special Action when starting from prone. However, this was reverted in the
+May 2026 FAQ. Jervis thus allows this.
+
+!!! bloodbowl "May FAQ 2026"
+
+    If an Active Trait allows a player to declare a Special Action, then they 
+    may still declare the Special Action whilst Prone long as the Special 
+    Action allows them to fi rst make a free Move Action to use the Special 
+    Action.
+
 ## Page 129 - Juggernaut
 Juggernaut cancels Fend, Stand Firm, and Wrestle for both the blocked player
 and all other opponents in the push chain.

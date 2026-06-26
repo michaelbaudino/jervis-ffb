@@ -4,6 +4,7 @@ import com.jervisffb.engine.rules.bb2020.procedures.actions.block.MultipleBlockA
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BlockAction
 import com.jervisffb.engine.rules.bb2025.procedures.actions.foul.FoulAction
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallAction
+import com.jervisffb.engine.rules.bb2025.procedures.skills.HypnoticGazeAction
 import com.jervisffb.engine.rules.common.actions.PlayerAction
 import com.jervisffb.engine.rules.common.actions.PlayerSpecialActionType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -127,7 +128,17 @@ class BB2025TeamActions : TeamActions() {
                         compulsory = false,
                     )
                 }
-//                PlayerSpecialActionType.HYPNOTIC_GAZE -> TODO()
+                PlayerSpecialActionType.HYPNOTIC_GAZE -> {
+                    PlayerAction(
+                        name = "Hypnotic Gaze",
+                        type = PlayerSpecialActionType.HYPNOTIC_GAZE,
+                        countsAs = null,
+                        availablePrTurn = Int.MAX_VALUE,
+                        procedure = HypnoticGazeAction,
+                        worksDuringBlitz = false,
+                        compulsory = false,
+                    )
+                }
 //                PlayerSpecialActionType.KICK_TEAM_MATE -> TODO()
                 PlayerSpecialActionType.MULTIPLE_BLOCK -> {
                     PlayerAction(

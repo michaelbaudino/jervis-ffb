@@ -115,7 +115,12 @@ object ActivatePlayer : Procedure() {
                             SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.CHAINSAW)
                         )
                     }
-                    PlayerSpecialActionType.HYPNOTIC_GAZE -> TODO()
+                    PlayerSpecialActionType.HYPNOTIC_GAZE -> {
+                        compositeCommandOf(
+                            SetSpecialActionSkillUsed(player, player.getSkill(SkillType.HYPNOTIC_GAZE), true),
+                            SetAvailableSpecialActions.markAsUsed(activeTeam, PlayerSpecialActionType.HYPNOTIC_GAZE)
+                        )
+                    }
                     PlayerSpecialActionType.KICK_TEAM_MATE -> TODO()
                     PlayerSpecialActionType.MULTIPLE_BLOCK -> {
                         compositeCommandOf(

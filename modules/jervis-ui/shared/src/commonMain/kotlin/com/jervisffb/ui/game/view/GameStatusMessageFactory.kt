@@ -36,6 +36,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopD
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowPlayerStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.ThrowTeammateAccuracyRoll
+import com.jervisffb.engine.rules.bb2025.procedures.skills.HypnoticGazeRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDirectionRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntStep
@@ -219,6 +220,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             FanFactorRolls.SetFanFactorForHomeTeam to "Roll D3 for Fan Factor",
             FoulAppearanceRoll.ReRollDie to "Re-roll D6 for Foul Appearance",
             FoulAppearanceRoll.RollDie to "Roll D6 for Foul Appearance",
+            HypnoticGazeRoll.ReRollDie to "Re-roll D6 for Hypnotic Gaze",
+            HypnoticGazeRoll.RollDie to "Roll D6 for Hypnotic Gaze",
             JumpRoll.ReRollDie to "Re-roll D6 to Jump",
             JumpRoll.RollDie to "Roll D6 to Jump",
             JumpUpRoll.ReRollDie to "Re-roll D6 to Jump Up",
@@ -292,6 +295,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             DauntlessRoll.ChooseReRollSource to "Accept Dauntless Result or Reroll D6?",
             DodgeRoll.ChooseReRollSource to "Accept Dodge Result or Reroll D6?",
             FoulAppearanceRoll.ChooseReRollSource to "Accept Foul Appearance Result or Reroll D6?",
+            HypnoticGazeRoll.ChooseReRollSource to "Accept Hypnotic Gaze Result or Reroll D6?",
             JumpRoll.ChooseReRollSource to "Accept Jump Result or Reroll D6?",
             JumpUpRoll.ChooseReRollSource to "Accept Jump Up Result or Reroll D6?",
             LandingRoll.ChooseReRollSource to "Accept Landing Result or Reroll D6?",

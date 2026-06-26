@@ -20,6 +20,7 @@ data class FoulAppearanceContext(
     val attacker: Player,
     val defender: Player,
     val roll: D6DieRoll? = null,
+    // `true` means that the `defender` avoided being affected by Foul Appearance
     val isSuccess: Boolean = false,
 ): ProcedureContext
 

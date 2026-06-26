@@ -38,6 +38,7 @@ import com.jervisffb.engine.rules.bb2025.skills.HailMaryPass
 import com.jervisffb.engine.rules.bb2025.skills.Hatred
 import com.jervisffb.engine.rules.bb2025.skills.HitAndRun
 import com.jervisffb.engine.rules.bb2025.skills.Horns
+import com.jervisffb.engine.rules.bb2025.skills.HypnoticGaze
 import com.jervisffb.engine.rules.bb2025.skills.Insignificant
 import com.jervisffb.engine.rules.bb2025.skills.IronHardSkin
 import com.jervisffb.engine.rules.bb2025.skills.Juggernaut
@@ -562,9 +563,9 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.HYPNOTIC_GAZE -> {
-                    // addEntry(type, SkillCategory.TRAITS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Hypnotic Gaze", type, SkillCategory.TRAITS) { player, category, expiresAt ->
+                        HypnoticGaze(player, category, expiresAt)
+                    }
                 }
                 SkillType.INSIGNIFICANT -> {
                     addNoValueEntry("Insignificant", type, SkillCategory.TRAITS) { player, category,expiresAt ->
