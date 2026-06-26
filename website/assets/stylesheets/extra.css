@@ -6,8 +6,8 @@
 
 /* Logos as masks */
 .admonition.naf .admonition-title::before {
-    -webkit-mask-image: url("/jervis-ffb/assets/naf.svg");
-    mask-image: url("/jervis-ffb/assets/naf.svg");
+    -webkit-mask-image: var(--md-admonition-icon--naf);
+    mask-image: var(--md-admonition-icon--naf);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-size: contain;
@@ -16,8 +16,8 @@
 }
 
 .admonition.fumbbl .admonition-title::before {
-    -webkit-mask-image: url("/jervis-ffb/assets/fumbbl.svg");
-    mask-image: url("/jervis-ffb/assets/fumbbl.svg");
+    -webkit-mask-image: var(--md-admonition-icon--fumbbl);
+    mask-image: var(--md-admonition-icon--fumbbl);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-size: contain;
@@ -26,8 +26,8 @@
 }
 
 .admonition.bloodbowl .admonition-title::before {
-    -webkit-mask-image: url("/jervis-ffb/assets/bloodbowl.svg");
-    mask-image: url("/jervis-ffb/assets/bloodbowl.svg");
+    -webkit-mask-image: var(--md-admonition-icon--bloodbowl);
+    mask-image: var(--md-admonition-icon--bloodbowl);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-size: contain;
