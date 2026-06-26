@@ -33,6 +33,9 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionCon
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.InterceptionRollContext
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallRoll
+import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungryContext
+import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungryRoll
+import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungrySquirmFreeRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopContext
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.skills.PuntDistanceRoll
@@ -83,6 +86,8 @@ import kotlin.time.ExperimentalTime
  * Abstract class for handling all single D6 with a potential reroll like:
  *
  * - Accuracy
+ * - Always Hungry
+ * - Always Hungry (Squirm Free)
  * - Animal Savagery
  * - BoneHead
  * - Breathe Fire
@@ -473,6 +478,36 @@ object BoneHeadWheelController : D6WithRerollWheelController() {
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<BoneHeadRollContext>()
         return context.roll?.originalRoll ?: error("No roll found in context")
+    }
+}
+
+object AlwaysHungryWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "always-hungry"
+    override val diceRollType: DiceRollType = DiceRollType.ALWAYS_HUNGRY
+    override val rollDiceNode: Node = AlwaysHungryRoll.RollDie
+    override val chooseRerollSourceNode: Node = AlwaysHungryRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = AlwaysHungryRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<AlwaysHungryContext>().thrower.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<AlwaysHungryContext>()
+        return context.isHungryRoll?.originalRoll ?: error("No roll found in context")
+    }
+}
+
+object AlwaysHungrySquirmFreeWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "squirm-free"
+    override val diceRollType: DiceRollType = DiceRollType.ALWAYS_HUNGRY_EAT_ATTEMPT
+    override val rollDiceNode: Node = AlwaysHungrySquirmFreeRoll.RollDie
+    override val chooseRerollSourceNode: Node = AlwaysHungrySquirmFreeRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = AlwaysHungrySquirmFreeRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate {
+        return state.getContext<AlwaysHungryContext>().thrownPlayer.coordinates
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<AlwaysHungryContext>()
+        return context.squirmFreeRoll?.originalRoll ?: error("No roll found in context")
     }
 }
 

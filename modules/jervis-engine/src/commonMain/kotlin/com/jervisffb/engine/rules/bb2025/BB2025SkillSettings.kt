@@ -1,6 +1,7 @@
 package com.jervisffb.engine.rules.bb2025
 
 import com.jervisffb.engine.rules.bb2025.skills.Accurate
+import com.jervisffb.engine.rules.bb2025.skills.AlwaysHungry
 import com.jervisffb.engine.rules.bb2025.skills.AnimalSavagery
 import com.jervisffb.engine.rules.bb2025.skills.ArmBar
 import com.jervisffb.engine.rules.bb2025.skills.BigHand
@@ -513,9 +514,9 @@ class BB2025SkillSettings: SkillSettings() {
                     // }
                 }
                 SkillType.ALWAYS_HUNGRY -> {
-                    // addEntry(type, SkillCategory.TRAITS) { player, category, _ , expiresAt ->
-                    // TODO()
-                    // }
+                    addNoValueEntry("Always Hungry", type, SkillCategory.TRAITS) { player, category,expiresAt ->
+                        AlwaysHungry(player, category, expiresAt)
+                    }
                 }
                 SkillType.BALL_AND_CHAIN -> {
                     // addEntry(type, SkillCategory.TRAITS) { player, category, _ , expiresAt ->

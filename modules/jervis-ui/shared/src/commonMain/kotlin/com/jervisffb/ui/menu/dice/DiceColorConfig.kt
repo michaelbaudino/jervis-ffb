@@ -63,6 +63,8 @@ object BB2025DiceColorConfig : DiceColorConfig() {
     override val entries: List<DiceRollTypeConfig> = DiceRollType.entries.map { rollType ->
         when (rollType) {
             DiceRollType.ACCURACY -> DiceRollTypeConfig(rollType, "Accuracy", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.ALWAYS_HUNGRY -> DiceRollTypeConfig(rollType, "Animal Savagery", d6, d6Colors, DiceColor.DEFAULT)
+            DiceRollType.ALWAYS_HUNGRY_EAT_ATTEMPT -> DiceRollTypeConfig(rollType, "Animal Savagery (Squirm Free)", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.ANIMAL_SAVAGERY -> DiceRollTypeConfig(rollType, "Animal Savagery", d6, d6Colors, DiceColor.DEFAULT)
             DiceRollType.ARGUE_THE_CALL -> DiceRollTypeConfig(rollType, "Argue the Call", d6, d6Colors, DiceColor.WHITE)
             DiceRollType.ARMOUR -> DiceRollTypeConfig(rollType, "Armour", d6, d6Colors, DiceColor.RED)

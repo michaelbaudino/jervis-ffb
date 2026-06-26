@@ -270,7 +270,7 @@ object ThrowTeamMateAction : Procedure() {
         override fun onExitNode(state: Game, rules: Rules): Command {
             val context = state.getContext<ThrowTeamMateContext>()
             return compositeCommandOf(
-                if (context.target == null) {
+                if (context.target == null && !state.isTurnOver()) {
                     // No target was selected, so no throw was attempted, continue the action.
                     GotoNode(MoveOrThrowPlayerOrEndAction)
                 } else {

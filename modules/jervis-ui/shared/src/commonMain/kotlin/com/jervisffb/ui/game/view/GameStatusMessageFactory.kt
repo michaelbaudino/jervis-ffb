@@ -29,6 +29,8 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.move.PogoStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.pass.PassStep
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.securetheball.SecureTheBallStep
+import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungryRoll
+import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.AlwaysHungrySquirmFreeRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDirectionRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopDistanceRoll
 import com.jervisffb.engine.rules.bb2025.procedures.actions.throwteammate.SwoopStep
@@ -180,6 +182,10 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
         val rollDiceScenarios = listOf(
             AccuracyRoll.ReRollDie to "Re-roll D6 to Pass the Ball",
             AccuracyRoll.RollDie to "Roll D6 to Pass the Ball",
+            AlwaysHungryRoll.RollDie to "Roll D6 for Always Hungry",
+            AlwaysHungryRoll.ReRollDie to "Re-roll D6 for Always Hungry",
+            AlwaysHungrySquirmFreeRoll.RollDie to "Roll D6 to Squirm Free",
+            AlwaysHungrySquirmFreeRoll.ReRollDie to "Re-roll D6 to Squirm Free",
             AnimalSavageryRoll.RollDie to "Roll D6 for Animal Savagery",
             AnimalSavageryRoll.ReRollDie to "Re-roll D6 for Animal Savagery",
             ArgueTheCallRoll.RollDie to "Roll D6 to Argue the Call",
@@ -275,6 +281,8 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
         )
         val askForRerollScenarios = listOf(
             AccuracyRoll.ChooseReRollSource to "Accept Pass Result or Reroll D6?",
+            AlwaysHungryRoll.ChooseReRollSource to "Accept Always Hungry Result or Reroll D6?",
+            AlwaysHungrySquirmFreeRoll.ChooseReRollSource to "Accept Always Hungry Squirm Free Result or Reroll D6?",
             AnimalSavageryRoll.ChooseReRollSource to "Accept Animal Savagery Result or Reroll D6?",
             BoneHeadRoll.ChooseReRollSource to "Accept Bone Head Result or Reroll D6?",
             BreatheFireRoll.ChooseReRollSource to "Accept Breathe Fire Result or Reroll D6?",

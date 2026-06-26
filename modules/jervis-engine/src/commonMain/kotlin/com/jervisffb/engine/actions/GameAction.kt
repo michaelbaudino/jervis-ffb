@@ -221,8 +221,9 @@ data class D8Result(override val value: Int) : DieResult() {
     }
 
     companion object {
-        fun allOptions(): List<D8Result> {
-            return (1..8).map { D8Result(it) }
+        fun allOptions(startWith: Int = 1): List<D8Result> {
+            require(startWith in 1..8) { "startWith must be in 1..8, was $startWith" }
+            return (0 until 8).map { D8Result(((startWith - 1 + it) % 8) + 1) }
         }
         fun random(random: Random = Random): D8Result {
             return random.nextInt(1, 8).d8

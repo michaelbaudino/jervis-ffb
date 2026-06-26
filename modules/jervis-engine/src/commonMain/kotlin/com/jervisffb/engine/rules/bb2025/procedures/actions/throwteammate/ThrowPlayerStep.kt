@@ -153,7 +153,7 @@ object ThrowPlayerStep: Procedure() {
                                             range = distance,
                                         )
                                     ),
-                                    GotoNode(TestForAccuracy)
+                                    GotoNode(CheckForAlwaysHungry)
                                 )
                             }
                         }
@@ -162,6 +162,49 @@ object ThrowPlayerStep: Procedure() {
             }
         }
     }
+
+    object CheckForAlwaysHungry: ParentNode() {
+        override fun skipNodeFor(state: Game, rules: Rules): Node? {
+            val context = state.getContext<ThrowTeamMateContext>()
+            val hasAlwaysHungry = context.thrower.isSkillAvailable(SkillType.ALWAYS_HUNGRY)
+            return when (hasAlwaysHungry) {
+                true -> null
+                false -> TestForAccuracy
+            }
+        }
+        override fun onEnterNode(state: Game, rules: Rules): Command? {
+            val context = state.getContext<ThrowTeamMateContext>()
+            val alwaysHungryContext = AlwaysHungryContext(
+                thrower = context.thrower,
+                thrownPlayer = context.thrownPlayer!!
+            )
+            return AddContext(alwaysHungryContext)
+        }
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = AlwaysHungryStep
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<AlwaysHungryContext>()
+            val throwContext = state.getContext<ThrowTeamMateContext>()
+            val isTurnover = state.isTurnOver()
+            val isFumbledThrow = (context.isHungry && context.squirmedFree)
+            val wasEaten = (context.isHungry && !context.squirmedFree)
+            return compositeCommandOf(
+                RemoveContext(context),
+                when {
+                    isFumbledThrow -> compositeCommandOf(
+                        UpdateContext(throwContext.copy(
+                            qualityRollResult = ThrowPlayerResult.FUMBLED
+                        )),
+                        GotoNode(ResolveFumbledThrow),
+
+                    )
+                    wasEaten -> ExitProcedure()
+                    isTurnover -> ExitProcedure()
+                    else -> GotoNode(TestForAccuracy)
+                }
+            )
+        }
+    }
+
 
     object TestForAccuracy: ParentNode() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure = ThrowTeammateAccuracyRoll

@@ -21,8 +21,17 @@ rolled, not the final result, so Dauntless is always used.
 
 These cases will be spelled out for the relevant skills below.
 
-## Page 123 - Animal Savagery
+## Page 123 - Always Hungry
+With the rules as written, it is unclear whether the turnover always happens
+when a player gets eaten or only if they are carrying the ball. NAF as ruled
+that it only applies if the player was holding the ball. Jervis has adopted
+this interpretation.
 
+!!! naf "NAF"
+
+    It is only a Turnover when the eaten player carried the ball.
+
+## Page 123 - Animal Savagery
 Reading the rules in the rulebook, it was unclear how Animal Savagery behaved
 if failing the roll and then blocking an adjacent player. 
 

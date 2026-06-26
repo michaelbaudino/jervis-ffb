@@ -703,6 +703,8 @@ abstract class Rules(
 
             // All of these should be allowed
             DiceRollType.ACCURACY,
+            DiceRollType.ALWAYS_HUNGRY,
+            DiceRollType.ALWAYS_HUNGRY_EAT_ATTEMPT,
             DiceRollType.ANIMAL_SAVAGERY,
             DiceRollType.BLOCK,
             DiceRollType.BLOODLUST,

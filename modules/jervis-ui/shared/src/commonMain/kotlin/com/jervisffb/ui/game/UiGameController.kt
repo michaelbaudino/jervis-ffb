@@ -39,12 +39,15 @@ import com.jervisffb.ui.game.state.UiActionProviderGroup
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2020WheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025PassWheelController
 import com.jervisffb.ui.game.state.actionwheel.AccuracyBB2025ThrowTeamMateWheelController
+import com.jervisffb.ui.game.state.actionwheel.AlwaysHungrySquirmFreeWheelController
+import com.jervisffb.ui.game.state.actionwheel.AlwaysHungryWheelController
 import com.jervisffb.ui.game.state.actionwheel.AnimalSavageryWheelController
 import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ArgueTheCallWheelController
 import com.jervisffb.ui.game.state.actionwheel.AwayTeamFanFactorRoll
 import com.jervisffb.ui.game.state.actionwheel.BoneHeadWheelController
-import com.jervisffb.ui.game.state.actionwheel.BounceRollWheelController
+import com.jervisffb.ui.game.state.actionwheel.BounceBallRollWheelController
+import com.jervisffb.ui.game.state.actionwheel.BouncePlayerRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BreatheFireWheelController
 import com.jervisffb.ui.game.state.actionwheel.BribeRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.BrilliantCoachingKickingTeamRollWheelController
@@ -237,8 +240,11 @@ class UiGameController(
         AccuracyBB2020WheelController,
         AccuracyBB2025PassWheelController,
         AccuracyBB2025ThrowTeamMateWheelController,
+        AlwaysHungryWheelController,
+        AlwaysHungrySquirmFreeWheelController,
         AnimalSavageryWheelController,
-        BounceRollWheelController,
+        BounceBallRollWheelController,
+        BouncePlayerRollWheelController,
         BoneHeadWheelController,
         BreatheFireWheelController,
         CatchWheelController,

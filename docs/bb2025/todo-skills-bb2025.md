@@ -548,8 +548,13 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] +2 modifier on Block/Blitz
   - [x] Iron Hard Skin does not work (Not opponent player)
 - [ ] Animosity (X)*
-- [ ] Always Hungry*
-  - [ ] Eating a player only causes turnover if it was holding the ball (FAQ May 2026)
+- [x] Always Hungry*
+  - [x] Eating a player only causes turnover if it was holding the ball (FAQ May 2026)
+  - [x] 2+ to continue throw
+  - [x] Fumble Player if squirm free
+  - [x] Eaten (DEAD) if failing to squirm free
+  - [x] Regen does not work
+  - [x] Apothecary does not work.
 - [ ] Ball & Chain*
   - [ ] Is stopped if moving into a Stand Firm player, move still used, block still happens (FAQ May 2026)
   - [ ] Moving off the pitch count as "Pushed into the Crowd" (FAQ May 2026)

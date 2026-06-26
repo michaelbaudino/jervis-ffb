@@ -8,25 +8,25 @@ import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.rules.common.skills.SkillType
 
 /**
- * Representation of the "Animal Savagery* (Active)" skill.
+ * Representation of the "Always Hungry* (Active)" skill.
  *
  * See page 123 in the BB2025 rulebook.
  */
-class AnimalSavagery(
+class AlwaysHungry(
     override val player: Player,
     override val category: SkillCategory = SkillCategory.TRAITS,
     override val expiresAt: Duration = Duration.PERMANENT,
 ) : BB2025Skill {
-    override val type: SkillType = SkillType.ANIMAL_SAVAGERY
+    override val type: SkillType = SkillType.ALWAYS_HUNGRY
     override val value: Unit? = null
     override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT
     override var used: Boolean = false
-    override val workWithoutTackleZones: Boolean = true
-    override val workWhenProne: Boolean = true
+    override val workWithoutTackleZones: Boolean = false
+    override val workWhenProne: Boolean = false
     override val keywords: List<SkillKeyword> = listOf(
-        SkillKeyword.PASSIVE
+        SkillKeyword.ACTIVE
     )
 }

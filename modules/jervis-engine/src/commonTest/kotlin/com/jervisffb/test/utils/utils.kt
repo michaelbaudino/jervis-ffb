@@ -255,6 +255,12 @@ fun Player.assertBanned() {
     assertEquals(DogOut, location)
 }
 
+fun Player.assertDead() {
+    assertEquals(PlayerState.DEAD, state)
+    assertNull(intermediateState)
+    assertEquals(DogOut, location)
+}
+
 /**
  * Test Helper, checking if a player is on the Pitch in a given square.
  */
