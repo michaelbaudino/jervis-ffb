@@ -51,6 +51,7 @@ import com.jervisffb.engine.rules.common.procedures.CatchRoll
 import com.jervisffb.engine.rules.common.procedures.PickupRoll
 import com.jervisffb.engine.rules.common.procedures.ReallyStupidRoll
 import com.jervisffb.engine.rules.common.procedures.ReallyStupidRollContext
+import com.jervisffb.engine.rules.common.procedures.RegenerationRoll
 import com.jervisffb.engine.rules.common.procedures.SteadyFootingRoll
 import com.jervisffb.engine.rules.common.procedures.TakeRootRoll
 import com.jervisffb.engine.rules.common.procedures.TakeRootRollContext
@@ -81,6 +82,7 @@ import com.jervisffb.engine.rules.common.procedures.rerolls.ProRollContext
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamCaptainRoll
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamCaptainRollContext
 import com.jervisffb.engine.rules.common.procedures.rerolls.TeamMascotRoll
+import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import kotlin.time.ExperimentalTime
 
 
@@ -547,6 +549,33 @@ object ReallyStupidWheelController : D6WithRerollWheelController() {
     override fun getOriginalRoll(state: Game): D6Result {
         val context = state.getContext<ReallyStupidRollContext>()
         return context.roll?.originalRoll ?: error("No roll found in context")
+    }
+}
+
+/**
+ * Define the Action-Wheel layout when rolling for Regeneration.
+ *
+ * Note that [RegenerationRoll.RerollUsingInducement] handles a reroll triggered
+ * by a Mortuary Assistant or Plague Doctor and goes through the same dice
+ * surface as the initial roll.
+ */
+object RegenerationWheelController : D6WithRerollWheelController() {
+    override val buttonIdPrefix: String = "regeneration"
+    override val diceRollType: DiceRollType = DiceRollType.REGENERATION
+    override val rollDiceNode: Node = RegenerationRoll.RollDie
+    override val chooseRerollSourceNode: Node = RegenerationRoll.ChooseReRollSource
+    override val rerollDiceNode: Node = RegenerationRoll.ReRollDie
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val player = state.getContext<RiskingInjuryContext>().player
+        return when {
+            player.location.isOnPitch(state.rules) -> player.coordinates
+            player.team.isHomeTeam() -> getHomeCenterCoordinates(state)
+            else -> getAwayCenterCoordinates(state)
+        }
+    }
+    override fun getOriginalRoll(state: Game): D6Result {
+        val context = state.getContext<RiskingInjuryContext>()
+        return context.regenerationRoll?.originalRoll ?: error("No roll found in context")
     }
 }
 

@@ -46,6 +46,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025FallingO
 import com.jervisffb.engine.rules.bb2025.procedures.tables.injury.BB2025KnockedDown
 import com.jervisffb.engine.rules.common.procedures.Catch
 import com.jervisffb.engine.rules.common.procedures.Pickup
+import com.jervisffb.engine.rules.common.procedures.RegenerationRoll
 import com.jervisffb.engine.rules.common.procedures.TheKickOff
 import com.jervisffb.engine.rules.common.procedures.actions.blitz.BlitzAction
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOff
@@ -582,6 +583,40 @@ object UseApothecaryWheelController: YesNoAnswerWheelController() {
                 }
             }
             is GiantLocation -> TODO("Not supported")
+        }
+    }
+}
+
+object UseMortuaryAssistantWheelController: YesNoAnswerWheelController() {
+    override val nodes: Set<Node> = setOf(
+        RegenerationRoll.ChooseToUseMortuaryAssistant,
+    )
+    override val yesLabel: String = "Use Mortuary Assistant"
+    override val noLabel: String = "Do not use Mortuary Assistant"
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val player = state.getContext<RiskingInjuryContext>().player
+        return when {
+            player.location.isOnPitch(state.rules) -> player.coordinates
+            player.team.isHomeTeam() -> getHomeCenterCoordinates(state)
+            else -> getAwayCenterCoordinates(state)
+        }
+    }
+}
+
+object UsePlagueDoctorWheelController: YesNoAnswerWheelController() {
+    override val nodes: Set<Node> = setOf(
+        RegenerationRoll.ChooseToUsePlagueDoctor,
+    )
+    override val yesLabel: String = "Use Plague Doctor"
+    override val noLabel: String = "Do not use Plague Doctor"
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val player = state.getContext<RiskingInjuryContext>().player
+        return when {
+            player.location.isOnPitch(state.rules) -> player.coordinates
+            player.team.isHomeTeam() -> getHomeCenterCoordinates(state)
+            else -> getAwayCenterCoordinates(state)
         }
     }
 }

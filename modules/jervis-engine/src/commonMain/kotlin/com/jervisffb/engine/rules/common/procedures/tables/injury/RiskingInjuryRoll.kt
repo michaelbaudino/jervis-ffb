@@ -24,12 +24,15 @@ import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.getContextOrNull
+import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.inducements.Apothecary
+import com.jervisffb.engine.model.inducements.MortuaryAssistant
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.D6DieRoll
+import com.jervisffb.engine.rules.common.procedures.RegenerationRoll
 import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.tables.CasualtyResult
@@ -114,9 +117,9 @@ data class RiskingInjuryContext(
     val finalLastingInjury: LastingInjuryResult? = null,
 
     // Regeneration
-    val regenerationRoll: D6Result? = null,
+    val regenerationRoll: D6DieRoll? = null,
     val regenerationApothecaryUsed: Apothecary? = null,
-    val regenerationReRoll: D6Result? = null,
+    val regenerationMortuaryAssistantUsed: MortuaryAssistant? = null,
     val regenerationSuccess: Boolean = false
 ): ProcedureContext {
 
@@ -271,9 +274,38 @@ object RiskingInjuryRoll: Procedure() {
                     )
                 }
                 InjuryResult.CASUALTY -> {
-                    GotoNode(RollForCasualty)
+                    if (context.player.hasSkill(SkillType.REGENERATION)) {
+                        GotoNode(RollForRegeneration)
+                    } else {
+                        GotoNode(RollForCasualty)
+                    }
                 }
                 null -> INVALID_GAME_STATE("Missing injury result")
+            }
+        }
+    }
+
+    /**
+     * Roll for Regeneration before rolling for the actual casualty.
+     * On a successful roll the player skips the Casualty Roll entirely and is
+     * placed in their team's Reserves Box. On a failure we continue to
+     * [RollForCasualty] as normal.
+     *
+     * See page 135 in the BB2025 rulebook.
+     */
+    object RollForRegeneration: ParentNode() {
+        override fun getChildProcedure(state: Game, rules: Rules): Procedure = RegenerationRoll
+        override fun onExitNode(state: Game, rules: Rules): Command {
+            val context = state.getContext<RiskingInjuryContext>()
+            return if (context.regenerationSuccess) {
+                compositeCommandOf(
+                    SetPlayerLocation(context.player, DogOut),
+                    getResetChompedStateCommands(context.player),
+                    SetPlayerState(context.player, PlayerState.RESERVE, hasTackleZones = false),
+                    ExitProcedure(),
+                )
+            } else {
+                GotoNode(RollForCasualty)
             }
         }
     }

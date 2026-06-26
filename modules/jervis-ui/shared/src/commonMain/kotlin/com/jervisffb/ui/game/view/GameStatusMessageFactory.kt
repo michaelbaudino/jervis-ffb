@@ -63,6 +63,7 @@ import com.jervisffb.engine.rules.common.procedures.PickupRoll
 import com.jervisffb.engine.rules.common.procedures.ReallyStupidRoll
 import com.jervisffb.engine.rules.common.procedures.RecoverKnockedOutPlayersStep
 import com.jervisffb.engine.rules.common.procedures.RecoverPlayerRoll
+import com.jervisffb.engine.rules.common.procedures.RegenerationRoll
 import com.jervisffb.engine.rules.common.procedures.ResolveBallLandingOnPitch
 import com.jervisffb.engine.rules.common.procedures.ScatterRoll
 import com.jervisffb.engine.rules.common.procedures.SteadyFootingRoll
@@ -252,6 +253,9 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             ReallyStupidRoll.ReRollDie to "Re-roll D6 to avoid Really Stupid",
             ReallyStupidRoll.RollDie to "Roll D6 for Really Stupid",
             RecoverPlayerRoll.RollDie to "Roll D6 to Recover Player",
+            RegenerationRoll.RollDie to "Roll D6 for Regeneration",
+            RegenerationRoll.ReRollDie to "Re-roll D6 for Regeneration",
+            RegenerationRoll.RerollUsingInducement to "Re-roll D6 for Regeneration",
             RushRoll.ReRollDie to "Re-roll D6 to Rush",
             RushRoll.RollDie to "Roll D6 to Rush",
             SecureTheBallRoll.ReRollDie to "Re-roll D6 to Secure the Ball",
@@ -306,6 +310,7 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
             ProRoll.ChooseReRollSource to "Accept Pro Result or Re-roll D6?",
             ProjectileVomitRoll.ChooseReRollSource to "Accept Projectile Vomit Result or Reroll D6?",
             ReallyStupidRoll.ChooseReRollSource to "Accept Really Stupid Result or Reroll D6?",
+            RegenerationRoll.ChooseReRollSource to "Accept Regeneration Result or Reroll D6?",
             RushRoll.ChooseReRollSource to "Accept Rush Result or Reroll D6?",
             SecureTheBallRoll.ChooseReRollSource to "Accept Secure the Ball Result or Reroll D6?",
             ShadowingRoll.ChooseReRollSource to "Accept Shadowing Result or Reroll D6?",
@@ -391,6 +396,18 @@ class GameStatusMessageFactory(private val menuViewModel: MenuViewModel, private
                 when (isActiveClient) {
                     true -> "Use Apothecary?"
                     false -> "Waiting for opponent to use Apothecary"
+                }
+            },
+            RegenerationRoll.ChooseToUseMortuaryAssistant to { isActiveClient, _, _ ->
+                when (isActiveClient) {
+                    true -> "Use Mortuary Assistant to re-roll Regeneration?"
+                    false -> "Waiting for opponent to use Mortuary Assistant"
+                }
+            },
+            RegenerationRoll.ChooseToUsePlagueDoctor to { isActiveClient, _, _ ->
+                when (isActiveClient) {
+                    true -> "Use Plague Doctor to re-roll Regeneration?"
+                    false -> "Waiting for opponent to use Plague Doctor"
                 }
             },
             PassStep.ChooseToUseSafePass to { isActiveClient, _, _ ->

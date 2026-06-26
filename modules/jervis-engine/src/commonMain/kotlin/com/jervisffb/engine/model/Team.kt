@@ -3,6 +3,7 @@ package com.jervisffb.engine.model
 import com.jervisffb.engine.model.inducements.Apothecary
 import com.jervisffb.engine.model.inducements.Bribe
 import com.jervisffb.engine.model.inducements.InfamousCoachingStaff
+import com.jervisffb.engine.model.inducements.MortuaryAssistant
 import com.jervisffb.engine.model.inducements.SpecialPlayCard
 import com.jervisffb.engine.model.inducements.TeamMascot
 import com.jervisffb.engine.model.inducements.wizards.Wizard
@@ -102,6 +103,7 @@ class Team(
     val specialPlayCards = mutableListOf<SpecialPlayCard>()
     val infamousCoachingStaff = mutableListOf<InfamousCoachingStaff>()
     val mascots = mutableListOf<TeamMascot>()
+    val mortuaryAssistants = mutableListOf<MortuaryAssistant>()
 
     // Some effects are hard to put into other buckets, like Cheering Fans
     // Offensive Assists. In these cases, we might want to mark the team

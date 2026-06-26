@@ -17,9 +17,11 @@ import com.jervisffb.engine.rules.bb2025.procedures.tables.kickoff.DodgySnack
 import com.jervisffb.engine.rules.builder.DiceRollOwner
 import com.jervisffb.engine.rules.common.procedures.RecoverKnockedOutPlayersContext
 import com.jervisffb.engine.rules.common.procedures.RecoverPlayerRoll
+import com.jervisffb.engine.rules.common.procedures.RegenerationRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.ArgueTheCallRoll
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BeingSentOffContext
 import com.jervisffb.engine.rules.common.procedures.actions.foul.BribeRoll
+import com.jervisffb.engine.rules.common.procedures.tables.injury.RiskingInjuryContext
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BB2020CheeringFans
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BB2025CheeringFans
 import com.jervisffb.engine.rules.common.procedures.tables.kickoff.BrilliantCoaching
@@ -316,6 +318,26 @@ object RecoverPlayerRollWheelController: D6RollWheelController() {
         return when (isHomeTeam) {
             true -> getHomeCenterCoordinates(state)
             false -> getAwayCenterCoordinates(state)
+        }
+    }
+}
+
+/**
+ * Action wheel for re-rolling the Regeneration roll using a Mortuary Assistant
+ * or Plague Doctor. The reroll itself is a single D6 roll without further
+ * reroll opportunities, so we surface it via [D6RollWheelController].
+ */
+object RegenerationInducementReRollWheelController: D6RollWheelController() {
+    override val buttonIdPrefix: String = "regeneration-inducement-reroll"
+    override val rollDiceNode: Node = RegenerationRoll.RerollUsingInducement
+    override val diceRollType: DiceRollType = DiceRollType.REGENERATION
+
+    override fun getActionWheelCenter(state: Game): PitchCoordinate? {
+        val player = state.getContext<RiskingInjuryContext>().player
+        return when {
+            player.location.isOnPitch(state.rules) -> player.coordinates
+            player.team.isHomeTeam() -> getHomeCenterCoordinates(state)
+            else -> getAwayCenterCoordinates(state)
         }
     }
 }

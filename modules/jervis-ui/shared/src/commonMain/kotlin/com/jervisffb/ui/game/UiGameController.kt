@@ -92,6 +92,8 @@ import com.jervisffb.ui.game.state.actionwheel.PuntDistanceWheelController
 import com.jervisffb.ui.game.state.actionwheel.QuickSnapRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.ReallyStupidWheelController
 import com.jervisffb.ui.game.state.actionwheel.RecoverPlayerRollWheelController
+import com.jervisffb.ui.game.state.actionwheel.RegenerationInducementReRollWheelController
+import com.jervisffb.ui.game.state.actionwheel.RegenerationWheelController
 import com.jervisffb.ui.game.state.actionwheel.RushWheelController
 import com.jervisffb.ui.game.state.actionwheel.ScatterRollWheelController
 import com.jervisffb.ui.game.state.actionwheel.SecureTheBallWheelController
@@ -134,7 +136,9 @@ import com.jervisffb.ui.game.state.actionwheel.UseLeapWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseLethalFlightWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseLoneFoulerWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseMightyBlowController
+import com.jervisffb.ui.game.state.actionwheel.UseMortuaryAssistantWheelController
 import com.jervisffb.ui.game.state.actionwheel.UsePileDriverWheelController
+import com.jervisffb.ui.game.state.actionwheel.UsePlagueDoctorWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseSafePairOfHandsWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseSafePassWheelController
 import com.jervisffb.ui.game.state.actionwheel.UseSidestepWheelController
@@ -269,6 +273,8 @@ class UiGameController(
         PuntDirectionWheelController,
         PuntDistanceWheelController,
         ReallyStupidWheelController,
+        RegenerationWheelController,
+        RegenerationInducementReRollWheelController,
         UnchannelledFuryWheelController,
         RushWheelController,
         SecureTheBallWheelController,
@@ -328,6 +334,8 @@ class UiGameController(
         UseWrestleWheelController,
 
         UseApothecaryWheelController,
+        UseMortuaryAssistantWheelController,
+        UsePlagueDoctorWheelController,
         ArgueTheCallWheelController,
         UseBribeWheelController,
         ChooseAlternativeToMascotWheelController,

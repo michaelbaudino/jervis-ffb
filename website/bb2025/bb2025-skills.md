@@ -804,6 +804,20 @@ Technically, using the skill should be optional, but there doesn't seem to be
 any use case for this (even a bad one), so until such a use case surfaces, this
 skill is always used.
 
+## Page 135 - Regeneration
+From the rulebook, it is unclear if you are allowed to use team re-rolls on
+Regeneration or not. A strict reading of the rulebook indicates "Yes", but only
+during your own team turn. This is a slightly odd mechanic and was also FAQ'ed
+out in BB2020. However, that wording is not present in BB2025.
+
+So for now, Jervis allows you to use team re-rolls on Regeneration, but only
+during your own team turn. This is also in line with how NAF interprets the 
+rules.
+
+!!! naf "NAF"
+
+    Team rerolls may be used for Regeneration in your own turn.
+
 ## Page 135 - Safe Pair of Hands
 The skill requires an adjacent unoccupied square. If one isn't available, this
 skill cannot be used.

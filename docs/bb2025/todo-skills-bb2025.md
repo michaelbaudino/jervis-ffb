@@ -330,7 +330,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Blitz
   - [x] Breathe Fire
   - [x] Chomp
-  - [ ] Hypnotic Gaze
+  - [x] Hypnotic Gaze
   - [ ] Multiple Block
   - [ ] Only stops one block during Multiple Block
   - [x] Projectile Vomit
@@ -661,7 +661,13 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [x] Adjacent player with Really Stupid cannot offer help
   - [x] Distracted adjacent player cannot offer help
   - [x] Becomes distracted if failure
-- [ ] Regeneration
+- [x] Regeneration
+  - [x] 4+ regenerates and places player in Reserves, skipping Casualty Roll
+  - [x] 1-3 fails and Casualty Roll proceeds as normal
+  - [x] Mortuary Assistant can re-roll a failed Regeneration roll
+  - [x] Plague Doctor can re-roll a failed Regeneration roll
+  - [x] Team rerolls may be used for Regeneration in your own turn (NAF)
+  - [x] Happens before applying an Apothecary (NAF)
 - [x] Right Stuff*
   - [x] Can be thrown using Throw Team-mate
   - [x] Can be thrown prone when using Throw Team-mate
@@ -729,6 +735,7 @@ a test class in `modules/jervis-engine/src/commonTest/kotlin/dk/ilios/jervis/bb2
   - [ ] Work Against Projectile Vomit
   - [ ] work against Breathe Fire
   - [ ] Work against Chain Saw
+  - [ ] Work against Stab
   - [ ] Work against Hypnotic Gaze
   - [ ] Does not work against Ball & Chain
   - [ ] Does not work if no eligible squares

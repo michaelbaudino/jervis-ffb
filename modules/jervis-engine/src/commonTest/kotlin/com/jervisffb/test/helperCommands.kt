@@ -324,6 +324,16 @@ fun useApothecary(value: Boolean) = when (value) {
     false -> Cancel
 }
 
+fun usePlagueDoctor(value: Boolean) = when (value) {
+    true -> Confirm
+    false -> Cancel
+}
+
+fun useMortuaryAssistant(value: Boolean) = when (value) {
+    true -> Confirm
+    false -> Cancel
+}
+
 fun followUp(value: Boolean) = when (value) {
     true -> Confirm
     false -> Cancel
@@ -489,5 +499,7 @@ fun giveBallToPlayer(player: Player) {
     val ball = state.singleBall()
     SetBallState.carried(ball, player).execute(state)
 }
+
+fun regenerationRoll(roll: D6Result = 6.d6) = roll
 
 
