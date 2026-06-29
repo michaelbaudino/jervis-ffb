@@ -13,10 +13,16 @@ import com.jervisffb.engine.actions.RemovePlayerKeyword
 import com.jervisffb.engine.actions.RemovePlayerSkill
 import com.jervisffb.engine.actions.Revert
 import com.jervisffb.engine.actions.Undo
+import com.jervisffb.engine.actions.SetBallLocation
+import com.jervisffb.engine.actions.SetPlayerLocation
+import com.jervisffb.engine.actions.SetPlayerState
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.EnterProcedure
 import com.jervisffb.engine.commands.ModifyPlayerBaseStat
+import com.jervisffb.engine.commands.NoOpCommand
+import com.jervisffb.engine.commands.SetBallState
 import com.jervisffb.engine.commands.compositeCommandOf
+import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.ComputationNode
 import com.jervisffb.engine.fsm.MutableProcedureStack
@@ -418,6 +424,40 @@ class GameEngineController(
             is RemovePlayerKeyword -> {
                 val player = action.getPlayer(state)
                 com.jervisffb.engine.commands.RemovePlayerKeyword(player, action.keyword)
+            }
+            is SetPlayerLocation -> {
+                val player = action.getPlayer(state)
+                val coord = action.coordinate()
+                if (coord.isOutOfBounds(state.rules)) {
+                    throw InvalidActionException("Cannot place player at out-of-bounds coordinate: $coord")
+                }
+                com.jervisffb.engine.commands.SetPlayerLocation(player, coord)
+            }
+            is SetPlayerState -> {
+                val player = action.getPlayer(state)
+                val playerState = action.state
+                com.jervisffb.engine.commands.SetPlayerState(player, playerState, action.hasTackleZones)
+            }
+            is SetBallLocation -> {
+                val ball = action.getBall(state)
+                var cmd: Command = NoOpCommand
+                // 1. Set ball location (if coordinates provided)
+                val coord = action.coordinate()
+                if (coord != null) {
+                    cmd = cmd + com.jervisffb.engine.commands.SetBallLocation(ball, coord)
+                }
+                // 2. Set ball state (ON_GROUND, CARRIED, IN_AIR)
+                val bs = action.ballState
+                val carrier = action.getPlayer(state)
+                if (bs != null) {
+                    cmd = cmd + when (bs) {
+                        BallState.CARRIED -> SetBallState.carried(ball, carrier!!)
+                        BallState.ON_GROUND -> SetBallState.onGround(ball)
+                        BallState.IN_AIR -> SetBallState.inAir(ball)
+                        else -> SetBallState.onGround(ball)
+                    }
+                }
+                cmd
             }
         }
         executeCommand(command)
