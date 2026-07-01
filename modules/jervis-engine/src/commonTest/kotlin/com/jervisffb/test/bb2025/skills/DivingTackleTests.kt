@@ -9,6 +9,7 @@ import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.commands.SetBallState
+import com.jervisffb.engine.ext.ballId
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
@@ -217,7 +218,7 @@ class DivingTackleTests: JervisGameBB2025Test() {
 
     @Test
     fun tacklerLandsOnBallInSquare() {
-        state.balls.add(Ball())
+        state.balls.add(Ball("temp-ball".ballId))
         val mover = awayTeam["A1".playerId].apply {
             addSkill(SkillType.FUMBLEROOSKI)
         }

@@ -203,7 +203,7 @@ class Game(
         return getContextOrNull<UseRerollContext>()
     }
 
-    val balls: MutableList<Ball> = mutableListOf(Ball())
+    val balls: MutableList<Ball> = mutableListOf(Ball(BallId.DEFAULT))
     // Easy reference to the ball that is currently being "handled" somehow. This makes
     // it easier to access it across multiple procedures.
     var currentBallReference: Ball? = null

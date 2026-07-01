@@ -6,6 +6,7 @@ import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerActionSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.commands.SetBallLocation
+import com.jervisffb.engine.ext.ballId
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
@@ -138,7 +139,7 @@ class BounceTests: JervisGameBB2025Test() {
         setupAndStartThrowTeamMateGame()
         val thrownPlayer = awayTeam["A13".playerId]
         giveBallToPlayer(thrownPlayer)
-        state.balls.add(Ball())
+        state.balls.add(Ball("temp-ball".ballId))
         SetBallLocation(state.balls.last(), PitchCoordinate(9, 4)).execute(state)
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.THROW_TEAM_MATE),

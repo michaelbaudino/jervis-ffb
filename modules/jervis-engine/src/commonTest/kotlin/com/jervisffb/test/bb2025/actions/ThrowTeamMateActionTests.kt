@@ -14,6 +14,7 @@ import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.actions.SelectPlayerAction
 import com.jervisffb.engine.commands.SetBallLocation
 import com.jervisffb.engine.commands.SetPlayerLocation
+import com.jervisffb.engine.ext.ballId
 import com.jervisffb.engine.ext.d16
 import com.jervisffb.engine.ext.d3
 import com.jervisffb.engine.ext.d6
@@ -695,7 +696,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
     @Test
     fun playerWithBallLandsOnGroundWithBall() {
         // Add a 2nd ball
-        val newBall = Ball().apply {
+        val newBall = Ball("temp-ball".ballId).apply {
             coordinates = PitchCoordinate(16, 5)
         }
         state.balls.add(newBall)
@@ -731,7 +732,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
     @Test
     fun playerWithBallLandsBadlyOnAnotherBall() {
         // Add a 2nd ball
-        val newBall = Ball().apply {
+        val newBall = Ball("temp-ball".ballId).apply {
             coordinates = PitchCoordinate(16, 5)
         }
         state.balls.add(newBall)

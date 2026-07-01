@@ -2,7 +2,7 @@ package com.jervisffb.engine.model
 
 import com.jervisffb.engine.model.locations.PitchCoordinate
 
-class Ball {
+class Ball(val id: BallId) {
     var state: BallState = BallState.ON_GROUND
 
     // TODO Giant Support

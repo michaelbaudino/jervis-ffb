@@ -44,6 +44,14 @@ value class PlayerId(val value: String)
 @JvmInline
 value class PositionId(val value: String)
 
+@Serializable
+@JvmInline
+value class BallId(val value: String) {
+    companion object {
+        val DEFAULT = BallId("ball")
+    }
+}
+
 /**
  * Unique identifier for a [RerollSource]. This must be unique across the entire
  * game. A [single RerollSource] can offer multiple [DiceRerollOption]. They
