@@ -97,7 +97,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            5.d6, // Re-roll succeeds
 //        )
 //        assertEquals(PlayerDogoutState.RESERVE, defender.state)
-//        assertEquals(DogOut, defender.location)
+//        assertEquals(Dogout, defender.location)
 //        assertTrue(homeTeam.mortuaryAssistants.single().used)
 //    }
 //
@@ -119,7 +119,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            Cancel, // Do not use Apothecary
 //        )
 //        assertEquals(PlayerDogoutState.BADLY_HURT, defender.state)
-//        assertEquals(DogOut, defender.location)
+//        assertEquals(Dogout, defender.location)
 //    }
 //
 //    @Test
@@ -140,7 +140,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            6.d6, // Re-roll succeeds
 //        )
 //        assertEquals(PlayerDogoutState.RESERVE, defender.state)
-//        assertEquals(DogOut, defender.location)
+//        assertEquals(Dogout, defender.location)
 //        assertFalse(homeTeam.mortuaryAssistants.single().used)
 //        assertTrue(homeTeam.tempApothecaries.single { it.type == ApothecaryType.PLAGUE_DOCTOR }.used)
 //    }

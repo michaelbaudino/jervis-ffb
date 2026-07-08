@@ -68,7 +68,6 @@ object UseBB11Apothecary: Procedure() {
             val context = state.getContext<RiskingInjuryContext>()
             val player = context.player
             val team = player.team
-            val moveToDogOut = context.armourBroken && context.injuryResult != InjuryResult.STUNNED
 
             return when (action) {
                 Confirm -> {

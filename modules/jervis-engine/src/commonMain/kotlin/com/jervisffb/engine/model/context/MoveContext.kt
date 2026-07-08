@@ -2,7 +2,7 @@ package com.jervisffb.engine.model.context
 
 import com.jervisffb.engine.actions.MoveType
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.procedures.actions.move.MoveAction
@@ -33,7 +33,7 @@ data class MoveContext(
     val dodgeFailed: Boolean = false,
     val target: PitchCoordinate? = null,
     val startingSquare: PitchCoordinate = when (val location = player.location) {
-        DogOut -> INVALID_GAME_STATE("Player in the dogout cannot move")
+        Dogout -> INVALID_GAME_STATE("Player in the dogout cannot move")
         is PitchCoordinate -> location
         is GiantLocation -> TODO("Convert startingSquare to location and adjust procedures")
     },

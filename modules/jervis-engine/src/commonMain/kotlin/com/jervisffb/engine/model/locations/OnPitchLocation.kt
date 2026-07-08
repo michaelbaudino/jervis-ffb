@@ -5,7 +5,7 @@ import com.jervisffb.engine.rules.Rules
 
 /**
  * Interface representing a location on the pitch of a Blood Bowl match.
- * This does not include the [DogOut].
+ * This does not include the [Dogout].
  */
 sealed interface OnPitchLocation: Location {
 

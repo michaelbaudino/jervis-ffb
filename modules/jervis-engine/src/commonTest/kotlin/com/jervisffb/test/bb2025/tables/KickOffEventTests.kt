@@ -25,7 +25,7 @@ import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.KickoffStatModifier
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
@@ -897,7 +897,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         // Fake it by moving all kickoff players back to Dogout after setup
         awayTeam.forEachIndexed { index, player ->
             player.state = PlayerDogoutState.RESERVE
-            player.location = DogOut
+            player.location = Dogout
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(
@@ -964,7 +964,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         awayTeam.forEachIndexed { index, player ->
             if (index > 0) {
                 player.state = PlayerDogoutState.RESERVE
-                player.location = DogOut
+                player.location = Dogout
             }
         }
         controller.rollForward(
@@ -993,7 +993,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         // Fake it by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
             it.state = PlayerDogoutState.RESERVE
-            it.location = DogOut
+            it.location = Dogout
         }
         controller.rollForward(
             EndSetup,

@@ -19,7 +19,7 @@ import com.jervisffb.engine.model.PositionId
 import com.jervisffb.engine.model.RosterId
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.BB72020Rules
 import com.jervisffb.engine.rules.Rules
@@ -302,7 +302,7 @@ class FuzzTester {
 
         setup.forEach { pitchCoordinate: PitchCoordinate ->
             team.firstOrNull {
-                val inReserve = (it.location == DogOut && it.state == PlayerDogoutState.RESERVE)
+                val inReserve = (it.location == Dogout && it.state == PlayerDogoutState.RESERVE)
                 inReserve && !playersTaken.contains(it.id)
             }?.let { selectedPlayer ->
                 playersTaken.add(selectedPlayer.id)

@@ -22,7 +22,7 @@ import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.isOnAwayTeam
 import com.jervisffb.engine.model.isOnHomeTeam
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.tables.Weather
 import com.jervisffb.engine.utils.safeTryEmit
@@ -183,7 +183,7 @@ class GameScreenModel(
             // 2. If there is no active player, but there is a hovered player, it should be shown in Away dogout (right side of the screen).
             // The only exception is if the player is in the Away dogout, in which case it should be shown in the Home dogout.
             (fixedPlayer == null && hoveredPlayer != null) -> {
-                val isInAwayDogout = hoveredPlayer.isOnAwayTeam() && hoveredPlayer.location is DogOut
+                val isInAwayDogout = hoveredPlayer.isOnAwayTeam() && hoveredPlayer.location is Dogout
                 when (forHomeSide) {
                     true -> if (isInAwayDogout) hoveredPlayer else null
                     false -> if (!isInAwayDogout) hoveredPlayer else null
@@ -195,8 +195,8 @@ class GameScreenModel(
             // hidden while we only show the hover player.
             (fixedPlayer != null && hoveredPlayer != null) -> {
                 val showFixedPlayer = shouldShowFixedHere(fixedPlayer, forHomeSide)
-                val isHoveredPlayerInHomeDogout = hoveredPlayer.isOnHomeTeam() && hoveredPlayer.location is DogOut
-                val isHoveredPlayerInAwayDogout = hoveredPlayer.isOnAwayTeam() && hoveredPlayer.location is DogOut
+                val isHoveredPlayerInHomeDogout = hoveredPlayer.isOnHomeTeam() && hoveredPlayer.location is Dogout
+                val isHoveredPlayerInAwayDogout = hoveredPlayer.isOnAwayTeam() && hoveredPlayer.location is Dogout
                 val isActivePlayerInHomeDogout = fixedPlayer.isOnHomeTeam()
                 val isActivePlayerInAwayDogout = fixedPlayer.isOnAwayTeam()
                 // Catch edge case where hovering over the other dogout while the active player is being shown

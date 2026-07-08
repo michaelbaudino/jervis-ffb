@@ -32,7 +32,7 @@ import androidx.compose.ui.input.pointer.isSecondaryPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.ui.game.icons.IconFactory
 import com.jervisffb.ui.game.model.UiPitchPlayer
@@ -107,7 +107,7 @@ fun Player(
                         transientData.onHoverExit.invoke()
                     }
                 }
-                .applyIf(player.location is DogOut) {
+                .applyIf(player.location is Dogout) {
                     pointerInput(player.id, player.location) {
                         awaitPointerEventScope {
                             var down = false // Track press, so we can filter Release correctly

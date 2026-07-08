@@ -8,7 +8,7 @@ import com.jervisffb.engine.rules.common.tables.CornerThrowInPosition
  * like a player position.
  *
  * It is also possible to represent locations outside the pitch but still using
-* the pitch's coordinates system. In particular, this means that [DogOut] is
+* the pitch's coordinates system. In particular, this means that [Dogout] is
  * not represented this way.
  */
 sealed interface Location {

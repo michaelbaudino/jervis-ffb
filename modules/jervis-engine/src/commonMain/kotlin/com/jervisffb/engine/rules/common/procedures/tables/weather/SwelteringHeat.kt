@@ -28,7 +28,7 @@ import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.SwelteringHeatContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportPlayerInjury
 import com.jervisffb.engine.rules.DiceRollType
@@ -97,7 +97,7 @@ object SwelteringHeat : Procedure() {
                 val playersRemoved = it.getPlayers(state).flatMap { player ->
                     listOf(
                         SetPlayerState(player, PlayerDogoutState.FAINTED),
-                        SetPlayerLocation(player, DogOut),
+                        SetPlayerLocation(player, Dogout),
                         ReportPlayerInjury(player, PlayerDogoutState.FAINTED),
                     )
                 }.toTypedArray()
@@ -154,7 +154,7 @@ object SwelteringHeat : Procedure() {
                 val playersRemoved = it.getPlayers(state).flatMap { player ->
                     listOf(
                         SetPlayerState(player, PlayerDogoutState.FAINTED),
-                        SetPlayerLocation(player, DogOut),
+                        SetPlayerLocation(player, Dogout),
                         ReportPlayerInjury(player, PlayerDogoutState.FAINTED),
                     )
                 }.toTypedArray()

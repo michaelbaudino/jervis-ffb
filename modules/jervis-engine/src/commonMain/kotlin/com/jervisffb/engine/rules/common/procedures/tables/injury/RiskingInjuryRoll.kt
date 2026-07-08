@@ -28,7 +28,7 @@ import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.inducements.Apothecary
 import com.jervisffb.engine.model.inducements.MortuaryAssistant
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.rules.Rules
@@ -232,7 +232,7 @@ object RiskingInjuryRoll: Procedure() {
                     // See page 61 in the rulebook.
                     if (context.mode == RiskingInjuryMode.PUSHED_INTO_CROWD) {
                         compositeCommandOf(
-                            SetPlayerLocation(context.player, DogOut),
+                            SetPlayerLocation(context.player, Dogout),
                             getResetChompedStateCommands(context.player),
                             SetPlayerState(context.player, PlayerDogoutState.RESERVE),
                             ExitProcedure(),
@@ -300,7 +300,7 @@ object RiskingInjuryRoll: Procedure() {
             val context = state.getContext<RiskingInjuryContext>()
             return if (context.regenerationSuccess) {
                 compositeCommandOf(
-                    SetPlayerLocation(context.player, DogOut),
+                    SetPlayerLocation(context.player, Dogout),
                     getResetChompedStateCommands(context.player),
                     SetPlayerState(context.player, PlayerDogoutState.RESERVE, hasTackleZones = false),
                     ExitProcedure(),

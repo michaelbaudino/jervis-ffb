@@ -32,7 +32,7 @@ import com.jervisffb.engine.model.inducements.Spell
 import com.jervisffb.engine.model.inducements.Timing
 import com.jervisffb.engine.model.inducements.wizards.Wizard
 import com.jervisffb.engine.model.isSkillAvailable
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.Location
 import com.jervisffb.engine.model.modifiers.OwnedPlayerStatusEffect
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
@@ -368,7 +368,7 @@ private fun gatherResetTeamTemporaryModifiersCommands(
 // - If it has Chomped others, those will be removed if no longer adjacent to them.
 fun getResetChompedStateCommands(
     player: Player,
-    nextLocation: Location = DogOut,
+    nextLocation: Location = Dogout,
     // The Chomper had a state change we know will cause Chomped to be removed.
     forceRemoveChompedByChomper: Boolean = false,
     // If `true`, we just remove Chomped status effects, but do not search for players affecte by the Chomper

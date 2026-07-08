@@ -85,7 +85,7 @@ interface PitchCoordinate: OnPitchLocation {
 
     override fun isAdjacent(rules: Rules, location: Location): Boolean {
         return when (location) {
-            DogOut -> false
+            Dogout -> false
             is PitchCoordinate -> distanceTo(location) == 1
             is GiantLocation -> distanceTo(location) == 1
         }
@@ -93,7 +93,7 @@ interface PitchCoordinate: OnPitchLocation {
 
     override fun overlap(otherLocation: Location): Boolean {
         return when (otherLocation) {
-            DogOut -> false
+            Dogout -> false
             is PitchCoordinate -> otherLocation.x == x && otherLocation.y == y
             is GiantLocation -> otherLocation.coordinates.contains(PitchCoordinate(x, y))
         }

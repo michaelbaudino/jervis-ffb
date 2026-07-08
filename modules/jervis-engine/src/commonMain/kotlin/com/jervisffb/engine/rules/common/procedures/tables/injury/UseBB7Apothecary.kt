@@ -27,7 +27,7 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.inducements.ApothecaryType
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportApothecaryUsed
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.rules.DiceRollType
@@ -82,7 +82,7 @@ object UseBB7Apothecary: Procedure() {
                 Cancel,
                 Continue -> {
                     compositeCommandOf(
-                        SetPlayerLocation(player, DogOut),
+                        SetPlayerLocation(player, Dogout),
                         ExitProcedure()  // Apothecary isn't used. Accept the first result
                     )
                 }

@@ -15,7 +15,7 @@ import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.procedures.Bounce
@@ -143,7 +143,7 @@ class KickOffTests: JervisGameBB2025Test() {
         // Fake it by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
             it.state = PlayerDogoutState.RESERVE
-            it.location = DogOut
+            it.location = Dogout
         }
 
         controller.rollForward(

@@ -10,7 +10,7 @@ import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.PlayerDogoutState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
 import com.jervisffb.test.activatePlayer
@@ -46,6 +46,6 @@ class ApothecaryTests: JervisGameBB2020Test() {
             Cancel,  // Use first roll
         )
         assertEquals(PlayerDogoutState.RESERVE, state.getPlayerById("H1".playerId).state)
-        assertEquals(DogOut, state.getPlayerById("H1".playerId).location)
+        assertEquals(Dogout, state.getPlayerById("H1".playerId).location)
     }
 }

@@ -40,7 +40,7 @@ import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.getSkill
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.skills.SecretWeapon
@@ -77,7 +77,7 @@ object SetupTeam : Procedure() {
             val context = state.getContext<SetupTeamContext>()
             val availablePlayers =
                 context.team.filter {
-                    val inReserve = (it.location == DogOut && it.state == PlayerDogoutState.RESERVE)
+                    val inReserve = (it.location == Dogout && it.state == PlayerDogoutState.RESERVE)
                     val onPitch = (it.location is PitchCoordinate && it.state == PlayerPitchState.STANDING)
                     inReserve || onPitch
                 }.let { players ->
@@ -133,7 +133,7 @@ object SetupTeam : Procedure() {
                 DogoutSelected -> {
                     compositeCommandOf(
                         getRemoveLeaderRerollCommand(player),
-                        SetPlayerLocation(player, DogOut),
+                        SetPlayerLocation(player, Dogout),
                         SetPlayerState(player, PlayerDogoutState.RESERVE),
                         UpdateContext(context.copy(currentPlayer = null)),
                         GotoNode(SelectPlayerOrEndSetup),

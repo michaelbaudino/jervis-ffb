@@ -10,7 +10,7 @@ import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.SkillKeyword
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.hasSkill
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.common.rerolls.LeaderTeamReroll
 import com.jervisffb.engine.rules.common.skills.Duration
 import com.jervisffb.engine.rules.common.skills.SkillCategory
@@ -80,7 +80,7 @@ class Leader(
             val leaderOnPitch = leaders.any { it.location.isOnPitch(rules) && it.hasSkill(SkillType.LEADER) }
             val leadersPermanentlyRemoved = leaders
                 .all { player ->
-                    val isInDogout = (player.location == DogOut)
+                    val isInDogout = (player.location == Dogout)
                     val removedState = when (player.state) {
                         PlayerDogoutState.RESERVE,
                         PlayerDogoutState.KNOCKED_OUT,

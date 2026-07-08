@@ -11,7 +11,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.modifiers.CasualtyModifier
 import com.jervisffb.engine.rules.bb2025.skills.Decay
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -59,7 +59,7 @@ class DecayTests: JervisGameBB2025Test() {
         )
 
         assertEquals(PlayerDogoutState.SERIOUSLY_HURT, defender.state)
-        assertEquals(DogOut, defender.location)
+        assertEquals(Dogout, defender.location)
     }
 
     @Test
@@ -79,6 +79,6 @@ class DecayTests: JervisGameBB2025Test() {
             Confirm, // Use 2nd roll
         )
         assertEquals(PlayerDogoutState.DEAD, defender.state)
-        assertEquals(DogOut, defender.location)
+        assertEquals(Dogout, defender.location)
     }
 }

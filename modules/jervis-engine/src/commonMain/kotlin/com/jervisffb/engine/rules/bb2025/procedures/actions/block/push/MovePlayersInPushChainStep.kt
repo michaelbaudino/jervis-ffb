@@ -15,7 +15,7 @@ import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.PushContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportPushedIntoCrowd
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.procedures.actions.block.BB2025PushBack
@@ -76,10 +76,10 @@ object MovePlayersInPushChainStep: Procedure() {
                             add(SetTurnOver(TurnOver.STANDARD))
                         }
                         addAll(
-                            SetPlayerLocation(push.pushee, DogOut),
+                            SetPlayerLocation(push.pushee, Dogout),
                             ReportPushedIntoCrowd(push.pushee, push.from)
                         )
-                        getResetChompedStateCommands(push.pushee, DogOut)?.let {
+                        getResetChompedStateCommands(push.pushee, Dogout)?.let {
                             add(it)
                         }
                         pushedIntoCrowd = true

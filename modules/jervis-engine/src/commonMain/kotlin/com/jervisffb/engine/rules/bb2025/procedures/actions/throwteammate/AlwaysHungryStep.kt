@@ -22,7 +22,7 @@ import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.bb2025.skills.AlwaysHungry
 import com.jervisffb.engine.rules.common.procedures.Bounce
@@ -77,7 +77,7 @@ object AlwaysHungryStep: Procedure() {
             return buildCompositeCommand {
                 addAll(
                     SetPlayerState(thrownPlayer, PlayerDogoutState.DEAD, hasTackleZones = false),
-                    SetPlayerLocation(thrownPlayer, DogOut)
+                    SetPlayerLocation(thrownPlayer, Dogout)
                 )
                 if (thrownPlayer.hasBall()) {
                     val ball = thrownPlayer.ball!!

@@ -17,7 +17,7 @@ import com.jervisffb.engine.model.context.CatchContext
 import com.jervisffb.engine.model.context.PickupRollContext
 import com.jervisffb.engine.model.context.RushRollContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.AccuracyModifier
 import com.jervisffb.engine.model.modifiers.CatchModifier
@@ -83,7 +83,7 @@ class WeatherTests: JervisGameBB2025Test() {
             awayTeam[PlayerNo(1)],
         ).forEach { player ->
             assertEquals(PlayerDogoutState.FAINTED, player.state, "Player $player")
-            assertEquals(DogOut, player.location, "Player $player")
+            assertEquals(Dogout, player.location, "Player $player")
         }
         assertEquals(2, homeTeam.filter { it.state == PlayerDogoutState.FAINTED }.size)
         assertEquals(1, awayTeam.filter { it.state == PlayerDogoutState.FAINTED }.size)

@@ -8,7 +8,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.modifiers.BrilliantCoachingModifiers
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.BrilliantCoachingReroll
@@ -69,7 +69,7 @@ class ArgueTheCallTests: JervisGameBB2020Test() {
         )
         assertEquals(homeTeam, state.activeTeam)
         assertEquals(PlayerDogoutState.BANNED, awayTeam["A1".playerId].state)
-        assertEquals(DogOut, awayTeam["A1".playerId].location)
+        assertEquals(Dogout, awayTeam["A1".playerId].location)
 
         // Skip to next halfs
         controller.rollForward(
@@ -119,7 +119,7 @@ class ArgueTheCallTests: JervisGameBB2020Test() {
         )
         assertEquals(homeTeam, state.activeTeam)
         assertEquals(PlayerDogoutState.BANNED, awayTeam["A6".playerId].state)
-        assertEquals(DogOut, awayTeam["A6".playerId].location)
+        assertEquals(Dogout, awayTeam["A6".playerId].location)
         assertFalse(awayTeam.coachBanned)
     }
 

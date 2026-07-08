@@ -7,7 +7,7 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.context.BB2020MultipleBlockContext
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContextOrNull
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.ui.game.UiSnapshotAccumulator
@@ -35,7 +35,7 @@ object BlockStatusIndicator: PitchStatusIndicator {
 
         players.forEach { player ->
             when (val loc = player.location) {
-                DogOut -> { /* Do not show indicators in the Dogout */ }
+                Dogout -> { /* Do not show indicators in the Dogout */ }
                 is GiantLocation -> TODO("Giant locations not supported yet")
                 is PitchCoordinate -> {
                     acc.updatePlayer(player.id) {

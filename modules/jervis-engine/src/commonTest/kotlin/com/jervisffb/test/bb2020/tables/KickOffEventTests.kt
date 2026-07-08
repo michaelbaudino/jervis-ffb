@@ -16,7 +16,7 @@ import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2020.procedures.TeamTurn
 import com.jervisffb.engine.rules.common.procedures.Bounce
@@ -629,7 +629,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         val awayPlayer = state.getPlayerById("A1".playerId)
         val homePlayer = state.getPlayerById("H1".playerId)
         assertEquals(PlayerDogoutState.BANNED, awayPlayer.state)
-        assertEquals(DogOut, awayPlayer.location)
+        assertEquals(Dogout, awayPlayer.location)
         homePlayer.assertStunned()
     }
 
@@ -644,7 +644,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         // Fake it, by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
             it.state = PlayerDogoutState.RESERVE
-            it.location = DogOut
+            it.location = Dogout
         }
 
         controller.rollForward(
@@ -719,7 +719,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         // Fake it, by moving all players on affected team back to Dogout after setup
         awayTeam.forEach {
             it.state = PlayerDogoutState.RESERVE
-            it.location = DogOut
+            it.location = Dogout
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(

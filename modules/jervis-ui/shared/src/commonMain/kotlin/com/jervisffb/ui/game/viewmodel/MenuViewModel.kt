@@ -13,7 +13,7 @@ import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.builder.GameType
@@ -310,7 +310,7 @@ class MenuViewModel {
                 // So we need to take that into account as well.
                 if (controller?.currentNode() == SetupTeam.PlacePlayer) {
                     val deselectAction = when (context.currentPlayer!!.location) {
-                        DogOut -> DogoutSelected
+                        Dogout -> DogoutSelected
                         is PitchCoordinate -> PitchSquareSelected(context.currentPlayer!!.coordinates)
                         is GiantLocation -> TODO()
                     }

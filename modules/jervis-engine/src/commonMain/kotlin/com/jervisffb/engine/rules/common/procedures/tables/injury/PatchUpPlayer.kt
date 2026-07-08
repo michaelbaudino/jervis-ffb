@@ -19,7 +19,7 @@ import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportInjuryResult
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.procedures.getResetChompedStateCommands
@@ -63,7 +63,7 @@ object PatchUpPlayer: Procedure() {
                             compositeCommandOf(
                                 SetPlayerState(player, PlayerDogoutState.RESERVE),
                                 getResetChompedStateCommands(player),
-                                SetPlayerLocation(player, DogOut),
+                                SetPlayerLocation(player, Dogout),
                             )
                         } else {
                             if (state.activeTeamOrThrow() == player.team) {
@@ -77,7 +77,7 @@ object PatchUpPlayer: Procedure() {
                         compositeCommandOf(
                             SetPlayerState(player, PlayerDogoutState.KNOCKED_OUT),
                             getResetChompedStateCommands(player),
-                            SetPlayerLocation(player, DogOut),
+                            SetPlayerLocation(player, Dogout),
                         )
                     }
                     context.injuryResult == InjuryResult.KO && context.apothecaryUsed != null -> {
@@ -99,7 +99,7 @@ object PatchUpPlayer: Procedure() {
                     ) -> {
                         buildCompositeCommand {
                             getResetChompedStateCommands(player)?.let { add(it) }
-                            add(SetPlayerLocation(player, DogOut))
+                            add(SetPlayerLocation(player, Dogout))
                             if (context.apothecaryUsed != null && context.apothecaryInjuryRollSuccess) {
                                 add(SetPlayerState(player, PlayerDogoutState.RESERVE))
                             } else {
@@ -121,13 +121,13 @@ object PatchUpPlayer: Procedure() {
                                     compositeCommandOf(
                                         SetPlayerState(player, PlayerDogoutState.RESERVE),
                                         getResetChompedStateCommands(player),
-                                        SetPlayerLocation(player, DogOut)
+                                        SetPlayerLocation(player, Dogout)
                                     )
                                 } else {
                                     compositeCommandOf(
                                         SetPlayerState(player, PlayerDogoutState.BADLY_HURT),
                                         getResetChompedStateCommands(player),
-                                        SetPlayerLocation(player, DogOut)
+                                        SetPlayerLocation(player, Dogout)
                                     )
                                 }
                             }
@@ -136,7 +136,7 @@ object PatchUpPlayer: Procedure() {
                                     SetMissNextGame(player, true),
                                     SetPlayerState(player, PlayerDogoutState.SERIOUSLY_HURT),
                                     getResetChompedStateCommands(player),
-                                    SetPlayerLocation(player, DogOut),
+                                    SetPlayerLocation(player, Dogout),
                                 )
                             }
                             CasualtyResult.SERIOUS_INJURY -> {
@@ -145,7 +145,7 @@ object PatchUpPlayer: Procedure() {
                                     AddNigglingInjuries(player,1),
                                     SetPlayerState(player, PlayerDogoutState.SERIOUS_INJURY),
                                     getResetChompedStateCommands(player),
-                                    SetPlayerLocation(player, DogOut),
+                                    SetPlayerLocation(player, Dogout),
                                 )
                             }
                             CasualtyResult.LASTING_INJURY -> {
@@ -153,14 +153,14 @@ object PatchUpPlayer: Procedure() {
                                     SetPlayerState(player, PlayerDogoutState.LASTING_INJURY),
                                     AddPlayerStatModifier(player, context.finalLastingInjury!!),
                                     getResetChompedStateCommands(player),
-                                    SetPlayerLocation(player, DogOut),
+                                    SetPlayerLocation(player, Dogout),
                                 )
                             }
                             CasualtyResult.DEAD -> {
                                 compositeCommandOf(
                                     SetPlayerState(player, PlayerDogoutState.DEAD),
                                     getResetChompedStateCommands(player),
-                                    SetPlayerLocation(player, DogOut),
+                                    SetPlayerLocation(player, Dogout),
                                 )
                             }
                         }

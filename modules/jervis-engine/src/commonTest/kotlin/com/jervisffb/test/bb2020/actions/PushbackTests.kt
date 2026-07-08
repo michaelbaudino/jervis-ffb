@@ -18,7 +18,7 @@ import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.utils.singleInstanceOf
@@ -213,7 +213,7 @@ class PushbackTests: JervisGameBB2020Test() {
         )
         assertEquals(PitchCoordinate(1, 14), awayTeam["A1".playerId].coordinates)
         homeTeam["H8".playerId].let {
-            assertEquals(DogOut, it.location)
+            assertEquals(Dogout, it.location)
             assertEquals(PlayerDogoutState.RESERVE, it.state)
         }
     }
@@ -275,7 +275,7 @@ class PushbackTests: JervisGameBB2020Test() {
         assertEquals(awayTeam, state.activeTeam)
         assertEquals(BallState.ON_GROUND, state.singleBall().state)
         assertEquals(PitchCoordinate(15, 3), state.singleBall().coordinates)
-        assertEquals(DogOut, homeTeam[4.playerNo].location)
+        assertEquals(Dogout, homeTeam[4.playerNo].location)
         assertEquals(PitchCoordinate(15, 0), awayTeam[7.playerNo].coordinates)
     }
 
@@ -306,7 +306,7 @@ class PushbackTests: JervisGameBB2020Test() {
         assertNull(state.activePlayer)
         assertEquals(PitchCoordinate(23, 1), awayTeam["A2".playerId].coordinates)
         assertTrue(awayTeam["A2".playerId].hasBall())
-        assertEquals(DogOut, awayTeam["A5".playerId].location)
+        assertEquals(Dogout, awayTeam["A5".playerId].location)
     }
 
     @Test
@@ -331,6 +331,6 @@ class PushbackTests: JervisGameBB2020Test() {
         assertEquals(awayTeam, state.activeTeam)
         assertNull(state.activePlayer)
         assertEquals(PitchCoordinate(23, 1), awayTeam["A2".playerId].coordinates)
-        assertEquals(DogOut, awayTeam["A5".playerId].location)
+        assertEquals(Dogout, awayTeam["A5".playerId].location)
     }
 }

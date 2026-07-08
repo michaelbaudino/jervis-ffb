@@ -77,7 +77,7 @@ class GiantLocation(val coordinates: MutableList<PitchCoordinate>): OnPitchLocat
     override fun overlap(otherLocation: Location): Boolean {
         TODO()
 //        return when (otherLocation) {
-//            DogOut -> false
+//            Dogout -> false
 //            is FieldCoordinate -> otherLocation.x == x || otherLocation.y == y
 //        }
     }

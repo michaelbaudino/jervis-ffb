@@ -4,7 +4,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayer
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.ui.game.UiSnapshotAccumulator
@@ -50,7 +50,7 @@ object SelectPlayerDecorator: PitchActionDecorator<SelectPlayer> {
 
             // Depending on the location, the event is tracked slightly different
             when (playerLocation) {
-                DogOut -> {
+                Dogout -> {
                     acc.updatePlayer(playerId) {
                         it.copy(
                             selectedAction = selectedAction

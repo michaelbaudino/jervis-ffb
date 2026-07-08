@@ -1,6 +1,6 @@
 package com.jervisffb.engine.model
 
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.Location
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -105,14 +105,14 @@ class Player(
     val type: PlayerType
 ) {
     lateinit var team: Team
-    var location: Location = DogOut
+    var location: Location = Dogout
 
     // Shortcut for getting a players coordinates. Only works for players currently on the pitch
     // taking up a single square.
     val coordinates: PitchCoordinate
         get() {
             return when (val playerLocation = location) {
-                DogOut -> INVALID_GAME_STATE("Cannot ask for coordinates when player is in the DogOut")
+                Dogout -> INVALID_GAME_STATE("Cannot ask for coordinates when player is in the Dogout")
                 is PitchCoordinate -> playerLocation
                 is GiantLocation -> INVALID_GAME_STATE("Cannot ask for coordinates for a giant player")
             }

@@ -40,7 +40,7 @@ import com.jervisffb.engine.model.context.PushContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.hasSkill
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.ReportPushedIntoCrowd
 import com.jervisffb.engine.rules.Rules
@@ -428,7 +428,7 @@ object BB2020PushStepInitialMoveSequence: Procedure() {
                             add(SetTurnOver(TurnOver.STANDARD))
                         }
                         addAll(
-                            SetPlayerLocation(push.pushee, DogOut),
+                            SetPlayerLocation(push.pushee, Dogout),
                             ReportPushedIntoCrowd(push.pushee, push.from)
                         )
 

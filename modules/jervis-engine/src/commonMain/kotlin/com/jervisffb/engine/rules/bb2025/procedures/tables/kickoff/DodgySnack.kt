@@ -31,7 +31,7 @@ import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.DodgySnackContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.modifiers.KickoffStatModifier
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffect
 import com.jervisffb.engine.reports.ReportDiceRoll
@@ -226,7 +226,7 @@ object DodgySnack : Procedure() {
         return when (d6.value) {
             1 -> compositeCommandOf(
                 SetPlayerState(player, PlayerDogoutState.DODGY_SNACK),
-                SetPlayerLocation(player, DogOut),
+                SetPlayerLocation(player, Dogout),
                 ReportGameProgress("${player.name} ate a bad snack and spends the drive on the lavatory")
             )
             else -> compositeCommandOf(

@@ -5,7 +5,7 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.Team
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.common.procedures.StartOfDriveSequence
 import com.jervisffb.engine.utils.safeTryEmit
 import com.jervisffb.ui.game.UiGameController
@@ -70,11 +70,11 @@ class SidebarViewModel(
     private val dogoutFlow: SharedFlow<Pair<UiGameSnapshot, List<UiSidebarPlayer>>> = uiState.uiStateFlow.map { snapshot: UiGameSnapshot ->
         val list = if (team.isHomeTeam()) {
             snapshot.game.homeTeam.filter { player ->
-                player.location == DogOut && snapshot.players[player.id]?.location == DogOut
+                player.location == Dogout && snapshot.players[player.id]?.location == Dogout
             }
         } else {
             snapshot.game.awayTeam.filter { player ->
-                player.location == DogOut && snapshot.players[player.id]?.location == DogOut
+                player.location == Dogout && snapshot.players[player.id]?.location == Dogout
             }
         }
         val newList = list.map { player ->

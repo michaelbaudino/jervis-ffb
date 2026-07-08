@@ -30,7 +30,7 @@ import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportGameProgress
 import com.jervisffb.engine.rules.DiceRollType
@@ -240,7 +240,7 @@ object OfficiousRef : Procedure() {
         return when (d6.value) {
             1 -> compositeCommandOf(
                 SetPlayerState(player, PlayerDogoutState.BANNED),
-                SetPlayerLocation(player, DogOut),
+                SetPlayerLocation(player, Dogout),
                 ReportGameProgress("${player.name} angered the Ref and was Sent-off")
             )
             else -> compositeCommandOf(

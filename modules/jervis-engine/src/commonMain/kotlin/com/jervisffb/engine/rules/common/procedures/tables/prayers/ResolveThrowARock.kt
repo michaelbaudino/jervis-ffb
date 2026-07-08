@@ -55,7 +55,7 @@ object ResolveThrowARock : Procedure() {
     override fun onEnterProcedure(state: Game, rules: Rules): Command {
         // Check for stalling players on the team ending their turn. Any
         // stalling players risk getting hit.
-        // It is unclear if people in the DogOut can be hit by a Rock, for now we are
+        // It is unclear if people in the Dogout can be hit by a Rock, for now we are
         // not checking for it, which means it would be allowed. But due to how
         // Stalling is defined, it will probably never happen.
         val stallingPlayers = state.activeTeamOrThrow().filter { it.isStalling && it.location.isOnPitch(rules) }

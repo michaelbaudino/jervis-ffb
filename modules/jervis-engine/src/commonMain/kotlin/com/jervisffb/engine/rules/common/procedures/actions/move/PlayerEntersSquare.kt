@@ -30,7 +30,7 @@ import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.MovePlayerIntoSquareContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportGameProgress
 import com.jervisffb.engine.rules.DiceRollType
@@ -170,7 +170,7 @@ object MovePlayerIntoSquare : Procedure() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<MovePlayerIntoSquareContext>()
             return compositeCommandOf(
-                SetPlayerLocation(context.player, DogOut),
+                SetPlayerLocation(context.player, Dogout),
                 SetPlayerIntermediateState(context.player, PlayerIntermediateState.KNOCKED_DOWN),
                 AddContext(
                     RiskingInjuryContext(

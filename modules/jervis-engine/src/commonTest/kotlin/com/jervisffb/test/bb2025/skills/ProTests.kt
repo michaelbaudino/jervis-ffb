@@ -21,7 +21,7 @@ import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.getSkill
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.bb2025.skills.Brawler
 import com.jervisffb.engine.rules.bb2025.skills.Pro
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -295,7 +295,7 @@ class ProTests: JervisGameBB2025Test() {
         state.assertActiveTeam(homeTeam)
         assertFalse(fouler.getSkill<Pro>().rerollUsed)
         assertEquals(PlayerDogoutState.BANNED, fouler.state)
-        assertEquals(DogOut, fouler.location)
+        assertEquals(Dogout, fouler.location)
     }
 
     @Test

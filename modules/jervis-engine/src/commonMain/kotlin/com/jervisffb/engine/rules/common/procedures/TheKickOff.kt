@@ -73,15 +73,15 @@ object TheKickOff : Procedure() {
             // center line of scrimmage must be selected.
             val players =
                 state.kickingTeam.fold(PlayersAvailableForKicking()) { acc, player ->
-                    val inDogOut = !player.location.isOnPitch(rules)
+                    val inDogout = !player.location.isOnPitch(rules)
                     val onLoS = player.location.isOnLineOfScrimmage(rules)
                     val inWideZone = player.location.isInWideZone(rules)
-                    val available = !(onLoS || inWideZone || inDogOut)
+                    val available = !(onLoS || inWideZone || inDogout)
                     if (onLoS && !inWideZone) {
                         acc.onLos += 1
                         acc.playersOnLoS.add(player)
                     }
-                    if (available && !inDogOut) {
+                    if (available && !inDogout) {
                         acc.inCenterField += 1
                         acc.playersInCenterField.add(player)
                     }

@@ -1,6 +1,6 @@
 package com.jervisffb.engine.model
 
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.utils.INVALID_GAME_STATE
@@ -9,7 +9,7 @@ import com.jervisffb.engine.utils.INVALID_GAME_STATE
  * Internal representation central Blood Bowl playing area. This representation
  * is used across all game types: Standard, BB7, Dungeon Bowl and Gutter Bowl.
  *
- * Note that [Pitch] and [DogOut] are two seperate concepts.
+ * Note that [Pitch] and [Dogout] are two seperate concepts.
  *
  * Going outside the defined pitch is considered out-of-bounds. Add walls to
  * all border squares to prevent this.

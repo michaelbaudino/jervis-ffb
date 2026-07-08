@@ -20,7 +20,7 @@ import com.jervisffb.engine.model.context.SteadyFootingRollContext
 import com.jervisffb.engine.model.context.StumbleContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isOnHomeTeam
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.GiantLocation
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2020.procedures.actions.block.BB2020BothDown
@@ -543,7 +543,7 @@ object UseMightyBlowController: UseSkillWheelController(SkillType.MIGHTY_BLOW) {
             // A player with Mighty Blow might have left the Pitch when the skill is used.
             // For now, just place the action wheel on the team half until we find
             // a way to show them in the Dogout.
-            DogOut -> when (player.isOnHomeTeam()) {
+            Dogout -> when (player.isOnHomeTeam()) {
                 true -> getHomeCenterCoordinates(state)
                 false -> getAwayCenterCoordinates(state)
             }
@@ -574,7 +574,7 @@ object UseApothecaryWheelController: YesNoAnswerWheelController() {
     override fun getActionWheelCenter(state: Game): PitchCoordinate? {
         val player = state.getContext<RiskingInjuryContext>().player
         return when (player.location) {
-            DogOut -> state.getContext<PushContext>().pushChain.last().from
+            Dogout -> state.getContext<PushContext>().pushChain.last().from
             is PitchCoordinate -> {
                 // TODO Figure out a better player to show the Action Wheel for players out-of-bounds
                 when (player.coordinates.isOutOfBounds(state.rules)) {
@@ -660,7 +660,7 @@ object UseClawsWheelController: UseSkillWheelController(SkillType.CLAWS) {
             // A player with Claws might have left the Pitch when the skill is used.
             // For now, just place the action wheel on the team half until we find
             // a way to show them in the Dogout.
-            DogOut -> when (player.isOnHomeTeam()) {
+            Dogout -> when (player.isOnHomeTeam()) {
                 true -> getHomeCenterCoordinates(state)
                 false -> getAwayCenterCoordinates(state)
             }

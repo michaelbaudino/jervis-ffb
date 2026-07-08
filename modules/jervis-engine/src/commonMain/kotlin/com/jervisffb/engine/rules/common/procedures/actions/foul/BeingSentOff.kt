@@ -37,7 +37,7 @@ import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.modifiers.BrilliantCoachingModifiers
 import com.jervisffb.engine.reports.ReportBribeResult
 import com.jervisffb.engine.reports.ReportBribeUsed
@@ -195,7 +195,7 @@ object BeingSentOff: Procedure() {
                         }
                         addAll(
                             SetPlayerState(player, PlayerDogoutState.BANNED),
-                            SetPlayerLocation(player, DogOut),
+                            SetPlayerLocation(player, Dogout),
                         )
                         getResetChompedStateCommands(player)?.let { add(it) }
                     })

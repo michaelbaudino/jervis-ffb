@@ -17,7 +17,7 @@ import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerIntermediateState
 import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffect
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
@@ -111,7 +111,7 @@ inline fun <reified T: Skill<*>> Player.hasSkill(): Boolean {
  */
 fun Player.putInReserves() {
     state = PlayerDogoutState.RESERVE
-    location = DogOut
+    location = Dogout
 }
 
 /**
@@ -135,7 +135,7 @@ fun Player.putStunned() {
  */
 fun Player.putInKnockedOut() {
     val state = this.team.game
-    SetPlayerLocation(this, DogOut).execute(state)
+    SetPlayerLocation(this, Dogout).execute(state)
     SetPlayerState(this, PlayerDogoutState.KNOCKED_OUT).execute(state)
 }
 
@@ -215,13 +215,13 @@ fun Player.assertStunned(ownTeamTurn: Boolean = false) {
 fun Player.assertKnockedOut() {
     assertEquals(PlayerDogoutState.KNOCKED_OUT, state)
     assertNull(intermediateState)
-    assertEquals(DogOut, location)
+    assertEquals(Dogout, location)
 }
 
 fun Player.assertBadlyHurt() {
     assertEquals(PlayerDogoutState.BADLY_HURT, state)
     assertNull(intermediateState)
-    assertEquals(DogOut, location)
+    assertEquals(Dogout, location)
 }
 
 /**
@@ -244,7 +244,7 @@ fun Player.assertKnockedDown() {
 fun Player.assertReserves() {
     assertEquals(PlayerDogoutState.RESERVE, state)
     assertNull(intermediateState)
-    assertEquals(DogOut, location)
+    assertEquals(Dogout, location)
 }
 
 /**
@@ -253,13 +253,13 @@ fun Player.assertReserves() {
 fun Player.assertBanned() {
     assertEquals(PlayerDogoutState.BANNED, state)
     assertNull(intermediateState)
-    assertEquals(DogOut, location)
+    assertEquals(Dogout, location)
 }
 
 fun Player.assertDead() {
     assertEquals(PlayerDogoutState.DEAD, state)
     assertNull(intermediateState)
-    assertEquals(DogOut, location)
+    assertEquals(Dogout, location)
 }
 
 /**

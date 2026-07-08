@@ -14,7 +14,7 @@ import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerPitchState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.utils.singleInstanceOf
@@ -173,7 +173,7 @@ class FoulActionTests: JervisGameBB2025Test() {
         homeTeam["H1".playerId].assertProne()
         assertEquals(homeTeam, state.activeTeam)
         assertEquals(PlayerDogoutState.BANNED, awayTeam["A6".playerId].state)
-        assertEquals(DogOut, awayTeam["A6".playerId].location)
+        assertEquals(Dogout, awayTeam["A6".playerId].location)
     }
 
     @Test
@@ -192,7 +192,7 @@ class FoulActionTests: JervisGameBB2025Test() {
         homeTeam["H1".playerId].assertStunned()
         assertEquals(homeTeam, state.activeTeam)
         assertEquals(PlayerDogoutState.BANNED, awayTeam["A6".playerId].state)
-        assertEquals(DogOut, awayTeam["A6".playerId].location)
+        assertEquals(Dogout, awayTeam["A6".playerId].location)
     }
 
     @Test

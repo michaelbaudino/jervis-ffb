@@ -9,7 +9,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.PlayerDogoutState
-import com.jervisffb.engine.model.locations.DogOut
+import com.jervisffb.engine.model.locations.Dogout
 import com.jervisffb.engine.rules.common.TeamCaptainNotOnPitch
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.procedures.SetupTeam
@@ -141,7 +141,7 @@ class TeamCaptainTests: JervisGameBB2025Test() {
             extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
             addSkill(SkillType.PRO)
         }
-        assertEquals(DogOut, captain.location)
+        assertEquals(Dogout, captain.location)
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.MOVE),
             *moveTo(14, 5),
