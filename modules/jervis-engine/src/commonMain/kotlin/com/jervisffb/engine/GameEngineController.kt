@@ -12,16 +12,14 @@ import com.jervisffb.engine.actions.GameActionId
 import com.jervisffb.engine.actions.RemovePlayerKeyword
 import com.jervisffb.engine.actions.RemovePlayerSkill
 import com.jervisffb.engine.actions.Revert
-import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.actions.SetBallState
 import com.jervisffb.engine.actions.SetPlayerState
+import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.EnterProcedure
 import com.jervisffb.engine.commands.ModifyPlayerBaseStat
 import com.jervisffb.engine.commands.buildCompositeCommand
 import com.jervisffb.engine.commands.compositeCommandOf
-import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.ComputationNode
 import com.jervisffb.engine.fsm.MutableProcedureStack
@@ -29,8 +27,11 @@ import com.jervisffb.engine.fsm.MutableProcedureState
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
+import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
+import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.TeamId
+import com.jervisffb.engine.model.locations.OnPitchLocation
 import com.jervisffb.engine.reports.LogCategory
 import com.jervisffb.engine.reports.LogEntry
 import com.jervisffb.engine.reports.ReportAvailableActions
@@ -426,8 +427,13 @@ class GameEngineController(
             }
             is SetPlayerState -> {
                 val player = action.getPlayer(state)
-                val location = action.targetLocation()
-                val hasTackleZones = action.state == PlayerState.STANDING
+                val location = action.location
+                val hasTackleZones = (action.state == PlayerState.STANDING)
+                if (location is OnPitchLocation) {
+                    if (!location.isOnPitch(rules)) {
+                        INVALID_ACTION(action, "Location is not on the pitch: $location")
+                    }
+                }
                 buildCompositeCommand {
                     add(com.jervisffb.engine.commands.SetPlayerState(player, action.state, hasTackleZones))
                     add(com.jervisffb.engine.commands.SetPlayerLocation(player, location))
@@ -435,12 +441,12 @@ class GameEngineController(
             }
             is SetBallState -> {
                 val ball = action.getBall(state)
-                val bs = action.ballState
+                val ballState = action.ballState
                 val carrier = action.getPlayer(state)
                 buildCompositeCommand {
                     add(com.jervisffb.engine.commands.SetBallLocation(ball, action.coordinate()))
-                    if (bs != null) {
-                        add(when (bs) {
+                    if (ballState != null) {
+                        add(when (ballState) {
                             BallState.ACCURATE_THROW -> com.jervisffb.engine.commands.SetBallState.accurateThrow(ball)
                             BallState.BOUNCING -> com.jervisffb.engine.commands.SetBallState.bouncing(ball)
                             BallState.CARRIED -> com.jervisffb.engine.commands.SetBallState.carried(ball, carrier!!)

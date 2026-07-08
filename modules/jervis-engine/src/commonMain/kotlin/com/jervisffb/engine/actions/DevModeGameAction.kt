@@ -71,13 +71,15 @@ data class RemovePlayerKeyword(
 data class SetPlayerState(
     val playerId: PlayerId,
     val state: PlayerState,
-    val x: Int,
-    val y: Int,
+    val location: Location,
 ) : DevModeGameAction {
-    fun getPlayer(state: Game): Player = state.getPlayerById(playerId)
-    fun coordinate(): PitchCoordinate = PitchCoordinate(x, y)
-    fun targetLocation(): Location {
-        val isDogOutState = state in setOf(
+    constructor(playerId: PlayerId, state: PlayerState, x: Int, y: Int) : this(playerId, state, PitchCoordinate(x, y))
+    // The GameController is responsible for the full validation. Here we just validate the most obvious things
+    init {
+        if (location is PitchCoordinate) {
+            if (location.x < 0 || location.y < 0) throw IllegalArgumentException("Invalid pitch coordinate: $location")
+        }
+        val isDogoutState = when (state) {
             PlayerState.RESERVE,
             PlayerState.KNOCKED_OUT,
             PlayerState.BADLY_HURT,
@@ -87,10 +89,15 @@ data class SetPlayerState(
             PlayerState.DEAD,
             PlayerState.FAINTED,
             PlayerState.BANNED,
-            PlayerState.DODGY_SNACK,
-        )
-        return if (isDogOutState) DogOut else coordinate()
+            PlayerState.DODGY_SNACK -> true
+            PlayerState.STANDING,
+            PlayerState.PRONE,
+            PlayerState.STUNNED,
+            PlayerState.STUNNED_OWN_TURN -> false
+        }
+        if (isDogoutState && location != DogOut) throw IllegalArgumentException("The chosen state is only valid if the location is DogOut: $state")
     }
+    fun getPlayer(state: Game): Player = state.getPlayerById(playerId)
 }
 
 @Serializable

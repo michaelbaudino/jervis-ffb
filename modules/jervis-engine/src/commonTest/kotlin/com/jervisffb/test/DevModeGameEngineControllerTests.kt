@@ -71,10 +71,17 @@ class DevModeGameEngineControllerTests {
 
     @Test
     fun setPlayerStateRejectsOutOfBoundsCoordinate() {
+        assertFailsWith<IllegalArgumentException> {
+            SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = -1, y = 5)
+        }
+    }
+
+    @Test
+    fun setPlayerStateRejectsOutOfBoundsCoordinateInGameController() {
         val controller = createGameController()
 
         assertFailsWith<InvalidActionException> {
-            controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = -1, y = 5))
+            controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = 30, y = 5))
         }
     }
 
