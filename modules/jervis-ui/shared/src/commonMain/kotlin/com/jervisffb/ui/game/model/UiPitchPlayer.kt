@@ -6,6 +6,7 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerIntermediateState
 import com.jervisffb.engine.model.PlayerNo
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.PlayerSize
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.TeamId
@@ -62,6 +63,6 @@ data class UiPitchPlayer(
     )
     val isTemporarySelected = mutableStateOf<Boolean>(false)
     val isSelectable = (selectedAction != null)
-    val isProne: Boolean = (state == PlayerState.PRONE)
-    val isStunned: Boolean = (state == PlayerState.STUNNED || state == PlayerState.STUNNED_OWN_TURN)
+    val isProne: Boolean = (state == PlayerPitchState.PRONE)
+    val isStunned: Boolean = (state == PlayerPitchState.STUNNED || state == PlayerPitchState.STUNNED_OWN_TURN)
 }

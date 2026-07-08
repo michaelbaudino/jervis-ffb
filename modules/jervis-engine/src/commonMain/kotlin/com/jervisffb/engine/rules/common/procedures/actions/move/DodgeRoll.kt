@@ -30,7 +30,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.DodgeRollContext
 import com.jervisffb.engine.model.context.ProcedureContext
@@ -459,7 +459,7 @@ object DodgeRoll: D6WithRerollProcedure() {
                                 rollModifiers = updatedModifiers,
                                 isSuccess = success
                             )),
-                            SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false),
+                            SetPlayerState(player, PlayerPitchState.PRONE, hasTackleZones = false),
                             SetPlayerLocation(player, context.startingSquare),
                         )
                         getResetChompedStateCommands(player, context.startingSquare, forceRemoveChompedByChomper = true)?.let {

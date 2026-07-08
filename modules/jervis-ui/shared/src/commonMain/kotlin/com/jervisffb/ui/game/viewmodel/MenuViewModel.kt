@@ -10,7 +10,8 @@ import com.jervisffb.engine.actions.DogoutSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.Undo
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.GiantLocation
@@ -269,7 +270,7 @@ class MenuViewModel {
             // Ignore player setup if either player or coordinate is not valid
             val playerAvailable = (
                 team.noToPlayer.contains(playerNo)
-                    && ((team[playerNo].state == PlayerState.RESERVE) || (team[playerNo].state == PlayerState.STANDING))
+                    && ((team[playerNo].state == PlayerDogoutState.RESERVE) || (team[playerNo].state == PlayerPitchState.STANDING))
             )
 
             // Map to pitch coordinate

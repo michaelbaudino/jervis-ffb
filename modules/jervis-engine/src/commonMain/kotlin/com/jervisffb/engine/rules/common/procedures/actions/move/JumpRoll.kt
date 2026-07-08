@@ -20,7 +20,7 @@ import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.JumpRollContext
 import com.jervisffb.engine.model.context.ProcedureContext
@@ -125,7 +125,7 @@ object JumpRoll : D6WithRerollProcedure() {
                             modifiers = updatedModifiers,
                             isSuccess = success
                         )),
-                        SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false),
+                        SetPlayerState(player, PlayerPitchState.PRONE, hasTackleZones = false),
                         SetPlayerLocation(player, context.startingSquare),
                         ExitProcedure()
                     )

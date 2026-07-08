@@ -15,7 +15,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
 import com.jervisffb.test.SmartMoveTo
@@ -272,7 +272,7 @@ class GameProgressTests: JervisGameBB2020Test() {
     @Test
     fun undoFoulActivation() {
         setupGame()
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         val player = awayTeam[10.playerNo]
         controller.rollForward(
             *activatePlayer("A10", PlayerStandardActionType.FOUL),
@@ -285,7 +285,7 @@ class GameProgressTests: JervisGameBB2020Test() {
     @Test
     fun cannotUndoFoulActivation() {
         setupGame()
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         val player = awayTeam[10.playerNo]
         controller.rollForward(
             *activatePlayer("A10", PlayerStandardActionType.FOUL),

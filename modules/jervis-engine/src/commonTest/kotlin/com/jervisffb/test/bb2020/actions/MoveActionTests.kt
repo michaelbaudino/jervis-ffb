@@ -12,7 +12,7 @@ import com.jervisffb.engine.actions.TargetSquare
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
@@ -58,7 +58,7 @@ class MoveActionTests: JervisGameBB2020Test() {
     @Test
     fun endActionWhileProneDoesNotMarkPlayerAsActivated() {
         val movingPlayer = state.getPlayerById("A8".playerId)
-        movingPlayer.state = PlayerState.PRONE
+        movingPlayer.state = PlayerPitchState.PRONE
         startMoveAction()
         assertEquals(Int.MAX_VALUE, state.activeTeamOrThrow().turnData.moveActions)
         assertEquals(Availability.IS_ACTIVE, movingPlayer.available)

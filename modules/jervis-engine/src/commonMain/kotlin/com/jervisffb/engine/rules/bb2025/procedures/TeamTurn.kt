@@ -34,7 +34,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.ForegoActivationContext
@@ -209,13 +209,13 @@ object TeamTurn : Procedure() {
             //  - Players stunned at the beginning of the turn are now prone
 
             val turnOverStunnedPlayersCommands = state.activeTeamOrThrow()
-                .filter { it.state == PlayerState.STUNNED }
-                .map { SetPlayerState(it, PlayerState.PRONE) }
+                .filter { it.state == PlayerPitchState.STUNNED }
+                .map { SetPlayerState(it, PlayerPitchState.PRONE) }
                 .toTypedArray()
 
             val progressStunnedCommands = state.activeTeamOrThrow()
-                .filter { it.state == PlayerState.STUNNED_OWN_TURN }
-                .map { SetPlayerState(it, PlayerState.STUNNED) }
+                .filter { it.state == PlayerPitchState.STUNNED_OWN_TURN }
+                .map { SetPlayerState(it, PlayerPitchState.STUNNED) }
                 .toTypedArray()
 
             // Reset Player availability. We mostly do this for UI purposes, so we should probably move towards
@@ -295,7 +295,7 @@ object TeamTurn : Procedure() {
     private fun getAvailablePlayers(state: Game, rules: Rules): List<Player> {
         return state.activeTeamOrThrow()
             .filter { it.available == Availability.AVAILABLE } // Players that hasn't already been activated
-            .filter { it.state == PlayerState.STANDING || it.state == PlayerState.PRONE } // Only Standing/Prone players
+            .filter { it.state == PlayerPitchState.STANDING || it.state == PlayerPitchState.PRONE } // Only Standing/Prone players
     }
 
     // Reset player stats back to start, this e.g. include moves
@@ -347,7 +347,7 @@ object TeamTurn : Procedure() {
     private fun getResetAvailablePlayers(state: Game, rules: Rules): Array<SetPlayerAvailability> {
         // TODO Is there anyone who should not be made available? I.e. Stunned players will be turned KO
         return state.activeTeamOrThrow().map {
-            if (it.location.isOnPitch(rules) && (it.state == PlayerState.STANDING || it.state == PlayerState.PRONE)) {
+            if (it.location.isOnPitch(rules) && (it.state == PlayerPitchState.STANDING || it.state == PlayerPitchState.PRONE)) {
                 SetPlayerAvailability(it, Availability.AVAILABLE)
             } else {
                 SetPlayerAvailability(it, Availability.UNAVAILABLE)

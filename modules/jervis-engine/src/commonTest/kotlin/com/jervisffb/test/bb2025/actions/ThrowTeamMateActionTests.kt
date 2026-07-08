@@ -23,7 +23,8 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Ball
 import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.skills.ThrowTeamMate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -452,7 +453,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
             DiceRollResults(1.d6, 1.d6), // Injury Roll on thrown player
         )
         assertEquals(awayTeam, state.activeTeam)
-        assertEquals(PlayerState.STUNNED_OWN_TURN, thrownPlayer.state)
+        assertEquals(PlayerPitchState.STUNNED_OWN_TURN, thrownPlayer.state)
         thrownPlayer.assertCoordinates(10, 5)
     }
 
@@ -503,7 +504,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
 
     @Test
     fun landOnPronePlayer() {
-        homeTeam["H13".playerId].state = PlayerState.PRONE
+        homeTeam["H13".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             // Ogre throws hafling on top of the prone player
             *activatePlayer("A1", PlayerStandardActionType.THROW_TEAM_MATE),
@@ -533,7 +534,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
             DiceRollResults(1.d6, 1.d6), // Injury roll
         )
         assertEquals(homeTeam, state.activeTeam)
-        assertEquals(PlayerState.RESERVE, awayTeam["A13".playerId].state)
+        assertEquals(PlayerDogoutState.RESERVE, awayTeam["A13".playerId].state)
     }
 
     @Test
@@ -576,7 +577,7 @@ class ThrowTeamMateActionTests: JervisGameBB2025Test() {
         )
         // Turn-over if player with ball is thrown out of the pitch
         assertEquals(homeTeam, state.activeTeam)
-        assertEquals(PlayerState.RESERVE, awayTeam["A13".playerId].state)
+        assertEquals(PlayerDogoutState.RESERVE, awayTeam["A13".playerId].state)
         assertEquals(PitchCoordinate(11, 2), state.singleBall().coordinates)
     }
 

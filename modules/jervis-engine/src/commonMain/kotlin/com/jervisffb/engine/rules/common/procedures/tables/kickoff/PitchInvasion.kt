@@ -24,7 +24,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.PitchInvasionContext
 import com.jervisffb.engine.model.context.getContext
@@ -127,7 +127,7 @@ object PitchInvasion : Procedure() {
                     castAction<RandomPlayersSelected>(action) { randomPlayersAction ->
                         val playerCommands = randomPlayersAction.getPlayers(state).flatMap { player ->
                             listOf(
-                                SetPlayerState(player, PlayerState.STUNNED, hasTackleZones = false),
+                                SetPlayerState(player, PlayerPitchState.STUNNED, hasTackleZones = false),
                                 ReportGameProgress("${player.name} was Stunned by the crowd")
                             )
                         }.toTypedArray()
@@ -175,7 +175,7 @@ object PitchInvasion : Procedure() {
                     castAction<RandomPlayersSelected>(action) { randomPlayersAction ->
                         val playerCommands = randomPlayersAction.getPlayers(state).flatMap { player ->
                             listOf(
-                                SetPlayerState(player, PlayerState.STUNNED, hasTackleZones = false),
+                                SetPlayerState(player, PlayerPitchState.STUNNED, hasTackleZones = false),
                                 ReportGameProgress("${player.name} was Stunned by the crowd")
                             )
                         }.toTypedArray()

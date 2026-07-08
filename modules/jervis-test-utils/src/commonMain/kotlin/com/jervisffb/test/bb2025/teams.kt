@@ -11,7 +11,7 @@ import com.jervisffb.engine.model.Pitch
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerNo
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
@@ -212,7 +212,7 @@ fun createStartingTestSetup(state: Game) {
     ) {
         player?.let {
             SetPlayerLocation(it, pitchCoordinate).execute(state)
-            SetPlayerState(it, PlayerState.STANDING)
+            SetPlayerState(it, PlayerPitchState.STANDING)
         } ?: error("")
     }
 

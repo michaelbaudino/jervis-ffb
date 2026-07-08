@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.isOnHomeTeam
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.rules.common.roster.PlayerSpecialRule
@@ -355,13 +355,13 @@ fun PlayerStatsCard(flow: Flow<UiPlayerCard?>, onClick: (() -> Unit)? = null) {
                             verticalSpacing = borderSize
                         ) {
                             when (player.model.state) {
-                                PlayerState.PRONE -> {
+                                PlayerPitchState.PRONE -> {
                                     StatusText("Prone", JervisTheme.statusProne)
                                 }
-                                PlayerState.STUNNED -> {
+                                PlayerPitchState.STUNNED -> {
                                     StatusText("Stunned", JervisTheme.statusStunned)
                                 }
-                                PlayerState.STUNNED_OWN_TURN -> {
+                                PlayerPitchState.STUNNED_OWN_TURN -> {
                                     StatusText("Stunned", JervisTheme.statusStunned)
                                 }
                                 else -> { /* Do nothing */ }

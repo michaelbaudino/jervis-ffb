@@ -9,7 +9,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
@@ -45,7 +45,7 @@ class ApothecaryTests: JervisGameBB2020Test() {
             DiceRollResults(1.d16), // Badly Hurt
             Cancel,  // Use first roll
         )
-        assertEquals(PlayerState.RESERVE, state.getPlayerById("H1".playerId).state)
+        assertEquals(PlayerDogoutState.RESERVE, state.getPlayerById("H1".playerId).state)
         assertEquals(DogOut, state.getPlayerById("H1".playerId).location)
     }
 }

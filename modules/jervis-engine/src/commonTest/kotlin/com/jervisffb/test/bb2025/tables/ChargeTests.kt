@@ -19,7 +19,7 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -357,7 +357,7 @@ class ChargeTests: JervisGameBB2025Test() {
             *defaultSetup()
         )
         listOf("H6".playerId, "H7".playerId, "H8".playerId, "H9".playerId).forEach {
-            homeTeam[it].state = PlayerState.PRONE
+            homeTeam[it].state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(
@@ -384,7 +384,7 @@ class ChargeTests: JervisGameBB2025Test() {
             *defaultSetup()
         )
         homeTeam.forEach {
-            it.state = PlayerState.PRONE
+            it.state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(

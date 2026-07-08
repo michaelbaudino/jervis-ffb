@@ -6,7 +6,8 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.modifiers.ArmourModifier
 import com.jervisffb.engine.rules.bb2025.skills.DirtyPlayer
@@ -42,7 +43,7 @@ class DirtyPlayerTests: JervisGameBB2025Test() {
 
     @Test
     fun doNotUseSkillIfNoImpact() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -60,7 +61,7 @@ class DirtyPlayerTests: JervisGameBB2025Test() {
 
     @Test
     fun useOnArmourRoll() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -75,7 +76,7 @@ class DirtyPlayerTests: JervisGameBB2025Test() {
 
     @Test
     fun useOnInjuryRoll() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),
@@ -84,14 +85,14 @@ class DirtyPlayerTests: JervisGameBB2025Test() {
             Confirm, // With +1 from Dirty Player, should move from Stunned to KO
             Cancel // Do not use apothecary
         )
-        assertEquals(PlayerState.KNOCKED_OUT, homeTeam["H1".playerId].state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, homeTeam["H1".playerId].state)
         assertNull(state.activePlayer)
         assertEquals(awayTeam, state.activeTeam)
     }
 
     @Test
     fun resetAfterAction() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
             PlayerSelected("H1".playerId),

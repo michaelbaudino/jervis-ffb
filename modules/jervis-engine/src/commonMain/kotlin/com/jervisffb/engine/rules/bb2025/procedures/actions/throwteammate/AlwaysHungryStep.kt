@@ -17,7 +17,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
@@ -76,7 +76,7 @@ object AlwaysHungryStep: Procedure() {
             val thrownPlayer = context.thrownPlayer
             return buildCompositeCommand {
                 addAll(
-                    SetPlayerState(thrownPlayer, PlayerState.DEAD, hasTackleZones = false),
+                    SetPlayerState(thrownPlayer, PlayerDogoutState.DEAD, hasTackleZones = false),
                     SetPlayerLocation(thrownPlayer, DogOut)
                 )
                 if (thrownPlayer.hasBall()) {

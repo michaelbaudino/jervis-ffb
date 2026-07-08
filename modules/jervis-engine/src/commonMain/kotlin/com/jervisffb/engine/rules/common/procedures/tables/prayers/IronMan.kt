@@ -16,7 +16,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
@@ -43,7 +43,7 @@ object IronMan : Procedure() {
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<PrayersToNuffleRollContext>()
             val requestedAction = context.team
-                .filter { it.state == PlayerState.RESERVE || it.location.isOnPitch(rules) }
+                .filter { it.state == PlayerDogoutState.RESERVE || it.location.isOnPitch(rules) }
                 .filter { !it.hasSkill(SkillType.LONER) }
                 .let {
                     when (it.isNotEmpty()) {

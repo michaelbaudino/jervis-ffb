@@ -11,7 +11,7 @@ import com.jervisffb.engine.actions.PlayerActionSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.skills.Titchy
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -91,7 +91,7 @@ class TitchyTests: JervisGameBB2025Test() {
     fun leavingTitchyPlayerRequiresDodge() {
         // Titchy players are still marking players, so leaving them requires a dodge
         val player = state.getPlayerById("H5".playerId)
-        state.getPlayerById("A4".playerId).state = PlayerState.PRONE
+        state.getPlayerById("A4".playerId).state = PlayerPitchState.PRONE
         val markingPlayers = rules.getMarkingPlayers(state, homeTeam, player.coordinates)
         assertEquals(1, markingPlayers.size)
         assertTrue(markingPlayers.first().hasSkill<Titchy>())

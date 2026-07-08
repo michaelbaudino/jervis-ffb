@@ -17,7 +17,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -69,7 +69,7 @@ class BlockActionTests: JervisGameBB2020Test() {
     @Test
     fun cannotBlockWhileProne() {
         val player = state.getPlayerById("A4".playerId)
-        player.state = PlayerState.PRONE
+        player.state = PlayerPitchState.PRONE
         controller.rollForward(
             PlayerSelected(player.id),
         )
@@ -91,14 +91,14 @@ class BlockActionTests: JervisGameBB2020Test() {
 
         // Non-standing players cannot be blocked
         player.hasTackleZones = true
-        state.getPlayerById("H3".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H4".playerId).state = PlayerState.STUNNED
-        state.getPlayerById("H5".playerId).state = PlayerState.STUNNED_OWN_TURN
+        state.getPlayerById("H3".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H4".playerId).state = PlayerPitchState.STUNNED
+        state.getPlayerById("H5".playerId).state = PlayerPitchState.STUNNED_OWN_TURN
         assertFalse(activePlayerCanBlock())
 
-        state.getPlayerById("H3".playerId).state = PlayerState.STANDING
-        state.getPlayerById("H4".playerId).state = PlayerState.STANDING
-        state.getPlayerById("H5".playerId).state = PlayerState.STANDING
+        state.getPlayerById("H3".playerId).state = PlayerPitchState.STANDING
+        state.getPlayerById("H4".playerId).state = PlayerPitchState.STANDING
+        state.getPlayerById("H5".playerId).state = PlayerPitchState.STANDING
         assertTrue(activePlayerCanBlock())
     }
 
@@ -116,8 +116,8 @@ class BlockActionTests: JervisGameBB2020Test() {
     @Test
     fun assistsFromOpenPlayers() {
         // Allow A2 to assist on H1
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H3".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H3".playerId).state = PlayerPitchState.PRONE
         val player = state.getPlayerById("A1".playerId)
         controller.rollForward(
             *activatePlayer(player, PlayerStandardActionType.BLOCK),

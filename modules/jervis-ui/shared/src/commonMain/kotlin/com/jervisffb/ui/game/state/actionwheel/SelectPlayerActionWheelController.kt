@@ -11,7 +11,7 @@ import com.jervisffb.engine.actions.PlayerDeselected
 import com.jervisffb.engine.actions.SelectPlayerAction
 import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerAction
@@ -54,7 +54,7 @@ object SelectPlayerActionWheelController : ActionWheelDialogController() {
         // If prone, also add a "Stand Up & And Action". But only if the
         // action has a move component. Similar to FUMBBL.
         val activePlayer = acc.game.activePlayer ?: error("No active player")
-        if (activePlayer.state == PlayerState.PRONE) {
+        if (activePlayer.state == PlayerPitchState.PRONE) {
             val menuItem = ActionButtonData(
                 id = ButtonId("[${actions.id.value}] Stand Up & End Action"),
                 label = { "Stand Up & End Action" },
@@ -108,7 +108,7 @@ object SelectPlayerActionWheelController : ActionWheelDialogController() {
                 PlayerStandardActionType.BLOCK -> {
                     val currentPlayer = state.activePlayer
                     val hasJumpUp = currentPlayer?.isSkillAvailable(SkillType.JUMP_UP) ?: false
-                    val isProne = currentPlayer?.state == PlayerState.PRONE
+                    val isProne = currentPlayer?.state == PlayerPitchState.PRONE
                     val title = when (isProne && hasJumpUp) {
                         true -> "Jump Up & Block"
                         false -> "Block"

@@ -12,7 +12,8 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -60,7 +61,7 @@ class FoulActionTests: JervisGameBB2025Test() {
 
     @Test
     fun selectStunnedPlayer() {
-        homeTeam["H1".playerId].state = PlayerState.STUNNED
+        homeTeam["H1".playerId].state = PlayerPitchState.STUNNED
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
         )
@@ -71,7 +72,7 @@ class FoulActionTests: JervisGameBB2025Test() {
 
     @Test
     fun cannotSelectTargetOnTheDistance() {
-        homeTeam["H5".playerId].state = PlayerState.STUNNED
+        homeTeam["H5".playerId].state = PlayerPitchState.STUNNED
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
         )
@@ -82,7 +83,7 @@ class FoulActionTests: JervisGameBB2025Test() {
     @Test
     fun canFoulAllEligibleTargets() {
         homeTeam["H1".playerId].putProne()
-        homeTeam["H2".playerId].state = PlayerState.STUNNED
+        homeTeam["H2".playerId].state = PlayerPitchState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
@@ -97,7 +98,7 @@ class FoulActionTests: JervisGameBB2025Test() {
 
     @Test
     fun canCancelActionBeforeMovingOrFouling() {
-        homeTeam["H1".playerId].state = PlayerState.STUNNED
+        homeTeam["H1".playerId].state = PlayerPitchState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.FOUL),
@@ -113,7 +114,7 @@ class FoulActionTests: JervisGameBB2025Test() {
 
     @Test
     fun useActionWhenMovingButNotFouling() {
-        homeTeam["H1".playerId].state = PlayerState.STUNNED
+        homeTeam["H1".playerId].state = PlayerPitchState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
@@ -127,7 +128,7 @@ class FoulActionTests: JervisGameBB2025Test() {
     @Test
     fun offensiveAssists() {
         homeTeam["H1".playerId].putProne()
-        homeTeam["H2".playerId].state = PlayerState.STUNNED
+        homeTeam["H2".playerId].state = PlayerPitchState.STUNNED
         assertEquals(1, awayTeam.turnData.foulActions)
         controller.rollForward(
             *activatePlayer("A6", PlayerStandardActionType.FOUL),
@@ -171,7 +172,7 @@ class FoulActionTests: JervisGameBB2025Test() {
         )
         homeTeam["H1".playerId].assertProne()
         assertEquals(homeTeam, state.activeTeam)
-        assertEquals(PlayerState.BANNED, awayTeam["A6".playerId].state)
+        assertEquals(PlayerDogoutState.BANNED, awayTeam["A6".playerId].state)
         assertEquals(DogOut, awayTeam["A6".playerId].location)
     }
 
@@ -190,7 +191,7 @@ class FoulActionTests: JervisGameBB2025Test() {
         )
         homeTeam["H1".playerId].assertStunned()
         assertEquals(homeTeam, state.activeTeam)
-        assertEquals(PlayerState.BANNED, awayTeam["A6".playerId].state)
+        assertEquals(PlayerDogoutState.BANNED, awayTeam["A6".playerId].state)
         assertEquals(DogOut, awayTeam["A6".playerId].location)
     }
 

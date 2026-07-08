@@ -10,8 +10,8 @@ import com.jervisffb.engine.model.CoachId
 import com.jervisffb.engine.model.CoachType
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Pitch
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerNo
-import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -376,7 +376,7 @@ class NetworkFuzzTester {
 
         setup.forEach { pitchCoordinate: PitchCoordinate ->
             team.firstOrNull {
-                it.state == PlayerState.RESERVE && !playersTaken.contains(it.number)
+                it.state == PlayerDogoutState.RESERVE && !playersTaken.contains(it.number)
             }?.let { replacementPlayer ->
                 playersTaken.add(replacementPlayer.number)
                 compositeActions.add(PlayerSelected(team[replacementPlayer.number]))

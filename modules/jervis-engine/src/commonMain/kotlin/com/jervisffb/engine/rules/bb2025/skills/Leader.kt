@@ -4,7 +4,8 @@ import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.commands.RemoveTeamReroll
 import com.jervisffb.engine.commands.SetTeamRerollEnabled
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.SkillKeyword
 import com.jervisffb.engine.model.Team
@@ -81,21 +82,21 @@ class Leader(
                 .all { player ->
                     val isInDogout = (player.location == DogOut)
                     val removedState = when (player.state) {
-                        PlayerState.RESERVE,
-                        PlayerState.KNOCKED_OUT,
-                        PlayerState.DEAD,
-                        PlayerState.FAINTED,
-                        PlayerState.DODGY_SNACK,
-                        PlayerState.STANDING,
-                        PlayerState.PRONE,
-                        PlayerState.STUNNED,
-                        PlayerState.STUNNED_OWN_TURN -> false
+                        PlayerDogoutState.RESERVE,
+                        PlayerDogoutState.KNOCKED_OUT,
+                        PlayerDogoutState.DEAD,
+                        PlayerDogoutState.FAINTED,
+                        PlayerDogoutState.DODGY_SNACK,
+                        PlayerPitchState.STANDING,
+                        PlayerPitchState.PRONE,
+                        PlayerPitchState.STUNNED,
+                        PlayerPitchState.STUNNED_OWN_TURN -> false
 
-                        PlayerState.BADLY_HURT,
-                        PlayerState.LASTING_INJURY,
-                        PlayerState.SERIOUSLY_HURT,
-                        PlayerState.SERIOUS_INJURY,
-                        PlayerState.BANNED -> true
+                        PlayerDogoutState.BADLY_HURT,
+                        PlayerDogoutState.LASTING_INJURY,
+                        PlayerDogoutState.SERIOUSLY_HURT,
+                        PlayerDogoutState.SERIOUS_INJURY,
+                        PlayerDogoutState.BANNED -> true
                     }
                     isInDogout && removedState
                 }

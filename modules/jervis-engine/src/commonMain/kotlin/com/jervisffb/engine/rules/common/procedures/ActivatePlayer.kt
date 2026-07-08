@@ -26,7 +26,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.isSkillAvailable
@@ -183,7 +183,7 @@ object ActivatePlayer : Procedure() {
             // a player to temporarily lose their tackle zone behave this way:
             // Bone Head, Hypnotic Gaze, Really Stupid
             val enableTackleZonesCommand = if (
-                player.state == PlayerState.STANDING
+                player.state == PlayerPitchState.STANDING
                 && !player.hasTackleZones
             ) {
                 compositeCommandOf(

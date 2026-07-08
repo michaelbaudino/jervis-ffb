@@ -7,7 +7,8 @@ import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.PitchSquare
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.isSkillAvailable
@@ -66,8 +67,8 @@ abstract class Rules(
      */
     open fun isSetupValid(state: Game, team: Team): List<SetupRule> {
         val isHomeTeam = team.isHomeTeam()
-        val inReserve: List<Player> = team.filter { it.state == PlayerState.RESERVE && !it.location.isOnPitch(this) }
-        val onField: List<Player> = team.filter { it.state == PlayerState.STANDING && it.location.isOnPitch(this) }
+        val inReserve: List<Player> = team.filter { it.state == PlayerDogoutState.RESERVE && !it.location.isOnPitch(this) }
+        val onField: List<Player> = team.filter { it.state == PlayerPitchState.STANDING && it.location.isOnPitch(this) }
         val totalAvailablePlayers: Int = inReserve.size + onField.size
 
         val brokenRules = mutableListOf<SetupRule>()
@@ -249,7 +250,7 @@ abstract class Rules(
         // TODO Probably need to account for difference between Bomb and Ball here
         return player.hasTackleZones
             && player.statusEffects.none { it.type == PlayerStatusEffectType.DISTRACTED }
-            && player.state == PlayerState.STANDING
+            && player.state == PlayerPitchState.STANDING
             && player.location.isOnPitch(this)
             && !player.hasBall()
     }
@@ -262,7 +263,7 @@ abstract class Rules(
         // to deflect.
         // TODO Players with "No Hands" cannot deflect
         return player.hasTackleZones
-            && player.state == PlayerState.STANDING
+            && player.state == PlayerPitchState.STANDING
             && player.location.isOnPitch(this)
     }
 
@@ -270,7 +271,7 @@ abstract class Rules(
      * Return `true` if this player is able to mark other players.
      */
     fun canMarkPlayers(player: Player): Boolean {
-        return player.hasTackleZones && player.state == PlayerState.STANDING
+        return player.hasTackleZones && player.state == PlayerPitchState.STANDING
     }
 
     /**
@@ -286,7 +287,7 @@ abstract class Rules(
      * on page 38 in the BB2025 rulebook.
      */
     fun isStanding(player: Player): Boolean {
-        return player.state == PlayerState.STANDING && player.location.isOnPitch(this)
+        return player.state == PlayerPitchState.STANDING && player.location.isOnPitch(this)
     }
 
     /**
@@ -301,20 +302,20 @@ abstract class Rules(
      */
     fun isInjuried(player: Player): Boolean {
         return when (player.state) {
-            PlayerState.BANNED,
-            PlayerState.DODGY_SNACK,
-            PlayerState.FAINTED,
-            PlayerState.PRONE,
-            PlayerState.RESERVE,
-            PlayerState.STANDING,
-            PlayerState.STUNNED,
-            PlayerState.STUNNED_OWN_TURN -> false
-            PlayerState.BADLY_HURT,
-            PlayerState.DEAD,
-            PlayerState.KNOCKED_OUT,
-            PlayerState.LASTING_INJURY,
-            PlayerState.SERIOUSLY_HURT,
-            PlayerState.SERIOUS_INJURY -> true
+            PlayerDogoutState.BANNED,
+            PlayerDogoutState.DODGY_SNACK,
+            PlayerDogoutState.FAINTED,
+            PlayerPitchState.PRONE,
+            PlayerDogoutState.RESERVE,
+            PlayerPitchState.STANDING,
+            PlayerPitchState.STUNNED,
+            PlayerPitchState.STUNNED_OWN_TURN -> false
+            PlayerDogoutState.BADLY_HURT,
+            PlayerDogoutState.DEAD,
+            PlayerDogoutState.KNOCKED_OUT,
+            PlayerDogoutState.LASTING_INJURY,
+            PlayerDogoutState.SERIOUSLY_HURT,
+            PlayerDogoutState.SERIOUS_INJURY -> true
         }
     }
 
@@ -347,7 +348,7 @@ abstract class Rules(
         if (!player.location.isOnPitch(this)) return false
         if (!target.location.isOnPitch(this)) return false
         if (!player.hasTackleZones) return false
-        if (player.state != PlayerState.STANDING) return false
+        if (player.state != PlayerPitchState.STANDING) return false
         val state = player.team.game
         return player.coordinates.getSurroundingCoordinates(this, 1)
             .any { state.pitch[it].player == target }
@@ -360,7 +361,7 @@ abstract class Rules(
         if (!player.location.isOnPitch(this)) return false
         if (target !is OnPitchLocation) return false
         if (!player.hasTackleZones) return false
-        if (player.state != PlayerState.STANDING) return false
+        if (player.state != PlayerPitchState.STANDING) return false
         val state = player.team.game
         return target.getSurroundingCoordinates(this, 1)
             .any { state.pitch[it] == player.location }

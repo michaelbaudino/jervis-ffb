@@ -43,7 +43,7 @@ import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.ChargeContext
@@ -314,8 +314,8 @@ object Charge : Procedure() {
             //  - Players stunned at the beginning of the turn are now prone
 
             val progressStunnedCommands = state.kickingTeam
-                .filter { it.state == PlayerState.STUNNED_OWN_TURN }
-                .map { SetPlayerState(it, PlayerState.STUNNED) }
+                .filter { it.state == PlayerPitchState.STUNNED_OWN_TURN }
+                .map { SetPlayerState(it, PlayerPitchState.STUNNED) }
                 .toTypedArray()
 
             // Reset Player availability. We mostly do this for UI purposes, so we should probably move towards
@@ -406,7 +406,7 @@ object Charge : Procedure() {
         val rules = state.rules
         // TODO Is there anyone who should not be made available? I.e. Stunned players will be turned KO
         return state.kickingTeam.map {
-            if (it.location.isOnPitch(rules) && (it.state == PlayerState.STANDING || it.state == PlayerState.PRONE)) {
+            if (it.location.isOnPitch(rules) && (it.state == PlayerPitchState.STANDING || it.state == PlayerPitchState.PRONE)) {
                 SetPlayerAvailability(it, Availability.AVAILABLE)
             } else {
                 SetPlayerAvailability(it, Availability.UNAVAILABLE)

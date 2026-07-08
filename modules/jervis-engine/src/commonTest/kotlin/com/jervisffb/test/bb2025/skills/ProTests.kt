@@ -17,7 +17,7 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.getSkill
@@ -274,7 +274,7 @@ class ProTests: JervisGameBB2025Test() {
             Cancel, // Do not use Apothecary
         )
         assertFalse(attacker.getSkill<Pro>().rerollUsed)
-        assertEquals(PlayerState.BADLY_HURT, defender.state)
+        assertEquals(PlayerDogoutState.BADLY_HURT, defender.state)
         state.assertNoActivePlayer()
     }
 
@@ -294,7 +294,7 @@ class ProTests: JervisGameBB2025Test() {
         )
         state.assertActiveTeam(homeTeam)
         assertFalse(fouler.getSkill<Pro>().rerollUsed)
-        assertEquals(PlayerState.BANNED, fouler.state)
+        assertEquals(PlayerDogoutState.BANNED, fouler.state)
         assertEquals(DogOut, fouler.location)
     }
 

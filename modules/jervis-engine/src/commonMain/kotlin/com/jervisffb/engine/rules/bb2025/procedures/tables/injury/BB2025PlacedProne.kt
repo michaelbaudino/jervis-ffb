@@ -17,7 +17,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.assertContext
@@ -60,7 +60,7 @@ object BB2025PlacedProne: Procedure() {
             val player = context.player
             val rootedStatus = player.statusEffects.firstOrNull { it.type == PlayerStatusEffectType.ROOTED }
             return buildCompositeCommand {
-                add(SetPlayerState(player, PlayerState.PRONE, hasTackleZones = false))
+                add(SetPlayerState(player, PlayerPitchState.PRONE, hasTackleZones = false))
                 if (rootedStatus != null) {
                     add(RemovePlayerStatusEffect(player, rootedStatus))
                 }

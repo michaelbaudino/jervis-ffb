@@ -12,7 +12,7 @@ import com.jervisffb.engine.actions.SelectPitchLocation
 import com.jervisffb.engine.actions.SelectRerollOption
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
@@ -47,13 +47,13 @@ class JumpTests: JervisGameBB2020Test() {
     // Check all player states we should be able to jump over
     @Test
     fun jumpOverPlayer() {
-        val entries = PlayerState.entries
+        val entries = PlayerPitchState.entries
         for (i in entries.indices) {
             val playerState = entries[i]
             val canJump = when (playerState) {
-                PlayerState.PRONE,
-                PlayerState.STUNNED,
-                PlayerState.STUNNED_OWN_TURN -> true
+                PlayerPitchState.PRONE,
+                PlayerPitchState.STUNNED,
+                PlayerPitchState.STUNNED_OWN_TURN -> true
                 else -> false
             }
             if (!canJump) continue
@@ -79,7 +79,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun legalSquares_straightJump() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -104,7 +104,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun legalSquares_diagonalJump() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A2".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -129,7 +129,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun modifiersWhenLeavingSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A2".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -151,8 +151,8 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun modifiersWhenEnteringSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -174,8 +174,8 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun useLargestModifier() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A2".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -197,7 +197,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun fallOverOnFailedJump() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -213,7 +213,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun fallOverInStartingSquareWhenRollingOne() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),
@@ -229,7 +229,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun rushToJump() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
 
         // Adjust move so jumping player needs 1 rush to jump
@@ -253,7 +253,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun rushTwiceToJump() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
 
         // Adjust move so jumping player needs 2 rush to jump
@@ -281,7 +281,7 @@ class JumpTests: JervisGameBB2020Test() {
     // prone player)
     @Test
     fun fallOverInStartingSquareWhenFailingFirstRush() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
 
         // Adjust move so jumping player needs 2 rush to jump
@@ -302,7 +302,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun fallOverInTargetSquareWhenFailingSecondRush() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
 
         // Adjust move so jumping player needs 2 rush to jump
@@ -341,7 +341,7 @@ class JumpTests: JervisGameBB2020Test() {
 
     @Test
     fun cannotJumpIfNotEnoughMove() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         controller.rollForward(
             PlayerSelected(jumpingPlayer.id),

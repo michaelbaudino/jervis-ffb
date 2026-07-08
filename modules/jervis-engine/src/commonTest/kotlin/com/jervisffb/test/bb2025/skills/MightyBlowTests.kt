@@ -8,7 +8,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.modifiers.MightyBlowArmourModifier
 import com.jervisffb.engine.model.modifiers.MightyBlowInjuryModifier
@@ -122,7 +122,7 @@ class MightyBlowTests: JervisGameBB2025Test() {
             Cancel, // Do not use apothecary
         )
         state.assertNoActivePlayer()
-        assertEquals(PlayerState.KNOCKED_OUT, defender.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, defender.state)
     }
 
 
@@ -147,7 +147,7 @@ class MightyBlowTests: JervisGameBB2025Test() {
             Cancel, // Do not use apothecary
         )
         state.assertNoActivePlayer()
-        assertEquals(PlayerState.KNOCKED_OUT, defender.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, defender.state)
     }
 
     @Test

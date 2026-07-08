@@ -6,7 +6,8 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.bb2025.skills.SneakyGit
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -35,7 +36,7 @@ class SneakyGitTests: JervisGameBB2025Test() {
     fun workOnDoubleArmour() {
         val fouler = awayTeam["A6".playerId]
         fouler.addSkill(SkillType.SNEAKY_GIT)
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         assertEquals(1, awayTeam.turnData.foulActions)
         assertEquals(awayTeam, state.activeTeam)
         controller.rollForward(
@@ -54,7 +55,7 @@ class SneakyGitTests: JervisGameBB2025Test() {
     fun doesNotWorkOnDoubleArmourIfBroken() {
         val fouler = awayTeam["A6".playerId]
         fouler.addSkill(SkillType.SNEAKY_GIT)
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         assertEquals(1, awayTeam.turnData.foulActions)
         assertEquals(awayTeam, state.activeTeam)
         controller.rollForward(
@@ -66,7 +67,7 @@ class SneakyGitTests: JervisGameBB2025Test() {
             Cancel // Do not argue the call
         )
         assertNull(state.activePlayer)
-        assertEquals(PlayerState.BANNED, fouler.state)
+        assertEquals(PlayerDogoutState.BANNED, fouler.state)
         assertEquals(homeTeam, state.activeTeam)
     }
 
@@ -74,7 +75,7 @@ class SneakyGitTests: JervisGameBB2025Test() {
     fun doesNotWorkOnDoubleInjury() {
         val fouler = awayTeam["A6".playerId]
         fouler.addSkill(SkillType.SNEAKY_GIT)
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         assertEquals(1, awayTeam.turnData.foulActions)
         assertEquals(awayTeam, state.activeTeam)
         controller.rollForward(
@@ -86,7 +87,7 @@ class SneakyGitTests: JervisGameBB2025Test() {
             Cancel // Do not argue the call
         )
         assertNull(state.activePlayer)
-        assertEquals(PlayerState.BANNED, fouler.state)
+        assertEquals(PlayerDogoutState.BANNED, fouler.state)
         assertEquals(homeTeam, state.activeTeam)
     }
 

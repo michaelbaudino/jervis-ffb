@@ -4,7 +4,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectPlayerAction
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.PlayerNo
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -66,7 +66,7 @@ class UnsteadyTests: JervisGameBB2025Test() {
 
     @Test
     fun cannotUseSecureTheBallIfUnsteadyAndProne() {
-        awayTeam["A1".playerId].state = PlayerState.PRONE
+        awayTeam["A1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             PlayerSelected("A1".playerId),
         )

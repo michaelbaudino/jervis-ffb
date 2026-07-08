@@ -29,7 +29,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.TeamId
 import com.jervisffb.engine.model.locations.OnPitchLocation
 import com.jervisffb.engine.reports.LogCategory
@@ -428,7 +428,7 @@ class GameEngineController(
             is SetPlayerState -> {
                 val player = action.getPlayer(state)
                 val location = action.location
-                val hasTackleZones = (action.state == PlayerState.STANDING)
+                val hasTackleZones = (action.state == PlayerPitchState.STANDING)
                 if (location is OnPitchLocation) {
                     if (!location.isOnPitch(rules)) {
                         INVALID_ACTION(action, "Location is not on the pitch: $location")

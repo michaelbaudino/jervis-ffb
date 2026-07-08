@@ -21,7 +21,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
@@ -77,7 +77,7 @@ object FoulAction : Procedure() {
             val fouler = state.getContext<FoulContext>().fouler
             val availableTargetPlayers = fouler.team.otherTeam().filter {
                 // You cannot foul your own players, so no need to check for STUNNED_OWN_TURN
-                it.location.isOnPitch(rules) && (it.state == PlayerState.PRONE || it.state == PlayerState.STUNNED)
+                it.location.isOnPitch(rules) && (it.state == PlayerPitchState.PRONE || it.state == PlayerPitchState.STUNNED)
             }.let {
                 SelectPlayer.fromPlayers(it)
             }

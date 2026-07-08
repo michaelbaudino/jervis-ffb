@@ -25,7 +25,7 @@ import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Coin
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.procedures.TeamTurn
 import com.jervisffb.engine.rules.common.actions.PassType
@@ -271,7 +271,7 @@ class TouchdownTests: JervisGameBB2025Test() {
 
         // Move opponent player in the way and put them prone, so we can jump over them
         SetPlayerLocation(homeTeam[11.playerNo], PitchCoordinate(1, 4)).execute(state)
-        homeTeam[11.playerNo].state = PlayerState.PRONE
+        homeTeam[11.playerNo].state = PlayerPitchState.PRONE
 
         // Give player enough moves to reach the End Zone
         player.movesLeft = 20

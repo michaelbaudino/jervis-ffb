@@ -1,18 +1,40 @@
 package com.jervisffb.engine.model
 
-// TODO Should we split this into DogoutState and PitchState?
+import com.jervisffb.engine.model.locations.OnPitchLocation
+import com.jervisffb.engine.model.locations.DogOut
+
 /**
- * This enum describes the high-level state of players. This enum should only
- * contain "stable" states. [PlayerIntermediateState] contains states that
- * are temporary and are used when transitioning between [PlayerState]s.
+ * This interface describes the high-level state of players. It is split into
+ * two enums, one for on-pitch states, and one for dogout state. These enums
+ * should only contain "stable" states. [PlayerIntermediateState] contains
+ * states that are temporary and are used when transitioning between [
+ * PlayerState]s.
  *
  * **Developer's Commentary**
  * There is some overlap between state and status effect, and it isn't clear
  * what the difference is, so for now, the separation is a best-guess for what
  * makes sense to model the rules the best. It might change in the future.
  */
-enum class PlayerState {
-    // Dogout states
+sealed interface PlayerState
+
+/**
+ * States for players on the pitch. These should only be used when
+ * [Player.location] is a [OnPitchLocation].
+ */
+enum class PlayerPitchState: PlayerState {
+    STANDING,
+    PRONE,
+    STUNNED,
+    // This state should only be visible to a player during their own team turn.
+    // After that, it should turn into a normal STUNNED state.
+    STUNNED_OWN_TURN,
+}
+
+/**
+ * States for players in the Dogout. These should only be used when
+ * [Player.location] is [DogOut].
+ */
+enum class PlayerDogoutState: PlayerState {
     RESERVE,
     KNOCKED_OUT,
     BADLY_HURT,
@@ -23,29 +45,8 @@ enum class PlayerState {
     FAINTED, // From Sweltering Heat
     BANNED, // From being sent off by the Ref
     DODGY_SNACK, // Miss the drive from Dodgy Snack
-
-    // Field states
-    STANDING,
-    PRONE,
-    STUNNED,
-    // This state should only be visible to a player during their own team turn.
-    // After that, it should turn into a normal STUNNED state.
-    STUNNED_OWN_TURN,
-
-//    MOVING,
-//    UNKNOWN,
-//    MISSING,
-//    FALLING,
-//    BLOCKED,
-//    EXHAUSTED,
-//    BEING_DRAGGED,
-//    PICKED_UP,
-//    HIT_ON_GROUND,
-//    HIT_BY_FIREBALL,
-//    HIT_BY_LIGHTNING,
-//    HIT_BY_BOMB,
-//    SETUP_PREVENTED
 }
+
 
 /**
  * Intermediate Player states. These states indicate that [Player.state]

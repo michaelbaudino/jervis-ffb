@@ -23,7 +23,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlockActionContext
@@ -77,7 +77,7 @@ object BlockAction : Procedure() {
     object CheckForJumpUp: ParentNode() {
         override fun skipNodeFor(state: Game, rules: Rules): Node? {
             val player = state.activePlayer ?: error("Missing active player")
-            val isProne = (player.state == PlayerState.PRONE)
+            val isProne = (player.state == PlayerPitchState.PRONE)
             val hasJumpUp = player.isSkillAvailable(SkillType.JUMP_UP)
             return when (isProne && hasJumpUp) {
                 true -> null
@@ -95,7 +95,7 @@ object BlockAction : Procedure() {
             return when (jumpUpContext.isSuccess) {
                 true -> compositeCommandOf(
                     RemoveContext(jumpUpContext),
-                    SetPlayerState(jumpUpContext.player, PlayerState.STANDING, hasTackleZones = true),
+                    SetPlayerState(jumpUpContext.player, PlayerPitchState.STANDING, hasTackleZones = true),
                     GotoNode(SelectDefenderOrEndAction),
                 )
                 false -> compositeCommandOf(
@@ -119,7 +119,7 @@ object BlockAction : Procedure() {
             val eligibleDefenders: List<GameActionDescriptor> =
                 attacker.coordinates.getSurroundingCoordinates(rules)
                     .mapNotNull { state.pitch[it].player }
-                    .filter { it.state == PlayerState.STANDING }
+                    .filter { it.state == PlayerPitchState.STANDING }
                     .filter { it.team != attacker.team }
                     .let { listOf(SelectPlayer.fromPlayers(it)) }
 

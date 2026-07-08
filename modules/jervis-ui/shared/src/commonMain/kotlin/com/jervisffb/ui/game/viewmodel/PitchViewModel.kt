@@ -13,7 +13,7 @@ import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -146,7 +146,7 @@ class PitchViewModel(
             // square and annotate the path towards it as well. These decorations take precedence
             // over already existing move decorations.
             val activePlayer: Player? = uiSnapshot.game.activePlayer
-            val requiresStandingUp = (activePlayer?.state == PlayerState.PRONE)
+            val requiresStandingUp = (activePlayer?.state == PlayerPitchState.PRONE)
             val standingUpIsFree = (activePlayer?.hasSkill(SkillType.JUMP_UP) == true)
 
             // Use path finder

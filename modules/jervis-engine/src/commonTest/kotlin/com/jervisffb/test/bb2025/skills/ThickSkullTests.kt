@@ -9,7 +9,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.rules.bb2025.skills.ThickSkull
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -90,7 +90,7 @@ class ThickSkullTests: JervisGameBB2025Test() {
             Cancel // Do not use Apothecary
         )
         assertNull(state.activePlayer)
-        assertEquals(PlayerState.KNOCKED_OUT, defender.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, defender.state)
     }
 
     @Test
@@ -145,6 +145,6 @@ class ThickSkullTests: JervisGameBB2025Test() {
             Cancel // Do not use Apothecary
         )
         assertNull(state.activePlayer)
-        assertEquals(PlayerState.KNOCKED_OUT, defender.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, defender.state)
     }
 }

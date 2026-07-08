@@ -14,7 +14,8 @@ import com.jervisffb.engine.ext.d3
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.RushRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.modifiers.RushModifier
@@ -158,7 +159,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
         )
 
         // Put player on home team on the ground so they can be fouled
-        homeTeam[1.playerNo].state = PlayerState.PRONE
+        homeTeam[1.playerNo].state = PlayerPitchState.PRONE
         assertTrue(awayTeam.hasPrayer(PrayerToNuffle.FRIENDS_WITH_THE_REF))
 
         // Foul player and roll 5 to trigger the prayer
@@ -240,7 +241,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
     fun stiletto_notAvailableToSomePlayers() {
         awayTeam.forEachIndexed { i, it ->
             when (i) {
-                0 -> it.state = PlayerState.KNOCKED_OUT
+                0 -> it.state = PlayerDogoutState.KNOCKED_OUT
                 1 -> it.addSkill(SkillType.STAB)
                 else -> it.addSkill(SkillType.LONER.id(2))
             }
@@ -307,7 +308,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
         awayTeam.forEachIndexed { i, it ->
             when (i) {
                 // Should it not be available to players that already have AV11?
-                0 -> it.state = PlayerState.KNOCKED_OUT
+                0 -> it.state = PlayerDogoutState.KNOCKED_OUT
                 else -> it.addSkill(SkillType.LONER.id(2))
             }
         }
@@ -403,7 +404,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
         awayTeam.forEachIndexed { i, it ->
             when (i) {
                 // Should it not be available to players that already have AV11?
-                0 -> it.state = PlayerState.KNOCKED_OUT
+                0 -> it.state = PlayerDogoutState.KNOCKED_OUT
                 1 -> it.addSkill(SkillType.MIGHTY_BLOW.id(2))
                 else -> it.addSkill(SkillType.LONER.id(2))
             }
@@ -505,7 +506,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
     fun badHabits_notAvailableToAnyPlayers() {
         homeTeam.forEachIndexed { i, it ->
             when (i) {
-                0 -> it.state = PlayerState.KNOCKED_OUT
+                0 -> it.state = PlayerDogoutState.KNOCKED_OUT
                 else -> it.addSkill(SkillType.LONER.id(4))
             }
         }
@@ -574,7 +575,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
     @Test
     fun greasyCleats_noPlayersAvailable() {
         homeTeam.forEachIndexed { i, it ->
-            it.state = PlayerState.KNOCKED_OUT
+            it.state = PlayerDogoutState.KNOCKED_OUT
         }
         controller.rollForward(
             *defaultPregame(
@@ -633,7 +634,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
     fun blessedStatueOfNuffle_noValidPlayers() {
         awayTeam.forEachIndexed { i, player ->
             when (i) {
-                0 -> player.state = PlayerState.KNOCKED_OUT
+                0 -> player.state = PlayerDogoutState.KNOCKED_OUT
                 1 -> player.addSkill(SkillType.PRO)
                 else -> player.addSkill(SkillType.LONER.id(2))
             }

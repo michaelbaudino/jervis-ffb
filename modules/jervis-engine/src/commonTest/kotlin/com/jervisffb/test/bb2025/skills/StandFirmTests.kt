@@ -12,7 +12,7 @@ import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2025.skills.StandFirm
 import com.jervisffb.engine.rules.common.actions.BlockType
@@ -152,7 +152,7 @@ class StandFirmTests: JervisGameBB2025Test() {
             Cancel // Do not follow up
         )
         defender.assertCoordinates(11, 5)
-        assertEquals(PlayerState.STANDING, defender.state)
+        assertEquals(PlayerPitchState.STANDING, defender.state)
         assertNull(state.activePlayer)
     }
 }

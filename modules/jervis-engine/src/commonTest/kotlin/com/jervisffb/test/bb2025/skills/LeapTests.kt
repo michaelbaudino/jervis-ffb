@@ -12,7 +12,7 @@ import com.jervisffb.engine.actions.SelectMoveType
 import com.jervisffb.engine.actions.SelectPitchLocation
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.LeapRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -105,8 +105,8 @@ class LeapTests: JervisGameBB2025Test() {
 
     @Test
     fun modifiersWhenEnteringSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
         val leapingPlayer = state.getPlayerById("A1".playerId)
         leapingPlayer.addSkill(SkillType.LEAP)
         controller.rollForward(
@@ -127,8 +127,8 @@ class LeapTests: JervisGameBB2025Test() {
 
     @Test
     fun useLargestModifier() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
         val leapingPlayer = state.getPlayerById("A2".playerId)
         leapingPlayer.addSkill(SkillType.LEAP)
         controller.rollForward(

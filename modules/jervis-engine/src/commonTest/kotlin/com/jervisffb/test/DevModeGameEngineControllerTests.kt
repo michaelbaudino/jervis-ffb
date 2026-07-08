@@ -8,7 +8,7 @@ import com.jervisffb.engine.model.BallId
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerIntermediateState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.StandardBB2020Rules
@@ -49,9 +49,9 @@ class DevModeGameEngineControllerTests {
         val controller = createGameController()
         val player = controller.state.homeTeam[PlayerId("H1")]
 
-        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.PRONE, x = 5, y = 10))
+        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.PRONE, x = 5, y = 10))
 
-        assertEquals(PlayerState.PRONE, player.state)
+        assertEquals(PlayerPitchState.PRONE, player.state)
         assertEquals(PitchCoordinate(5, 10), player.location)
         val square = controller.state.pitch[PitchCoordinate(5, 10)]
         assertEquals(player, square.player)
@@ -62,17 +62,17 @@ class DevModeGameEngineControllerTests {
         val controller = createGameController()
         val player = controller.state.homeTeam[PlayerId("H1")]
 
-        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.PRONE, x = 5, y = 10))
+        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.PRONE, x = 5, y = 10))
         assertFalse(player.hasTackleZones)
 
-        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = 6, y = 10))
+        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.STANDING, x = 6, y = 10))
         assertTrue(player.hasTackleZones)
     }
 
     @Test
     fun setPlayerStateRejectsOutOfBoundsCoordinate() {
         assertFailsWith<IllegalArgumentException> {
-            SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = -1, y = 5)
+            SetPlayerState(PlayerId("H1"), state = PlayerPitchState.STANDING, x = -1, y = 5)
         }
     }
 
@@ -81,7 +81,7 @@ class DevModeGameEngineControllerTests {
         val controller = createGameController()
 
         assertFailsWith<InvalidActionException> {
-            controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = 30, y = 5))
+            controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.STANDING, x = 30, y = 5))
         }
     }
 
@@ -92,9 +92,9 @@ class DevModeGameEngineControllerTests {
         val originalLocation = player.location
         val originalState = player.state
 
-        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STUNNED, x = 7, y = 7))
+        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.STUNNED, x = 7, y = 7))
         assertEquals(PitchCoordinate(7, 7), player.location)
-        assertEquals(PlayerState.STUNNED, player.state)
+        assertEquals(PlayerPitchState.STUNNED, player.state)
 
         controller.handleAction(Undo)
         assertEquals(originalLocation, player.location)
@@ -107,9 +107,9 @@ class DevModeGameEngineControllerTests {
         val player = controller.state.homeTeam[PlayerId("H1")]
         player.intermediateState = PlayerIntermediateState.KNOCKED_DOWN
 
-        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerState.STANDING, x = 5, y = 5))
+        controller.handleAction(SetPlayerState(PlayerId("H1"), state = PlayerPitchState.STANDING, x = 5, y = 5))
 
-        assertEquals(PlayerState.STANDING, player.state)
+        assertEquals(PlayerPitchState.STANDING, player.state)
         assertNull(player.intermediateState)
     }
 
@@ -132,7 +132,7 @@ class DevModeGameEngineControllerTests {
         val ball = controller.state.balls.first()
         val carrierId = PlayerId("H1")
 
-        controller.handleAction(SetPlayerState(carrierId, state = PlayerState.STANDING, x = 5, y = 5))
+        controller.handleAction(SetPlayerState(carrierId, state = PlayerPitchState.STANDING, x = 5, y = 5))
         controller.handleAction(SetBallState(BallId.DEFAULT, x = 5, y = 5, ballState = BallState.CARRIED, carriedBy = carrierId))
 
         assertEquals(BallState.CARRIED, ball.state)

@@ -17,7 +17,8 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.BB2020MultipleBlockContext
 import com.jervisffb.engine.model.context.FoulContext
 import com.jervisffb.engine.model.context.ProcedureContext
@@ -203,7 +204,7 @@ object RiskingInjuryRoll: Procedure() {
                 //   breaking armour will keep them Stunned.
                 val player = context.player
                 val standOnFailure = (context.mode in listOf(RiskingInjuryMode.STAB, RiskingInjuryMode.PROJECTILE_VOMIT, RiskingInjuryMode.CHAINSAW))
-                val isStunned = (player.state == PlayerState.STUNNED)
+                val isStunned = (player.state == PlayerPitchState.STUNNED)
                 val isFoul = (state.getContextOrNull<FoulContext>()?.victim == context.player)
                 compositeCommandOf(
                     when {
@@ -211,7 +212,7 @@ object RiskingInjuryRoll: Procedure() {
                         isStunned -> SetPlayerIntermediateState(player, state = null) // Player remains Stunned
                         standOnFailure || isFoul -> null // Armour wasn't broken, so just keep the current player state (whatever it was)
                         else -> compositeCommandOf(
-                            SetPlayerState(context.player, PlayerState.PRONE, hasTackleZones = false),
+                            SetPlayerState(context.player, PlayerPitchState.PRONE, hasTackleZones = false),
                             getResetChompedStateCommands(context.player, context.player.location, forceRemoveChompedByChomper = true)
                         )
                     },
@@ -233,16 +234,16 @@ object RiskingInjuryRoll: Procedure() {
                         compositeCommandOf(
                             SetPlayerLocation(context.player, DogOut),
                             getResetChompedStateCommands(context.player),
-                            SetPlayerState(context.player, PlayerState.RESERVE),
+                            SetPlayerState(context.player, PlayerDogoutState.RESERVE),
                             ExitProcedure(),
                         )
                     } else {
                         val player = context.player
                         compositeCommandOf(
                             if (state.activeTeamOrThrow() == player.team) {
-                                SetPlayerState(player, PlayerState.STUNNED_OWN_TURN, hasTackleZones = false)
+                                SetPlayerState(player, PlayerPitchState.STUNNED_OWN_TURN, hasTackleZones = false)
                             } else {
-                                SetPlayerState(player, PlayerState.STUNNED, hasTackleZones = false)
+                                SetPlayerState(player, PlayerPitchState.STUNNED, hasTackleZones = false)
                             },
                             ExitProcedure(),
                         )
@@ -251,25 +252,25 @@ object RiskingInjuryRoll: Procedure() {
                 InjuryResult.KO -> {
                     // TODO Add handling of things that might modify KO results (like thick skull)
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.KNOCKED_OUT),
+                        SetPlayerState(context.player, PlayerDogoutState.KNOCKED_OUT),
                         GotoNode(CheckApothecary),
                     )
                 }
                 InjuryResult.BADLY_HURT -> {
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.BADLY_HURT),
+                        SetPlayerState(context.player, PlayerDogoutState.BADLY_HURT),
                         GotoNode(CheckApothecary),
                     )
                 }
                 InjuryResult.SERIOUSLY_HURT -> {
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.SERIOUSLY_HURT),
+                        SetPlayerState(context.player, PlayerDogoutState.SERIOUSLY_HURT),
                         GotoNode(CheckApothecary),
                     )
                 }
                 InjuryResult.DEAD -> {
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.DEAD),
+                        SetPlayerState(context.player, PlayerDogoutState.DEAD),
                         GotoNode(CheckApothecary),
                     )
                 }
@@ -301,7 +302,7 @@ object RiskingInjuryRoll: Procedure() {
                 compositeCommandOf(
                     SetPlayerLocation(context.player, DogOut),
                     getResetChompedStateCommands(context.player),
-                    SetPlayerState(context.player, PlayerState.RESERVE, hasTackleZones = false),
+                    SetPlayerState(context.player, PlayerDogoutState.RESERVE, hasTackleZones = false),
                     ExitProcedure(),
                 )
             } else {
@@ -318,24 +319,24 @@ object RiskingInjuryRoll: Procedure() {
 
             val playerChangeCommands = when (context.casualtyResult) {
                 CasualtyResult.BADLY_HURT -> {
-                    SetPlayerState(context.player, PlayerState.BADLY_HURT)
+                    SetPlayerState(context.player, PlayerDogoutState.BADLY_HURT)
                 }
                 CasualtyResult.SERIOUSLY_HURT -> {
-                    SetPlayerState(context.player, PlayerState.SERIOUS_INJURY)
+                    SetPlayerState(context.player, PlayerDogoutState.SERIOUS_INJURY)
                 }
                 CasualtyResult.SERIOUS_INJURY -> {
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.SERIOUS_INJURY),
+                        SetPlayerState(context.player, PlayerDogoutState.SERIOUS_INJURY),
                     )
                 }
                 CasualtyResult.LASTING_INJURY -> {
                     compositeCommandOf(
-                        SetPlayerState(context.player, PlayerState.LASTING_INJURY),
+                        SetPlayerState(context.player, PlayerDogoutState.LASTING_INJURY),
                         GotoNode(RollForLastingInjury)
                     )
                 }
                 CasualtyResult.DEAD -> {
-                    SetPlayerState(context.player, PlayerState.DEAD)
+                    SetPlayerState(context.player, PlayerDogoutState.DEAD)
                 }
                 null -> INVALID_GAME_STATE("Missing casualty roll result")
             }

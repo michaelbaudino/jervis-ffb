@@ -19,7 +19,7 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -446,7 +446,7 @@ class TurnOverTests: JervisGameBB2025Test() {
 
     @Test
     fun sentOffByRef() {
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
         assertEquals(awayTeam, state.activeTeam)
         assertEquals(1, awayTeam.turnMarker)
         assertEquals(0, homeTeam.turnMarker)

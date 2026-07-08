@@ -24,7 +24,7 @@ import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.BadHabitsContext
 import com.jervisffb.engine.model.context.assertContext
@@ -130,7 +130,7 @@ object BadHabits : Procedure() {
 
     private fun getEligiblePlayers(context: PrayersToNuffleRollContext, rules: Rules): List<Player> {
         return context.team.otherTeam().filter {
-            (it.state == PlayerState.RESERVE || it.location.isOnPitch(rules)) && !it.hasSkill(SkillType.LONER)
+            (it.state == PlayerDogoutState.RESERVE || it.location.isOnPitch(rules)) && !it.hasSkill(SkillType.LONER)
         }
     }
 

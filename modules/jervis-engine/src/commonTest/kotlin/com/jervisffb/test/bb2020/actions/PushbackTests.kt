@@ -16,7 +16,8 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -213,7 +214,7 @@ class PushbackTests: JervisGameBB2020Test() {
         assertEquals(PitchCoordinate(1, 14), awayTeam["A1".playerId].coordinates)
         homeTeam["H8".playerId].let {
             assertEquals(DogOut, it.location)
-            assertEquals(PlayerState.RESERVE, it.state)
+            assertEquals(PlayerDogoutState.RESERVE, it.state)
         }
     }
 
@@ -239,7 +240,7 @@ class PushbackTests: JervisGameBB2020Test() {
         SetPlayerLocation(homeTeam[4.playerNo], PitchCoordinate(11, 4)).execute(state)
         SetPlayerLocation(homeTeam[10.playerNo], PitchCoordinate(11, 5)).execute(state)
         homeTeam[10.playerNo].apply {
-            state = PlayerState.STUNNED
+            state = PlayerPitchState.STUNNED
             hasTackleZones = false
         }
         SetPlayerLocation(homeTeam[11.playerNo], PitchCoordinate(11, 6)).execute(state)

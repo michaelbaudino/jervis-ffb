@@ -28,7 +28,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
@@ -119,7 +119,7 @@ object HandOffAction : Procedure() {
                             GameVersion.BB2025 -> it.hasTackleZones
                         }
                         it.team == context.thrower.team
-                            && it.state == PlayerState.STANDING
+                            && it.state == PlayerPitchState.STANDING
                             && verifiedTackleZones
                     }
                     .let {

@@ -16,7 +16,7 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PassType
@@ -382,8 +382,8 @@ class PassActionTests: JervisGameBB2025Test() {
         assertEquals(5, interceptors.size)
 
         // Make some players invalid for selection
-        homeTeam["H2".playerId].state = PlayerState.PRONE
-        homeTeam["H3".playerId].state = PlayerState.STUNNED
+        homeTeam["H2".playerId].state = PlayerPitchState.PRONE
+        homeTeam["H3".playerId].state = PlayerPitchState.STUNNED
         homeTeam["H4".playerId].makeDistracted()
 
         val modifiedInterceptors = controller.getAvailableActions().singleInstanceOf<SelectPlayer>().players
@@ -484,7 +484,7 @@ class PassActionTests: JervisGameBB2025Test() {
 
     @Test
     fun intercept_markedModifiers() {
-        awayTeam["A1".playerId].state = PlayerState.PRONE
+        awayTeam["A1".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             *activatePlayer("A10", PlayerStandardActionType.PASS),
             *moveTo(17, 7),

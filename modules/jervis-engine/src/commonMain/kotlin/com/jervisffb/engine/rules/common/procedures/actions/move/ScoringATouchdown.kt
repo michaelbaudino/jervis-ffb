@@ -18,7 +18,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ScoringATouchDownContext
@@ -66,7 +66,7 @@ object ScoringATouchdown : Procedure() {
     override fun onExitProcedure(state: Game, rules: Rules): Command? = null
     override fun isValid(state: Game, rules: Rules) {
         val player = state.getContext<ScoringATouchDownContext>().player
-        if (!player.hasBall() || player.state != PlayerState.STANDING) {
+        if (!player.hasBall() || player.state != PlayerPitchState.STANDING) {
             INVALID_GAME_STATE("Player needs to have the ball and be standing: $player")
         }
     }

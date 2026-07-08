@@ -5,7 +5,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.RollDice
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.bb2025.skills.Defensive
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -92,7 +92,7 @@ class DefensiveTests: JervisGameBB2025Test() {
         assister.addSkill(SkillType.PUT_THE_BOOT_IN)
 
         val foulTarget = homeTeam["H1".playerId]
-        foulTarget.state = PlayerState.PRONE
+        foulTarget.state = PlayerPitchState.PRONE
 
         val fouler = awayTeam["A1".playerId]
         fouler.addSkill(SkillType.DEFENSIVE)

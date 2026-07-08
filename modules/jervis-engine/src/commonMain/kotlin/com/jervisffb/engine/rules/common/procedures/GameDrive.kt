@@ -16,7 +16,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -103,7 +103,7 @@ object GameDrive : Procedure() {
                 .map {
                     val player = it.player!!
                     compositeCommandOf(
-                        SetPlayerState(player, PlayerState.RESERVE),
+                        SetPlayerState(player, PlayerDogoutState.RESERVE),
                         SetPlayerLocation(player, DogOut),
                         getResetChompedStateCommands(player, ignoreChomper = true),
                     )

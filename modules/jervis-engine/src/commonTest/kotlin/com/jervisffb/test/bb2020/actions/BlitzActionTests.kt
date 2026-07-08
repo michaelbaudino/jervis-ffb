@@ -18,7 +18,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2020Test
@@ -98,7 +98,7 @@ class BlitzActionTests: JervisGameBB2020Test() {
     @Test
     fun declareBlitzFromProne() {
         val attacker = state.getPlayerById("A1".playerId)
-        attacker.state = PlayerState.PRONE
+        attacker.state = PlayerPitchState.PRONE
         attacker.hasTackleZones = false
         val defender = state.getPlayerById("H1".playerId)
         controller.rollForward(
@@ -129,7 +129,7 @@ class BlitzActionTests: JervisGameBB2020Test() {
         state.homeTeam
             .filter { it.location.isOnPitch(rules) }
             .forEach {
-                it.state = PlayerState.PRONE
+                it.state = PlayerPitchState.PRONE
                 it.hasTackleZones = false
             }
         controller.rollForward(PlayerSelected(attacker.id))

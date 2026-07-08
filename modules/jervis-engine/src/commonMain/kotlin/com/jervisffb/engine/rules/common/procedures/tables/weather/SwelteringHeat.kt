@@ -24,7 +24,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.SwelteringHeatContext
 import com.jervisffb.engine.model.context.getContext
@@ -96,9 +96,9 @@ object SwelteringHeat : Procedure() {
             return castAction<RandomPlayersSelected>(action) {
                 val playersRemoved = it.getPlayers(state).flatMap { player ->
                     listOf(
-                        SetPlayerState(player, PlayerState.FAINTED),
+                        SetPlayerState(player, PlayerDogoutState.FAINTED),
                         SetPlayerLocation(player, DogOut),
-                        ReportPlayerInjury(player, PlayerState.FAINTED),
+                        ReportPlayerInjury(player, PlayerDogoutState.FAINTED),
                     )
                 }.toTypedArray()
                 return compositeCommandOf(
@@ -153,9 +153,9 @@ object SwelteringHeat : Procedure() {
             return castAction<RandomPlayersSelected>(action) {
                 val playersRemoved = it.getPlayers(state).flatMap { player ->
                     listOf(
-                        SetPlayerState(player, PlayerState.FAINTED),
+                        SetPlayerState(player, PlayerDogoutState.FAINTED),
                         SetPlayerLocation(player, DogOut),
-                        ReportPlayerInjury(player, PlayerState.FAINTED),
+                        ReportPlayerInjury(player, PlayerDogoutState.FAINTED),
                     )
                 }.toTypedArray()
                 return compositeCommandOf(

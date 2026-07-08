@@ -11,7 +11,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.test.JervisGameBB2020Test
@@ -39,7 +39,7 @@ class StandingUpTests: JervisGameBB2020Test() {
         super.setUp()
         startDefaultGame()
         val player = state.getPlayerById("A10".playerId)
-        player.state = PlayerState.PRONE
+        player.state = PlayerPitchState.PRONE
         player.hasTackleZones = false
     }
 
@@ -102,7 +102,7 @@ class StandingUpTests: JervisGameBB2020Test() {
 
         // Put down opponent player (so we have a target for foul actions)
         state.getPlayerById("H1".playerId).let {
-            it.state = PlayerState.PRONE
+            it.state = PlayerPitchState.PRONE
             it.hasTackleZones = false
         }
 

@@ -23,7 +23,8 @@ import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.model.modifiers.KickoffStatModifier
@@ -199,7 +200,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         // Only standing open players can be selected, so make
         // everyone but 1 prone
         (1..10).forEach {
-            homeTeam[it.playerNo].state = PlayerState.PRONE
+            homeTeam[it.playerNo].state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             1.d3, // D3 + 3 players
@@ -317,7 +318,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
             *defaultSetup(),
         )
         // Put all players prone so they are no longer Open
-        awayTeam.forEach { it.state = PlayerState.PRONE }
+        awayTeam.forEach { it.state = PlayerPitchState.PRONE }
         controller.rollForward(
             *defaultKickOffHomeTeam(
                 placeKick = PitchSquareSelected(21, 7),
@@ -749,7 +750,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         // Only standing open players can be selected, so make
         // everyone but 1 prone
         (1..10).forEach {
-            awayTeam[it.playerNo].state = PlayerState.PRONE
+            awayTeam[it.playerNo].state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             1.d3, // D3 + 3 players
@@ -840,7 +841,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         )
         val player = state.getPlayerById("A1".playerId)
         assertFalse(player.location.isOnPitch(rules))
-        assertEquals(PlayerState.DODGY_SNACK, player.state)
+        assertEquals(PlayerDogoutState.DODGY_SNACK, player.state)
         assertFalse(player.armourModifiers.any { it == KickoffStatModifier.DODGY_SNACK_AV })
         assertFalse(player.moveModifiers.any { it == KickoffStatModifier.DODGY_SNACK_MA })
     }
@@ -895,7 +896,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         )
         // Fake it by moving all kickoff players back to Dogout after setup
         awayTeam.forEachIndexed { index, player ->
-            player.state = PlayerState.RESERVE
+            player.state = PlayerDogoutState.RESERVE
             player.location = DogOut
         }
         controller.rollForward(
@@ -946,8 +947,8 @@ class KickOffEventTests: JervisGameBB2025Test() {
                 )
             )
         )
-        assertEquals(2, awayTeam.count { it.state == PlayerState.STUNNED })
-        assertEquals(1, homeTeam.count { it.state == PlayerState.STUNNED })
+        assertEquals(2, awayTeam.count { it.state == PlayerPitchState.STUNNED })
+        assertEquals(1, homeTeam.count { it.state == PlayerPitchState.STUNNED })
         state.getPlayerById("A1".playerId).assertStunned()
         state.getPlayerById("A3".playerId).assertStunned()
         state.getPlayerById("H1".playerId).assertStunned()
@@ -962,7 +963,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         // Fake it, by moving all kickoff players except 1 back to Dogout after setup
         awayTeam.forEachIndexed { index, player ->
             if (index > 0) {
-                player.state = PlayerState.RESERVE
+                player.state = PlayerDogoutState.RESERVE
                 player.location = DogOut
             }
         }
@@ -978,7 +979,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
             )
         )
         assertEquals(TeamTurn.SelectPlayerOrEndTurn, controller.currentNode())
-        assertEquals(1, awayTeam.count { it.state == PlayerState.STUNNED })
+        assertEquals(1, awayTeam.count { it.state == PlayerPitchState.STUNNED })
         state.getPlayerById("A1".playerId).assertStunned()
     }
 
@@ -991,7 +992,7 @@ class KickOffEventTests: JervisGameBB2025Test() {
         )
         // Fake it by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
-            it.state = PlayerState.RESERVE
+            it.state = PlayerDogoutState.RESERVE
             it.location = DogOut
         }
         controller.rollForward(

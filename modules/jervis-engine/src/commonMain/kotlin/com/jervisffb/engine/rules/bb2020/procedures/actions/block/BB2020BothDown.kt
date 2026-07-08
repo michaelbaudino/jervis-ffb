@@ -22,7 +22,7 @@ import com.jervisffb.engine.fsm.Node
 import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.BothDownContext
@@ -186,8 +186,8 @@ object BB2020BothDown: Procedure() {
             // Otherwise check if one or both players need to roll injury
             return if (context.attackerUsesWrestle || context.defenderUsesWrestle) {
                 compositeCommandOf(
-                    SetPlayerState(context.attacker, PlayerState.PRONE, hasTackleZones = false),
-                    SetPlayerState(context.defender, PlayerState.PRONE, hasTackleZones = false),
+                    SetPlayerState(context.attacker, PlayerPitchState.PRONE, hasTackleZones = false),
+                    SetPlayerState(context.defender, PlayerPitchState.PRONE, hasTackleZones = false),
                     ExitProcedure()
                 )
             } else {

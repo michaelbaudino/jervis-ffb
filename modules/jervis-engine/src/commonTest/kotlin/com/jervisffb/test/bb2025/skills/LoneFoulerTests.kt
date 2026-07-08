@@ -7,7 +7,7 @@ import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.PlayersSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.modifiers.DefensiveAssistsArmourModifier
 import com.jervisffb.engine.model.modifiers.OffensiveAssistArmourModifier
@@ -136,7 +136,7 @@ class LoneFoulerTests: JervisGameBB2025Test() {
         )
         assertNull(state.activePlayer)
         fouler.assertStanding()
-        assertEquals(PlayerState.KNOCKED_OUT, target.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, target.state)
     }
 
     @Test

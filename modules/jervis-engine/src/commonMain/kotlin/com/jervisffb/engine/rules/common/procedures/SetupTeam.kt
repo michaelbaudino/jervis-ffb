@@ -31,7 +31,8 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
@@ -76,8 +77,8 @@ object SetupTeam : Procedure() {
             val context = state.getContext<SetupTeamContext>()
             val availablePlayers =
                 context.team.filter {
-                    val inReserve = (it.location == DogOut && it.state == PlayerState.RESERVE)
-                    val onPitch = (it.location is PitchCoordinate && it.state == PlayerState.STANDING)
+                    val inReserve = (it.location == DogOut && it.state == PlayerDogoutState.RESERVE)
+                    val onPitch = (it.location is PitchCoordinate && it.state == PlayerPitchState.STANDING)
                     inReserve || onPitch
                 }.let { players ->
                     if (players.isNotEmpty()) {
@@ -133,7 +134,7 @@ object SetupTeam : Procedure() {
                     compositeCommandOf(
                         getRemoveLeaderRerollCommand(player),
                         SetPlayerLocation(player, DogOut),
-                        SetPlayerState(player, PlayerState.RESERVE),
+                        SetPlayerState(player, PlayerDogoutState.RESERVE),
                         UpdateContext(context.copy(currentPlayer = null)),
                         GotoNode(SelectPlayerOrEndSetup),
                     )
@@ -146,7 +147,7 @@ object SetupTeam : Procedure() {
                     compositeCommandOf(
                         getAddLeaderRerollCommand(player),
                         SetPlayerLocation(player, PitchCoordinate(action.x, action.y)),
-                        SetPlayerState(player, PlayerState.STANDING),
+                        SetPlayerState(player, PlayerPitchState.STANDING),
                         UpdateContext(context.copy(currentPlayer = null)),
                         GotoNode(SelectPlayerOrEndSetup),
                     )

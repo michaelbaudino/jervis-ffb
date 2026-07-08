@@ -19,7 +19,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.BB2025Rules
@@ -371,7 +371,7 @@ class LeaderTests: JervisGameBB2025Test() {
         awayTeam["A10".playerId].extraSkills.clear() // Only one Leader on the Pitch
         awayTeam["A6".playerId].addSkill(SkillType.LEADER) // Only one Leader on the Pitch
         awayTeam["A12".playerId].addSkill(SkillType.LEADER) // One Leader in the Dogout
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
 
         assertFalse(awayTeam.rerolls.single { it is LeaderTeamReroll }.rerollUsed)
         assertTrue(awayTeam.rerolls.single { it is LeaderTeamReroll }.enabled)
@@ -392,7 +392,7 @@ class LeaderTests: JervisGameBB2025Test() {
         awayTeam["A1".playerId].extraSkills.clear() // Only one Leader on the Pitch
         awayTeam["A10".playerId].extraSkills.clear() // Only one Leader on the Pitch
         awayTeam["A6".playerId].addSkill(SkillType.LEADER) // Only one Leader on the Pitch
-        homeTeam["H1".playerId].state = PlayerState.PRONE
+        homeTeam["H1".playerId].state = PlayerPitchState.PRONE
 
         assertFalse(awayTeam.rerolls.single { it is LeaderTeamReroll }.rerollUsed)
         assertTrue(awayTeam.rerolls.single { it is LeaderTeamReroll }.enabled)

@@ -24,7 +24,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
@@ -208,9 +208,9 @@ object ThrowTeamMateAction : Procedure() {
                     val context = state.getContext<ThrowTeamMateContext>()
                     val thrownPlayer = action.getPlayer(state)
                     val willCrashLand = !thrownPlayer.hasTackleZones
-                        || thrownPlayer.state == PlayerState.PRONE
-                        || thrownPlayer.state == PlayerState.STUNNED
-                        || thrownPlayer.state == PlayerState.STUNNED_OWN_TURN
+                        || thrownPlayer.state == PlayerPitchState.PRONE
+                        || thrownPlayer.state == PlayerPitchState.STUNNED
+                        || thrownPlayer.state == PlayerPitchState.STUNNED_OWN_TURN
                     compositeCommandOf(
                         ReportPickingUpPlayerToThrow(context, thrownPlayer),
                         UpdateContext(

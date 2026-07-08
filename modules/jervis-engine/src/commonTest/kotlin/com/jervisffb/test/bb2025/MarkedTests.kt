@@ -6,7 +6,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.common.actions.PassType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.test.JervisGameBB2025Test
@@ -50,7 +50,7 @@ class MarkedTests: JervisGameBB2025Test() {
     @Test
     fun isOpen_prone() {
         val player = awayTeam[10.playerNo]
-        player.state = PlayerState.PRONE
+        player.state = PlayerPitchState.PRONE
         assertTrue(player.coordinates.getSurroundingCoordinates(rules, 1, false).none {
             state.pitch[it].isOccupied()
         })
@@ -71,7 +71,7 @@ class MarkedTests: JervisGameBB2025Test() {
     @Test
     fun isMarked_prone() {
         val player = awayTeam[1.playerNo]
-        player.state = PlayerState.PRONE
+        player.state = PlayerPitchState.PRONE
         assertTrue(player.coordinates.getSurroundingCoordinates(rules, 1, false).any {
             state.pitch[it].let { it.isOccupied() && it.player!!.team != player.team }
         })
@@ -113,7 +113,7 @@ class MarkedTests: JervisGameBB2025Test() {
     @Test
     fun noTackleZone_cannotDeflectPass() {
         homeTeam["H1".playerId].makeDistracted() // In [12, 5]
-        homeTeam["H2".playerId].state = PlayerState.PRONE // In [12, 6]
+        homeTeam["H2".playerId].state = PlayerPitchState.PRONE // In [12, 6]
         controller.rollForward(
             *activatePlayer("A10", PlayerStandardActionType.PASS),
             *moveTo(17, 7),

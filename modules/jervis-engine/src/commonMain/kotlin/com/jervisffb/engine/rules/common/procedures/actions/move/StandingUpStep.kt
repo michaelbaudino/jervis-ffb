@@ -17,7 +17,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.ProcedureContext
@@ -55,7 +55,7 @@ object StandingUpStep : Procedure() {
     override fun isValid(state: Game, rules: Rules) {
         val context = state.getContext<MoveContext>()
         val player = context.player
-        if (player.state != PlayerState.PRONE) {
+        if (player.state != PlayerPitchState.PRONE) {
             INVALID_GAME_STATE("Player ${player.name} must be prone: ${player.state}")
         }
         if (context.moveType != MoveType.STAND_UP) {
@@ -76,7 +76,7 @@ object StandingUpStep : Procedure() {
                     else -> movingPlayer.movesLeft - rules.moveRequiredForStandingUp
                 }
                 compositeCommandOf(
-                    SetPlayerState(movingPlayer, PlayerState.STANDING, hasTackleZones = true),
+                    SetPlayerState(movingPlayer, PlayerPitchState.STANDING, hasTackleZones = true),
                     SetPlayerMoveLeft(movingPlayer, adjustedMovesLeft),
                     UpdateContext(context.copy(hasMoved = true)),
                     ExitProcedure()
@@ -104,7 +104,7 @@ object StandingUpStep : Procedure() {
                     addAll(
                         UpdateContext(moveContext.copy(hasMoved = true)),
                         SetPlayerMoveLeft(context.player, 0),
-                        SetPlayerState(context.player, PlayerState.STANDING, hasTackleZones = true),
+                        SetPlayerState(context.player, PlayerPitchState.STANDING, hasTackleZones = true),
                     )
                 } else {
                     addAll(

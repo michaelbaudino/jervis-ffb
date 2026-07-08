@@ -15,7 +15,7 @@ import com.jervisffb.engine.commands.fsm.ExitProcedure
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.reports.ReportTouchback
 import com.jervisffb.engine.rules.Rules
@@ -32,7 +32,7 @@ object BB2025TheKickOffEvent {
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val standingPlayers = mutableListOf<Player>()
             state.receivingTeam.forEach {
-                if (it.location.isOnPitch(rules) && it.state == PlayerState.STANDING) {
+                if (it.location.isOnPitch(rules) && it.state == PlayerPitchState.STANDING) {
                     standingPlayers.add(it)
                 }
             }

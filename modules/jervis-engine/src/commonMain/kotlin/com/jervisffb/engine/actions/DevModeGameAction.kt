@@ -5,6 +5,7 @@ import com.jervisffb.engine.model.BallId
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerKeyword
 import com.jervisffb.engine.model.PlayerState
@@ -79,22 +80,7 @@ data class SetPlayerState(
         if (location is PitchCoordinate) {
             if (location.x < 0 || location.y < 0) throw IllegalArgumentException("Invalid pitch coordinate: $location")
         }
-        val isDogoutState = when (state) {
-            PlayerState.RESERVE,
-            PlayerState.KNOCKED_OUT,
-            PlayerState.BADLY_HURT,
-            PlayerState.LASTING_INJURY,
-            PlayerState.SERIOUSLY_HURT,
-            PlayerState.SERIOUS_INJURY,
-            PlayerState.DEAD,
-            PlayerState.FAINTED,
-            PlayerState.BANNED,
-            PlayerState.DODGY_SNACK -> true
-            PlayerState.STANDING,
-            PlayerState.PRONE,
-            PlayerState.STUNNED,
-            PlayerState.STUNNED_OWN_TURN -> false
-        }
+        val isDogoutState = (state is PlayerDogoutState)
         if (isDogoutState && location != DogOut) throw IllegalArgumentException("The chosen state is only valid if the location is DogOut: $state")
     }
     fun getPlayer(state: Game): Player = state.getPlayerById(playerId)

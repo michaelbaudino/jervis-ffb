@@ -14,7 +14,8 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.bb2020.procedures.TeamTurn
@@ -180,7 +181,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         // Only standing open players can be selected, so make
         // everyone but 1 prone
         (1..10).forEach {
-            homeTeam[it.playerNo].state = PlayerState.PRONE
+            homeTeam[it.playerNo].state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             1.d3, // D3 + 3 players
@@ -531,7 +532,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         // Only standing open players can be selected, so make
         // everyone but 1 prone
         (1..10).forEach {
-            awayTeam[it.playerNo].state = PlayerState.PRONE
+            awayTeam[it.playerNo].state = PlayerPitchState.PRONE
         }
         controller.rollForward(
             1.d3, // D3 + 3 players
@@ -627,7 +628,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         )
         val awayPlayer = state.getPlayerById("A1".playerId)
         val homePlayer = state.getPlayerById("H1".playerId)
-        assertEquals(PlayerState.BANNED, awayPlayer.state)
+        assertEquals(PlayerDogoutState.BANNED, awayPlayer.state)
         assertEquals(DogOut, awayPlayer.location)
         homePlayer.assertStunned()
     }
@@ -642,7 +643,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
 
         // Fake it, by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
-            it.state = PlayerState.RESERVE
+            it.state = PlayerDogoutState.RESERVE
             it.location = DogOut
         }
 
@@ -661,7 +662,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
             )
         )
         val awayPlayer = state.getPlayerById("A1".playerId)
-        assertEquals(PlayerState.BANNED, awayPlayer.state)
+        assertEquals(PlayerDogoutState.BANNED, awayPlayer.state)
         assertEquals(TeamTurn.SelectPlayerOrEndTurn, controller.currentNode())
     }
 
@@ -702,8 +703,8 @@ class KickOffEventTests: JervisGameBB2020Test() {
                 )
             )
         )
-        assertEquals(2, awayTeam.count { it.state == PlayerState.STUNNED })
-        assertEquals(1, homeTeam.count { it.state == PlayerState.STUNNED })
+        assertEquals(2, awayTeam.count { it.state == PlayerPitchState.STUNNED })
+        assertEquals(1, homeTeam.count { it.state == PlayerPitchState.STUNNED })
         state.getPlayerById("A1".playerId).assertStunned()
         state.getPlayerById("A3".playerId).assertStunned()
         state.getPlayerById("H1".playerId).assertStunned()
@@ -717,7 +718,7 @@ class KickOffEventTests: JervisGameBB2020Test() {
         )
         // Fake it, by moving all players on affected team back to Dogout after setup
         awayTeam.forEach {
-            it.state = PlayerState.RESERVE
+            it.state = PlayerDogoutState.RESERVE
             it.location = DogOut
         }
         controller.rollForward(

@@ -21,7 +21,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.assertContext
@@ -51,7 +51,7 @@ object IntensiveTraining : Procedure() {
         override fun actionOwner(state: Game, rules: Rules): Team? = state.getContext<PrayersToNuffleRollContext>().team
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val availablePlayers = state.getContext<PrayersToNuffleRollContext>().team
-                .filter {it.state == PlayerState.RESERVE }
+                .filter {it.state == PlayerDogoutState.RESERVE }
                 .filter { !it.hasSkill(SkillType.LONER) }
                 .map { SelectPlayer(it) }
             return availablePlayers.ifEmpty {

@@ -31,7 +31,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ProcedureContext
@@ -194,7 +194,7 @@ object BeingSentOff: Procedure() {
                             )
                         }
                         addAll(
-                            SetPlayerState(player, PlayerState.BANNED),
+                            SetPlayerState(player, PlayerDogoutState.BANNED),
                             SetPlayerLocation(player, DogOut),
                         )
                         getResetChompedStateCommands(player)?.let { add(it) }

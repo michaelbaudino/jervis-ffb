@@ -3,8 +3,9 @@ package com.jervisffb.engine.rules
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerKeyword
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.isSkillAvailable
@@ -66,7 +67,7 @@ abstract class BB2025Rules(
             ) { data, player ->
                 when {
                     player.location.isOnPitch(rules) -> data.second.add(player)
-                    !player.location.isOnPitch(rules) && player.state == PlayerState.RESERVE -> data.first.add(player)
+                    !player.location.isOnPitch(rules) && player.state == PlayerDogoutState.RESERVE -> data.first.add(player)
                     else -> data.third.add(player)
                 }
                 data
@@ -93,9 +94,9 @@ abstract class BB2025Rules(
                     add(teamActions.handOff)
                 }
                 if (turnData.blockActions > 0) {
-                    val isStanding = (player.state == PlayerState.STANDING)
+                    val isStanding = (player.state == PlayerPitchState.STANDING)
                     // Jump Up can only be used on Block Actions, not Special Actions
-                    val hasJumpUp = player.isSkillAvailable(SkillType.JUMP_UP) && player.state == PlayerState.PRONE
+                    val hasJumpUp = player.isSkillAvailable(SkillType.JUMP_UP) && player.state == PlayerPitchState.PRONE
                     val hasEligibleTargets = (player.location as OnPitchLocation)
                         .getSurroundingCoordinates(this@BB2025Rules, 1)
                         .mapNotNull { state.pitch[it].player }
@@ -120,7 +121,7 @@ abstract class BB2025Rules(
                 if (turnData.foulActions > 0) {
                     val hasEligibleFoulTargets = player.team.otherTeam()
                         .filter { targetPlayer ->  targetPlayer.location.isOnPitch(this@BB2025Rules) }
-                        .any {  targetPlayer -> targetPlayer.state == PlayerState.PRONE || targetPlayer.state == PlayerState.STUNNED }
+                        .any {  targetPlayer -> targetPlayer.state == PlayerPitchState.PRONE || targetPlayer.state == PlayerPitchState.STUNNED }
                     if (hasEligibleFoulTargets) {
                         add(teamActions.foul)
                     }

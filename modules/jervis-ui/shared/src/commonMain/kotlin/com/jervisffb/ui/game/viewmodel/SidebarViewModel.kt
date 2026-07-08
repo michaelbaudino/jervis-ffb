@@ -2,6 +2,7 @@ package com.jervisffb.ui.game.viewmodel
 
 import com.jervisffb.engine.model.CoachType
 import com.jervisffb.engine.model.Player
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.DogOut
@@ -104,23 +105,23 @@ class SidebarViewModel(
         return dogoutFlow
             .map { (_, players) ->
                 players
-                    .filter { it.player.state == PlayerState.RESERVE }
+                    .filter { it.player.state == PlayerDogoutState.RESERVE }
                     .sortedBy { it.player.number }
             }
     }
 
-    fun knockedOut(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerState.KNOCKED_OUT, dogoutFlow)
+    fun knockedOut(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerDogoutState.KNOCKED_OUT, dogoutFlow)
 
-    fun badlyHurt(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerState.BADLY_HURT, dogoutFlow)
+    fun badlyHurt(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerDogoutState.BADLY_HURT, dogoutFlow)
 
-    fun seriousInjuries(): Flow<List<UiSidebarPlayer>> = mapTo(listOf(PlayerState.SERIOUSLY_HURT, PlayerState.SERIOUS_INJURY, PlayerState.LASTING_INJURY), dogoutFlow)
+    fun seriousInjuries(): Flow<List<UiSidebarPlayer>> = mapTo(listOf(PlayerDogoutState.SERIOUSLY_HURT, PlayerDogoutState.SERIOUS_INJURY, PlayerDogoutState.LASTING_INJURY), dogoutFlow)
 
-    fun dead(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerState.DEAD, dogoutFlow)
+    fun dead(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerDogoutState.DEAD, dogoutFlow)
 
-    fun banned(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerState.BANNED, dogoutFlow)
+    fun banned(): Flow<List<UiSidebarPlayer>> = mapTo(PlayerDogoutState.BANNED, dogoutFlow)
 
     fun special(): Flow<List<UiSidebarPlayer>> = mapTo(
-        listOf(PlayerState.FAINTED, PlayerState.DODGY_SNACK),
+        listOf(PlayerDogoutState.FAINTED, PlayerDogoutState.DODGY_SNACK),
         dogoutFlow
     )
 

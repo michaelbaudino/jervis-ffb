@@ -22,7 +22,7 @@ import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlockActionContext
@@ -95,7 +95,7 @@ object BlockAction : Procedure() {
                     .filter { state.pitch[it].isOccupied() }
                     .filter { state.pitch[it].player!!.team != attacker.team }
                     .map { state.pitch[it].player!! }
-                    .filter { it.state == PlayerState.STANDING }
+                    .filter { it.state == PlayerPitchState.STANDING }
                     .let { listOf(SelectPlayer.Companion.fromPlayers(it)) }
 
             return end + eligibleDefenders

@@ -5,7 +5,7 @@ import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerKeyword
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.hasSkill
 import com.jervisffb.engine.model.inducements.settings.InducementType
 import com.jervisffb.engine.model.isSkillAvailable
@@ -65,7 +65,7 @@ abstract class BB2020Rules(
                 }
                 if (turnData.handOffActions > 0) add(teamActions.handOff)
                 if (turnData.blockActions > 0) {
-                    val isStanding = (player.state == PlayerState.STANDING)
+                    val isStanding = (player.state == PlayerPitchState.STANDING)
                     val hasEligibleTargets = (player.location as OnPitchLocation)
                         .getSurroundingCoordinates(this@BB2020Rules, 1)
                         .mapNotNull { state.pitch[it].player }
@@ -90,7 +90,7 @@ abstract class BB2020Rules(
                 if (turnData.foulActions > 0) {
                     val hasEligibleFoulTargets = player.team.otherTeam()
                         .filter { targetPlayer ->  targetPlayer.location.isOnPitch(this@BB2020Rules) }
-                        .any {  targetPlayer -> targetPlayer.state == PlayerState.PRONE || targetPlayer.state == PlayerState.STUNNED }
+                        .any {  targetPlayer -> targetPlayer.state == PlayerPitchState.PRONE || targetPlayer.state == PlayerPitchState.STUNNED }
                     if (hasEligibleFoulTargets) {
                         add(teamActions.foul)
                     }

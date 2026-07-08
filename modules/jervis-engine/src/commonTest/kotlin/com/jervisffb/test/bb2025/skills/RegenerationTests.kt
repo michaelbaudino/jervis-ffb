@@ -96,7 +96,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            Confirm, // Use Mortuary Assistant
 //            5.d6, // Re-roll succeeds
 //        )
-//        assertEquals(PlayerState.RESERVE, defender.state)
+//        assertEquals(PlayerDogoutState.RESERVE, defender.state)
 //        assertEquals(DogOut, defender.location)
 //        assertTrue(homeTeam.mortuaryAssistants.single().used)
 //    }
@@ -118,7 +118,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            DiceRollResults(6.d16), // Badly Hurt
 //            Cancel, // Do not use Apothecary
 //        )
-//        assertEquals(PlayerState.BADLY_HURT, defender.state)
+//        assertEquals(PlayerDogoutState.BADLY_HURT, defender.state)
 //        assertEquals(DogOut, defender.location)
 //    }
 //
@@ -139,7 +139,7 @@ class RegenerationTests: JervisGameBB2025Test() {
 //            Confirm, // Use Plague Doctor
 //            6.d6, // Re-roll succeeds
 //        )
-//        assertEquals(PlayerState.RESERVE, defender.state)
+//        assertEquals(PlayerDogoutState.RESERVE, defender.state)
 //        assertEquals(DogOut, defender.location)
 //        assertFalse(homeTeam.mortuaryAssistants.single().used)
 //        assertTrue(homeTeam.tempApothecaries.single { it.type == ApothecaryType.PLAGUE_DOCTOR }.used)

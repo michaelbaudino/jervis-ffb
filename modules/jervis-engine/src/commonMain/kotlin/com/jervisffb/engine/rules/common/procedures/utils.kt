@@ -21,7 +21,7 @@ import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.model.Availability
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.getSkillOrNull
 import com.jervisffb.engine.model.hasSkill
@@ -62,7 +62,7 @@ fun calculateMoveTypesAvailable(state: Game, player: Player): SelectMoveType? {
     val options = mutableListOf<MoveType>()
 
     // Standup
-    if (player.location.isOnPitch(rules) && player.state == PlayerState.PRONE) {
+    if (player.location.isOnPitch(rules) && player.state == PlayerPitchState.PRONE) {
         options.add(MoveType.STAND_UP)
     }
 

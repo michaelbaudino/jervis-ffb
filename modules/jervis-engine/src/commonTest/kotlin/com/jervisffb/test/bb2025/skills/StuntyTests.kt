@@ -11,7 +11,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.DodgeRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -122,6 +122,6 @@ class StuntyTests: JervisGameBB2025Test() {
         assertNull(state.activePlayer)
         attacker.assertCoordinates(13, 5)
         attacker.assertStanding()
-        assertEquals(PlayerState.KNOCKED_OUT, defender.state)
+        assertEquals(PlayerDogoutState.KNOCKED_OUT, defender.state)
     }
 }

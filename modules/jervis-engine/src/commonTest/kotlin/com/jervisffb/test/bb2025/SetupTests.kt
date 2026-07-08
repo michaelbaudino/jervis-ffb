@@ -7,7 +7,8 @@ import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.MissingPlayersOnLoS
@@ -104,7 +105,7 @@ class SetupTests: JervisGameBB2025Test() {
     @Test
     fun valid_allPlayersOnLoSIfRequired() {
         repeat(10) { i ->
-            state.homeTeam[(i + 1).playerNo].state = PlayerState.KNOCKED_OUT
+            state.homeTeam[(i + 1).playerNo].state = PlayerDogoutState.KNOCKED_OUT
         }
 
         // 2 players in Center Field but not on LoS
@@ -139,7 +140,7 @@ class SetupTests: JervisGameBB2025Test() {
     @Test
     fun valid_noPlayersAvailable() {
         state.homeTeam.forEach {
-            it.state = PlayerState.KNOCKED_OUT
+            it.state = PlayerDogoutState.KNOCKED_OUT
         }
         assertTrue(rules.isSetupValid(state, state.homeTeam).isEmpty())
     }
@@ -326,7 +327,7 @@ class SetupTests: JervisGameBB2025Test() {
     }
 
     private fun moveTo(player: Player, x: Int, y: Int) {
-        SetPlayerState(player, PlayerState.STANDING).execute(state)
+        SetPlayerState(player, PlayerPitchState.STANDING).execute(state)
         SetPlayerLocation(player, PitchCoordinate(x, y)).execute(state)
     }
 }

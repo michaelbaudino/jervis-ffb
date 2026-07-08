@@ -25,7 +25,8 @@ import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.getContext
@@ -238,12 +239,12 @@ object OfficiousRef : Procedure() {
     private fun createPlayerChangeCommands(player: Player, d6: D6Result): Command {
         return when (d6.value) {
             1 -> compositeCommandOf(
-                SetPlayerState(player, PlayerState.BANNED),
+                SetPlayerState(player, PlayerDogoutState.BANNED),
                 SetPlayerLocation(player, DogOut),
                 ReportGameProgress("${player.name} angered the Ref and was Sent-off")
             )
             else -> compositeCommandOf(
-                SetPlayerState(player, PlayerState.STUNNED, hasTackleZones = false),
+                SetPlayerState(player, PlayerPitchState.STUNNED, hasTackleZones = false),
                 ReportGameProgress("${player.name} came to blows with the Ref and was Stunned"),
             )
         }

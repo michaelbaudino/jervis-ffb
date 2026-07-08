@@ -13,7 +13,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.BallState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PassType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -186,7 +186,7 @@ class ThrowInTests: JervisGameBB2020Test() {
     @Test
     fun bounceFromLandingSquareIfPlayerCannotCatch() {
         leavePitchAt(25, 1)
-        awayTeam["A7".playerId].state = PlayerState.PRONE
+        awayTeam["A7".playerId].state = PlayerPitchState.PRONE
         controller.rollForward(
             2.d3, // Direction
             DiceRollResults(5.d6, 5.d6), // Distance

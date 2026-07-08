@@ -10,7 +10,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Availability
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.bb2025.skills.ProjectileVomit
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.actions.PlayerSpecialActionType
@@ -135,7 +135,7 @@ class ProjectileVomitTests: JervisGameBB2025Test() {
         )
         assertNull(state.activePlayer)
         assertEquals(Availability.HAS_ACTIVATED, attacker.available)
-        assertEquals(PlayerState.STUNNED_OWN_TURN, attacker.state)
+        assertEquals(PlayerPitchState.STUNNED_OWN_TURN, attacker.state)
         defender.assertStanding()
     }
 

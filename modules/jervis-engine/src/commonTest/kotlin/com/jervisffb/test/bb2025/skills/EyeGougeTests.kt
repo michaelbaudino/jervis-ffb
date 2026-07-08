@@ -14,7 +14,7 @@ import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.BlockContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.DogOut
@@ -86,7 +86,7 @@ class EyeGougeTests: JervisGameBB2025Test() {
         assertNull(state.activePlayer)
         homeTeam["H8".playerId].let {
             assertEquals(DogOut, it.location)
-            assertEquals(PlayerState.RESERVE, it.state)
+            assertEquals(PlayerDogoutState.RESERVE, it.state)
             assertTrue(it.statusEffects.any { it.type == PlayerStatusEffectType.EYE_GOUGE })
         }
     }

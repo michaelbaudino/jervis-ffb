@@ -27,7 +27,7 @@ import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.fsm.castDiceRoll
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.DodgySnackContext
 import com.jervisffb.engine.model.context.getContext
@@ -225,7 +225,7 @@ object DodgySnack : Procedure() {
     private fun createPlayerChangeCommands(player: Player, d6: D6Result): Command {
         return when (d6.value) {
             1 -> compositeCommandOf(
-                SetPlayerState(player, PlayerState.DODGY_SNACK),
+                SetPlayerState(player, PlayerDogoutState.DODGY_SNACK),
                 SetPlayerLocation(player, DogOut),
                 ReportGameProgress("${player.name} ate a bad snack and spends the drive on the lavatory")
             )

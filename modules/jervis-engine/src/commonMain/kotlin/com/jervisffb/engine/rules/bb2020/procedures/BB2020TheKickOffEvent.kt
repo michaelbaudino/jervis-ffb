@@ -14,7 +14,7 @@ import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.reports.ReportTouchback
 import com.jervisffb.engine.rules.Rules
@@ -36,10 +36,10 @@ object BB2020TheKickOffEvent {
             state.receivingTeam.forEach {
                 if (it.location.isOnPitch(rules)) {
                     when (it.state) {
-                        PlayerState.PRONE, PlayerState.STUNNED -> {
+                        PlayerPitchState.PRONE, PlayerPitchState.STUNNED -> {
                             pronePlayers.add(it)
                         }
-                        PlayerState.STANDING -> {
+                        PlayerPitchState.STANDING -> {
                             standingPlayers.add(it)
                         }
                         else -> INVALID_GAME_STATE("Unsupported state: ${it.state}")
@@ -55,7 +55,7 @@ object BB2020TheKickOffEvent {
         override fun applyAction(action: GameAction, state: Game, rules: Rules): Command {
             return castAction<PlayerSelected>(action) {
                 val player = it.getPlayer(state)
-                if (player.state == PlayerState.STANDING) {
+                if (player.state == PlayerPitchState.STANDING) {
                     return compositeCommandOf(
                         SetBallState.carried(state.singleBall(), player),
                         ReportTouchback.fromPlayer(player),

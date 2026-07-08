@@ -13,8 +13,9 @@ import com.jervisffb.engine.commands.SetPlayerState
 import com.jervisffb.engine.model.Ball
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerIntermediateState
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -109,7 +110,7 @@ inline fun <reified T: Skill<*>> Player.hasSkill(): Boolean {
  * Modify the Player state, so they will put in the Reserves.
  */
 fun Player.putInReserves() {
-    state = PlayerState.RESERVE
+    state = PlayerDogoutState.RESERVE
     location = DogOut
 }
 
@@ -117,7 +118,7 @@ fun Player.putInReserves() {
  * Modify the Player state, so they will be considered Prone.
  */
 fun Player.putProne() {
-    state = PlayerState.PRONE
+    state = PlayerPitchState.PRONE
     hasTackleZones = false
 }
 
@@ -125,7 +126,7 @@ fun Player.putProne() {
  * Modify the Player state, so they will be considered Stunned.
  */
 fun Player.putStunned() {
-    state = PlayerState.STUNNED
+    state = PlayerPitchState.STUNNED
     hasTackleZones = false
 }
 
@@ -135,7 +136,7 @@ fun Player.putStunned() {
 fun Player.putInKnockedOut() {
     val state = this.team.game
     SetPlayerLocation(this, DogOut).execute(state)
-    SetPlayerState(this, PlayerState.KNOCKED_OUT).execute(state)
+    SetPlayerState(this, PlayerDogoutState.KNOCKED_OUT).execute(state)
 }
 
 /**
@@ -144,7 +145,7 @@ fun Player.putInKnockedOut() {
  * Standing without TackleZones
  */
 fun Player.makeDistracted() {
-    if (state != PlayerState.STANDING) error("Player must be standing to be marked as distracted")
+    if (state != PlayerPitchState.STANDING) error("Player must be standing to be marked as distracted")
     hasTackleZones = false
     if (this.team.game.rules.baseVersion == GameVersion.BB2025) {
         statusEffects.add(PlayerStatusEffect.distracted())
@@ -169,7 +170,7 @@ fun Player.assertActive() {
  * Test Helper, checking if a player is Standing
  */
 fun Player.assertStanding() {
-    assertEquals(PlayerState.STANDING, state)
+    assertEquals(PlayerPitchState.STANDING, state)
     assertNull(intermediateState)
     assertTrue(hasTackleZones)
     assertTrue(location.isOnPitch(team.game.rules))
@@ -188,7 +189,7 @@ fun Player.assertDistracted() {
  * Test Helper, checking if a player is Prone
  */
 fun Player.assertProne() {
-    assertEquals(PlayerState.PRONE, state)
+    assertEquals(PlayerPitchState.PRONE, state)
     assertNull(intermediateState)
     assertFalse(hasTackleZones, "Prone players should not have tackle zones")
     assertTrue(location.isOnPitch(team.game.rules), "Prone players should be on the Pitch")
@@ -199,8 +200,8 @@ fun Player.assertProne() {
  */
 fun Player.assertStunned(ownTeamTurn: Boolean = false) {
     val expectedState = when (ownTeamTurn) {
-        true -> PlayerState.STUNNED_OWN_TURN
-        false -> PlayerState.STUNNED
+        true -> PlayerPitchState.STUNNED_OWN_TURN
+        false -> PlayerPitchState.STUNNED
     }
     assertEquals(expectedState, state)
     assertNull(intermediateState)
@@ -212,13 +213,13 @@ fun Player.assertStunned(ownTeamTurn: Boolean = false) {
  * Test Helper, checking if a player is Knocked Out.
  */
 fun Player.assertKnockedOut() {
-    assertEquals(PlayerState.KNOCKED_OUT, state)
+    assertEquals(PlayerDogoutState.KNOCKED_OUT, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }
 
 fun Player.assertBadlyHurt() {
-    assertEquals(PlayerState.BADLY_HURT, state)
+    assertEquals(PlayerDogoutState.BADLY_HURT, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }
@@ -241,7 +242,7 @@ fun Player.assertKnockedDown() {
  * Test Helper, checking if a player is in the Reserves box.
  */
 fun Player.assertReserves() {
-    assertEquals(PlayerState.RESERVE, state)
+    assertEquals(PlayerDogoutState.RESERVE, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }
@@ -250,13 +251,13 @@ fun Player.assertReserves() {
  * Test Helper, checking if a player is in the Banned box.
  */
 fun Player.assertBanned() {
-    assertEquals(PlayerState.BANNED, state)
+    assertEquals(PlayerDogoutState.BANNED, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }
 
 fun Player.assertDead() {
-    assertEquals(PlayerState.DEAD, state)
+    assertEquals(PlayerDogoutState.DEAD, state)
     assertNull(intermediateState)
     assertEquals(DogOut, location)
 }

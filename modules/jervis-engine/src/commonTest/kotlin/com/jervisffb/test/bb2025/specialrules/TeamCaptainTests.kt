@@ -8,7 +8,7 @@ import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.rules.common.TeamCaptainNotOnPitch
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -73,7 +73,7 @@ class TeamCaptainTests: JervisGameBB2025Test() {
         super.setUp()
         awayTeam["A12".playerId].apply {
             extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
-            state = PlayerState.BADLY_HURT
+            state = PlayerDogoutState.BADLY_HURT
         }
         controller.rollForward(
             *defaultPregame(),

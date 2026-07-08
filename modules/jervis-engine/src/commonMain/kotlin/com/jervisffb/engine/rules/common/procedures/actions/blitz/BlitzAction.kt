@@ -36,7 +36,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.fsm.castAction
 import com.jervisffb.engine.model.Game
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
@@ -114,7 +114,7 @@ object BlitzAction : Procedure() {
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val attacker = state.getContext<BlitzActionContext>().attacker
             val availableTargetPlayers = attacker.team.otherTeam()
-                .filter { it.location.isOnPitch(rules) && it.state == PlayerState.STANDING }
+                .filter { it.location.isOnPitch(rules) && it.state == PlayerPitchState.STANDING }
 
             return listOf(SelectPlayer.fromPlayers(availableTargetPlayers), EndActionWhenReady)
         }

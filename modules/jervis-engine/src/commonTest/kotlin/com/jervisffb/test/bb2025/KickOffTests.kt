@@ -12,8 +12,9 @@ import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.ext.playerNo
 import com.jervisffb.engine.model.BallState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.PlayerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -76,7 +77,7 @@ class KickOffTests: JervisGameBB2025Test() {
         // Adjust the home team so we only have 3 players available and then
         // place them on LoS
         (1..9).forEach {
-            homeTeam[it.playerNo].state = PlayerState.KNOCKED_OUT
+            homeTeam[it.playerNo].state = PlayerDogoutState.KNOCKED_OUT
         }
         controller.rollForward(
             *teamSetup(
@@ -141,7 +142,7 @@ class KickOffTests: JervisGameBB2025Test() {
 
         // Fake it by moving all kickoff players back to Dogout after setup
         homeTeam.forEach {
-            it.state = PlayerState.RESERVE
+            it.state = PlayerDogoutState.RESERVE
             it.location = DogOut
         }
 
@@ -389,7 +390,7 @@ class KickOffTests: JervisGameBB2025Test() {
                 bounce = null
             ),
         )
-        awayTeam["A1".playerId].state = PlayerState.STUNNED
+        awayTeam["A1".playerId].state = PlayerPitchState.STUNNED
         val availablePlayers = (controller.getAvailableActions().first() as SelectPlayer).players
         assertEquals(10, availablePlayers.size)
         assertFalse(availablePlayers.contains("A1".playerId))
@@ -412,8 +413,8 @@ class KickOffTests: JervisGameBB2025Test() {
             ),
         )
         assertEquals(BallState.OUT_OF_BOUNDS, state.getBall().state)
-        state.receivingTeam.forEach { it.state = PlayerState.PRONE }
-        state.receivingTeam["A2".playerId].state = PlayerState.STUNNED
+        state.receivingTeam.forEach { it.state = PlayerPitchState.PRONE }
+        state.receivingTeam["A2".playerId].state = PlayerPitchState.STUNNED
         assertNull(controller.getAvailableActions().getOrNull<SelectPlayer>())
         val availableSquares = (controller.getAvailableActions().get<SelectPitchLocation>().squares)
         assertEquals(((26*15/2)-11), availableSquares.size)

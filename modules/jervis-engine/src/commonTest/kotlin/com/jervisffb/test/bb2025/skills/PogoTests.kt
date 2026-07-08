@@ -10,7 +10,7 @@ import com.jervisffb.engine.actions.SelectMoveType
 import com.jervisffb.engine.actions.SelectPitchLocation
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.model.context.PogoRollContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.PitchCoordinate
@@ -102,8 +102,8 @@ class PogoTests: JervisGameBB2025Test() {
 
     @Test
     fun noModifiersWhenEnteringSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
-        state.getPlayerById("H2".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
+        state.getPlayerById("H2".playerId).state = PlayerPitchState.PRONE
         val pogoingPlayer = state.getPlayerById("A1".playerId)
         pogoingPlayer.addSkill(SkillType.POGO_STICK)
         controller.rollForward(

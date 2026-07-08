@@ -12,7 +12,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.rules.bb2025.skills.PileDriver
 import com.jervisffb.engine.rules.common.actions.PlayerSpecialActionType
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
@@ -101,7 +101,7 @@ class PileDriverTests: JervisGameBB2025Test() {
             Cancel, // Do not argue the call
         )
         assertNull(state.activePlayer)
-        assertEquals(PlayerState.BANNED, attacker.state)
+        assertEquals(PlayerDogoutState.BANNED, attacker.state)
         defender.assertProne()
     }
 

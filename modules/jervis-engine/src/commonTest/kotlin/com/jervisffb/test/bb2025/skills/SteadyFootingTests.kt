@@ -16,7 +16,7 @@ import com.jervisffb.engine.ext.d8
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerPitchState
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -205,7 +205,7 @@ class SteadyFootingTests: JervisGameBB2025Test() {
 
     @Test
     fun preventJump_targetSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         jumpingPlayer.addSkill(SkillType.STEADY_FOOTING)
         controller.rollForward(
@@ -223,7 +223,7 @@ class SteadyFootingTests: JervisGameBB2025Test() {
 
     @Test
     fun preventJump_startingSquare() {
-        state.getPlayerById("H1".playerId).state = PlayerState.PRONE
+        state.getPlayerById("H1".playerId).state = PlayerPitchState.PRONE
         val jumpingPlayer = state.getPlayerById("A1".playerId)
         jumpingPlayer.addSkill(SkillType.STEADY_FOOTING)
         controller.rollForward(

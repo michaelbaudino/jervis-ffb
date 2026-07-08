@@ -9,7 +9,7 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.locations.DogOut
 import com.jervisffb.engine.model.modifiers.CasualtyModifier
@@ -58,7 +58,7 @@ class DecayTests: JervisGameBB2025Test() {
             Cancel,  // Do not Apothecary
         )
 
-        assertEquals(PlayerState.SERIOUSLY_HURT, defender.state)
+        assertEquals(PlayerDogoutState.SERIOUSLY_HURT, defender.state)
         assertEquals(DogOut, defender.location)
     }
 
@@ -78,7 +78,7 @@ class DecayTests: JervisGameBB2025Test() {
             DiceRollResults(14.d16), // Serious Injury + 1 -> Dead
             Confirm, // Use 2nd roll
         )
-        assertEquals(PlayerState.DEAD, defender.state)
+        assertEquals(PlayerDogoutState.DEAD, defender.state)
         assertEquals(DogOut, defender.location)
     }
 }

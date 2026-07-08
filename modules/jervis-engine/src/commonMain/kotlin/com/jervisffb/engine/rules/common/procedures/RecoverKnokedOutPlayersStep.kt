@@ -19,7 +19,7 @@ import com.jervisffb.engine.fsm.ParentNode
 import com.jervisffb.engine.fsm.Procedure
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
-import com.jervisffb.engine.model.PlayerState
+import com.jervisffb.engine.model.PlayerDogoutState
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.getContext
@@ -137,7 +137,7 @@ object RecoverKnockedOutPlayersStep: Procedure() {
             return compositeCommandOf(
                 ReportRecoverPlayer(player, context.isSuccess),
                 UpdateContext(context.reset(player)),
-                if (context.isSuccess) SetPlayerState(player, PlayerState.RESERVE) else null,
+                if (context.isSuccess) SetPlayerState(player, PlayerDogoutState.RESERVE) else null,
                 GotoNode(if (player.team == state.receivingTeam) ReceivingTeamSelectPlayerToRecover else KickingTeamSelectPlayerToRecover),
             )
         }
@@ -147,7 +147,7 @@ object RecoverKnockedOutPlayersStep: Procedure() {
 
     private fun getPlayersToRecover(team: Team, context: RecoverKnockedOutPlayersContext): List<Player> {
         return team
-            .filter { it.state == PlayerState.KNOCKED_OUT }
+            .filter { it.state == PlayerDogoutState.KNOCKED_OUT }
             .filter { it !in context.playersHandled }
     }
 }

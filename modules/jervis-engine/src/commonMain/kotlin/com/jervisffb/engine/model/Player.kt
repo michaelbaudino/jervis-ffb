@@ -122,7 +122,7 @@ class Player(
     // in an empty square or out of bounds.
     var isBeingThrown: Boolean = false
     var facing: PlayerFacing = PlayerFacing.UNKNOWN
-    var state: PlayerState = PlayerState.RESERVE
+    var state: PlayerState = PlayerDogoutState.RESERVE
     var intermediateState: PlayerIntermediateState? = null
     val isActive: Boolean get() = (team.game.activePlayer == this)
     var available: Availability = Availability.AVAILABLE
@@ -295,7 +295,7 @@ fun Player.isSkillAvailable(type: SkillType): Boolean {
 
         // Check for distracted state
         val isDistracted = when (rules.baseVersion) {
-            GameVersion.BB2020 -> !hasTackleZones && !skill.workWithoutTackleZones && this.state == PlayerState.STANDING
+            GameVersion.BB2020 -> !hasTackleZones && !skill.workWithoutTackleZones && this.state == PlayerPitchState.STANDING
             GameVersion.BB2025 -> statusEffects.any { it.type == PlayerStatusEffectType.DISTRACTED } && !skill.workWithoutTackleZones
         }
         if (isDistracted) {
@@ -304,7 +304,7 @@ fun Player.isSkillAvailable(type: SkillType): Boolean {
 
         // Check for Prone state
         // TODO Is a Stunned player considered Prone or are they completely separate?
-        val isProne = (state == PlayerState.PRONE || state == PlayerState.STUNNED || state == PlayerState.STUNNED_OWN_TURN)
+        val isProne = (state == PlayerPitchState.PRONE || state == PlayerPitchState.STUNNED || state == PlayerPitchState.STUNNED_OWN_TURN)
         if (isProne && !skill.workWhenProne) {
             return@let false
         }
