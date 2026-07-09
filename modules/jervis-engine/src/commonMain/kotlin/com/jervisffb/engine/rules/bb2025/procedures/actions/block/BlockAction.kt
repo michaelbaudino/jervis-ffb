@@ -13,6 +13,7 @@ import com.jervisffb.engine.commands.SetSkillUsed
 import com.jervisffb.engine.commands.compositeCommandOf
 import com.jervisffb.engine.commands.context.AddContext
 import com.jervisffb.engine.commands.context.RemoveContext
+import com.jervisffb.engine.commands.context.RemoveContextListItem
 import com.jervisffb.engine.commands.context.UpdateContext
 import com.jervisffb.engine.commands.fsm.ExitProcedure
 import com.jervisffb.engine.commands.fsm.GotoNode
@@ -28,6 +29,7 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlockActionContext
 import com.jervisffb.engine.model.context.BlockContext
+import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.getContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.isSkillAvailable
@@ -36,6 +38,7 @@ import com.jervisffb.engine.rules.bb2025.procedures.actions.block.singleblock.Si
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireStep
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChainsawBlockStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitContext
@@ -175,7 +178,14 @@ object BlockAction : Procedure() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<BlockActionContext>()
             return when (context.blockType) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> AddContext(
+                    ChainsawContext(
+                        attacker = context.attacker,
+                        attackerOriginalCoordinates = context.attacker.coordinates,
+                        defender = context.defender,
+                        defenderOriginalCoordinates = context.defender.coordinates,
+                    )
+                )
                 BlockType.CHOMP -> {
                     AddContext(
                         ChompContext(
@@ -226,7 +236,7 @@ object BlockAction : Procedure() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure {
             val context = state.getContext<BlockActionContext>()
             return when (context.blockType) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> ChainsawBlockStep
                 BlockType.CHOMP -> ChompStep
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> BreatheFireStep
@@ -245,7 +255,7 @@ object BlockAction : Procedure() {
 
             // Check if Block Action was completed or not
             val removeContextCommand = when (context.blockType) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> RemoveContext<ChainsawContext>()
                 BlockType.CHOMP -> RemoveContext<ChompContext>()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> RemoveContext<BreatheFireContext>()
@@ -256,7 +266,7 @@ object BlockAction : Procedure() {
 
             // Remove state required for the specific block type
             val hasBlocked = when (context.blockType) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> (state.getContext<ChainsawContext>().kickbackRoll != null)
                 BlockType.CHOMP -> (state.getContext<ChompContext>().chompRoll != null)
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> (state.getContext<BreatheFireContext>().result != null)

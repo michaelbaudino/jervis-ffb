@@ -1,7 +1,9 @@
 package com.jervisffb.test.bb2025.skills
 
+import com.jervisffb.engine.actions.BlockTypeSelected
 import com.jervisffb.engine.actions.Confirm
 import com.jervisffb.engine.actions.DiceRollResults
+import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.actions.PitchSquareSelected
 import com.jervisffb.engine.actions.PlayerSelected
 import com.jervisffb.engine.actions.SelectBlockType
@@ -92,9 +94,12 @@ class ChainsawTests: JervisGameBB2025Test() {
             *activatePlayer(attacker, PlayerStandardActionType.BLITZ),
             PlayerSelected(defender),
             PlayerSelected(defender),
+            BlockTypeSelected(BlockType.CHAINSAW),
+            *chainsawRoll(6.d6),
+            DiceRollResults(1.d6, 1.d6),
         )
-        val blockTypes = controller.getAvailableActions().get<SelectBlockType>().types
-        assertTrue(blockTypes.any { it == BlockType.CHAINSAW })
+        state.assertNoActivePlayer()
+        defender.assertStanding()
     }
 
     @Test

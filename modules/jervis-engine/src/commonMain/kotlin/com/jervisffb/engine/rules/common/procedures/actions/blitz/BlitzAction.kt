@@ -42,6 +42,7 @@ import com.jervisffb.engine.model.TurnOver
 import com.jervisffb.engine.model.context.ActivatePlayerContext
 import com.jervisffb.engine.model.context.BlitzActionContext
 import com.jervisffb.engine.model.context.BlockContext
+import com.jervisffb.engine.model.context.ChainsawContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.RushRollContext
 import com.jervisffb.engine.model.context.getContext
@@ -59,6 +60,7 @@ import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.BreatheFireStep
+import com.jervisffb.engine.rules.common.procedures.actions.block.ChainsawBlockStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompContext
 import com.jervisffb.engine.rules.common.procedures.actions.block.ChompStep
 import com.jervisffb.engine.rules.common.procedures.actions.block.ProjectileVomitContext
@@ -362,7 +364,14 @@ object BlitzAction : Procedure() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             val context = state.getContext<BlitzActionContext>()
             return when (context.blockType!!) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> AddContext(
+                    ChainsawContext(
+                        attacker = context.attacker,
+                        attackerOriginalCoordinates = context.attacker.coordinates,
+                        defender = context.defender!!,
+                        defenderOriginalCoordinates = context.defender.coordinates,
+                    )
+                )
                 BlockType.CHOMP -> {
                     AddContext(
                         ChompContext(
@@ -413,7 +422,7 @@ object BlitzAction : Procedure() {
         override fun getChildProcedure(state: Game, rules: Rules): Procedure {
             val context = state.getContext<BlitzActionContext>()
             return when (context.blockType!!) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> ChainsawBlockStep
                 BlockType.CHOMP -> ChompStep
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> BreatheFireStep
@@ -436,7 +445,7 @@ object BlitzAction : Procedure() {
 
             // Check if Block Action was completed or not
             val removeContextCommand = when (context.blockType!!) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> RemoveContext<ChainsawContext>()
                 BlockType.CHOMP -> RemoveContext<ChompContext>()
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> RemoveContext<BreatheFireContext>()
@@ -447,7 +456,7 @@ object BlitzAction : Procedure() {
 
             // Remove state required for the specific block type
             val hasBlocked = when (context.blockType) {
-                BlockType.CHAINSAW -> TODO()
+                BlockType.CHAINSAW -> (state.getContext<ChainsawContext>().kickbackRoll != null)
                 BlockType.CHOMP -> (state.getContext<ChompContext>().chompRoll != null)
                 BlockType.MULTIPLE_BLOCK -> TODO()
                 BlockType.BREATHE_FIRE -> (state.getContext<BreatheFireContext>().result != null)
