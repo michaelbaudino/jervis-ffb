@@ -6,6 +6,7 @@ import kotlinx.serialization.modules.SerializersModule
 
 val jervisNetworkSerializer = Json {
     useArrayPolymorphism = true
+    allowStructuredMapKeys = true // Required by Inducements
     serializersModule = SerializersModule {
         include(JervisSerialization.jervisEngineModule)
     }
