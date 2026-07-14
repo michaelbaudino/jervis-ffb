@@ -99,7 +99,6 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.CompletableDeferred
 import okio.internal.commonToUtf8String
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.skia.Image
@@ -226,11 +225,8 @@ object IconFactory {
      * Loads the fumbbl ini file and prepare the mapping between local paths
      * and download URLs
      */
-    @OptIn(ExperimentalResourceApi::class)
     suspend fun initializeFumbblMapping() {
-        val fileContent = Res.readBytes("files/fumbbl/icons.ini")
-        val propertiesFile = fileContent.commonToUtf8String()
-        propertiesFile.lines().forEach { line ->
+        fun addPropLineToCache(line: String) {
             val parts = line.split("=")
             if (parts.size == 2) {
                 val url = parts[0].replace("https\\", "https")
@@ -238,6 +234,13 @@ object IconFactory {
                 fumbblCache[path] = Url(url)
             }
         }
+        suspend fun cacheFile(path: String) {
+            val fileContent = Res.readBytes(path)
+            val propsFile = fileContent.commonToUtf8String()
+            propsFile.lines().forEach { line -> addPropLineToCache(line) }
+        }
+        cacheFile("files/fumbbl/icons.ini")
+        cacheFile("files/fumbbl/icons-extra.ini")
     }
 
     // Load all image resources used.
