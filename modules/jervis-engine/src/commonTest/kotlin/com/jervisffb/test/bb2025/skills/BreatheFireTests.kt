@@ -181,7 +181,7 @@ class BreatheFireTests: JervisGameBB2025Test() {
         val attacker = state.getPlayerById("A1".playerId)
         attacker.apply {
             addSkill(SkillType.BREATHE_FIRE)
-            addSkill(SkillType.MIGHTY_BLOW.id(1))
+            addSkill(SkillType.MIGHTY_BLOW.idAdjustment(1))
             addSkill(SkillType.DIRTY_PLAYER)
         }
         val defender = state.getPlayerById("H1".playerId)

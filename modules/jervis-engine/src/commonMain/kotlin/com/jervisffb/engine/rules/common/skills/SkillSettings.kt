@@ -14,55 +14,10 @@ import kotlinx.serialization.Transient
  * Right now, it isn't possible to configure it, but hopefully it is flexible enough, so we can
  * add customization support with relatively little work.
  *
- * @see com.jervisffb.engine.rules.Rules.getSkillFactory
  * @see com.jervisffb.engine.rules.Rules.skillSettings
  */
 @Serializable
 abstract class SkillSettings {
-
-    // Wrapper class that manages creation of skills
-    // The type system around this
-    private class SkillFactoryOld<T>(
-        private val type: SkillType,
-        private val category: SkillCategory,
-        private val defaultValue: T?,
-        private val createFunc: ((Player, SkillCategory, T?, Duration) -> Skill<T>)?,
-        private val createNoValueFunc: ((Player, SkillCategory, Duration) -> Skill<T>)?
-    ) {
-        val defaultSkillId: SkillId =
-            when (defaultValue) {
-                null -> SkillId(type, SkillValue.None)
-                is Int -> SkillId(type, SkillValue.Int(defaultValue))
-                is PlayerKeyword -> SkillId(type, SkillValue.Keyword(defaultValue))
-                else -> error("Unsupported default value type: ${defaultValue::class.simpleName}")
-            }
-
-        fun createSkill(player: Player, value: SkillValue?, expiresAt: Duration): Skill<T> {
-            TODO()
-        }
-
-        fun createSkill(player: Player, value: T? = null, expiresAt: Duration): Skill<T> {
-            return createFunc?.let { func ->
-                func(player, category, value, expiresAt)
-            } ?: error("Missing skill factory for: $type")
-        }
-
-        fun createSkill(player: Player, expiresAt: Duration): Skill<T> {
-            return createNoValueFunc?.let { func ->
-                func(player, category, expiresAt)
-            } ?: error("Missing skill factory for: $type")
-        }
-
-        // Creates the skill as it is listed in the categories sections in the rulebook.
-        // This is only relevant for skills with values like "Loner (4+)" or "Mighty Blow (+1)".
-        fun createDefaultSkill(player: Player, expiresAt: Duration): Skill<T> {
-            return if (defaultValue == null || defaultValue is SkillValue.None) {
-                createSkill(player, expiresAt)
-            } else {
-                createSkill(player, defaultValue, expiresAt)
-            }
-        }
-    }
 
     // Map between skill type and their factories
     @Transient
@@ -113,14 +68,7 @@ abstract class SkillSettings {
         return niceRegex.matchEntire(niceSkillName)?.let { match ->
             val name = match.groups[1]?.value?.trim() ?: error("Failed to find skill name in string: $niceSkillName")
             val value = match.groups[3]?.value
-            val intValue = value?.toIntOrNull()
-            // TODO: It is not clear how Tourplay and Fumbble represent Hatred and Animosity
-            val keywordValue = PlayerKeyword.entries.firstOrNull { it.description.equals(value, ignoreCase = true) }
-            val skillValue = when {
-                intValue != null -> SkillValue.Int(intValue)
-                keywordValue != null -> SkillValue.Keyword(keywordValue)
-                else -> SkillValue.None
-            }
+            val skillValue = extractValueType(value)
             skillCache.keys.firstOrNull { it.description == name }?.let { skillType ->
                 SkillId(skillType, skillValue)
             }
@@ -131,26 +79,40 @@ abstract class SkillSettings {
      * Converts a string to the appropriate [SkillId], or return `null` if the skill name could not be mapped
      * to a supported skill in this ruleset.
      *
-     * [serializedSkillId] is expected to have a similar format to [SkillId.serialize], example: "MIGHTY_BLOW(1)"
+     * [serializedSkillId] is expected to have a similar format to [SkillId.serialize], example: "MIGHTY_BLOW(+1)"
      */
     fun getSkillId(serializedSkillId: String): SkillId? {
         // Split name into name and a value
         return skillIdRegex.matchEntire(serializedSkillId)?.let { match ->
             // Should be equal to the enum name for the SkillType, e.g. "BLOCK" for SkillType.BLOCK
             val name = match.groups[1]?.value?.trim() ?: error("Failed to find skill name in string: $serializedSkillId")
-            // The "int" value for a skill. e.g. 1 for "MIGHTY_BLOW(1)"
+            // The "int" value for a skill. e.g. "MIGHTY_BLOW(+1)"
             val value = match.groups[3]?.value
-            val intValue = value?.toIntOrNull()
-            // The string value for a skill that uses keywords, e.g. "Human" for "HATRED(Human)"
-            // TODO: It is not clear how Tourplay and Fumbble represent Hatred and Animosity
-            val keywordValue = PlayerKeyword.entries.firstOrNull { it.description.equals(value, ignoreCase = true) }
-            val skillValue = when {
-                intValue != null -> SkillValue.Int(intValue)
-                keywordValue != null -> SkillValue.Keyword(keywordValue)
-                else -> SkillValue.None
-            }
+            val skillValue = extractValueType(value)
             skillCache.keys.firstOrNull { type -> type.name == name }?.let { skillType ->
                 SkillId(skillType, skillValue)
+            }
+        }
+    }
+
+    // This method assumes that the value was matched using the skill regex, which limits
+    // the scenarios we need to check for
+    private fun extractValueType(value: String?): SkillValue {
+        if (value == null) return SkillValue.None
+        return if (value.startsWith("+") || value.startsWith("-")) {
+            value.toIntOrNull()?.let { intAdjustment ->
+                SkillValue.IntAdjustment(intAdjustment)
+            } ?: SkillValue.None
+        } else if (value.endsWith("+")) {
+            value.substringBeforeLast("+").toIntOrNull()?.let { intTaget ->
+                SkillValue.IntTarget(intTaget)
+            } ?: SkillValue.None
+        } else {
+            // TODO: It is not clear how Tourplay and Fumbble represent Hatred and Animosity
+            val keywordValue = PlayerKeyword.entries.firstOrNull { it.description.equals(value, ignoreCase = true) }
+            when (keywordValue != null) {
+                true -> SkillValue.Keyword(keywordValue)
+                false -> SkillValue.None
             }
         }
     }
@@ -210,15 +172,28 @@ abstract class SkillSettings {
     // Helper method for populating the `skillCache` and `categories` mappings. Should only be called from
     // `initializeSkillCache()`
 
-    // Creates a new skill that has an associated Int value e.g. Mighty Block (+1)
-    protected fun addIntEntry(
+    // Creates a new skill that has an associated Int value that acts as a target, like Loner (4+)
+    protected fun addIntTargetEntry(
         name: String,
         type: SkillType,
         category: SkillCategory,
         defaultValue: Int? = null,
         createFunc: (Player, SkillCategory, Int?, Duration) -> Skill<Int>
     ) {
-        val entry = IntSkillFactory(name, type, category, defaultValue, createFunc)
+        val entry = IntTargetSkillFactory(name, type, category, defaultValue, createFunc)
+        skillCache[type] = entry
+        categories[category]?.add(entry) ?: error("Cannot find category: ${category.name}")
+    }
+
+    // Creates a new skill that has Int adjustment to some value, like Mighty Block (+1)
+    protected fun addIntAdjustmentEntry(
+        name: String,
+        type: SkillType,
+        category: SkillCategory,
+        defaultValue: Int? = null,
+        createFunc: (Player, SkillCategory, Int?, Duration) -> Skill<Int>
+    ) {
+        val entry = IntAdjustmentSkillFactory(name, type, category, defaultValue, createFunc)
         skillCache[type] = entry
         categories[category]?.add(entry) ?: error("Cannot find category: ${category.name}")
     }

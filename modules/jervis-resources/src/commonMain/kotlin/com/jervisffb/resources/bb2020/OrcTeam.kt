@@ -151,8 +151,8 @@ val UNTRAINED_TROLL =
         4, 5, 5, 5, 10,
         listOf(
             ALWAYS_HUNGRY.id(),
-            LONER.id(4),
-            MIGHTY_BLOW.id(1),
+            LONER.idTarget(4),
+            MIGHTY_BLOW.idAdjustment(1),
             PROJECTILE_VOMIT.id(),
             REALLY_STUPID.id(),
             REGENERATION.id(),

@@ -323,7 +323,7 @@ class TeamMascotTests: JervisGameBB2025Test() {
         val player = awayTeam["A1".playerId].apply {
             extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
             addSkill(SkillType.PRO)
-            addSkill(SkillType.LONER.id(4))
+            addSkill(SkillType.LONER.idTarget(4))
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(),
@@ -362,7 +362,7 @@ class TeamMascotTests: JervisGameBB2025Test() {
         val player = awayTeam["A1".playerId].apply {
             extraSpecialRules.add(PlayerSpecialRule.TEAM_CAPTAIN)
             addSkill(SkillType.PRO)
-            addSkill(SkillType.LONER.id(4))
+            addSkill(SkillType.LONER.idTarget(4))
         }
         controller.rollForward(
             *defaultKickOffHomeTeam(),

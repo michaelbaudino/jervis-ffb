@@ -120,8 +120,8 @@ val OGRE =
         5, 5, 4, 5, 10,
         listOf(
             SkillType.BONE_HEAD.id(),
-            SkillType.LONER.id(4),
-            SkillType.MIGHTY_BLOW.id(1),
+            SkillType.LONER.idTarget(4),
+            SkillType.MIGHTY_BLOW.idAdjustment(1),
             SkillType.THICK_SKULL.id(),
             SkillType.THROW_TEAMMATE.id()
         ),

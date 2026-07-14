@@ -3,7 +3,8 @@ package com.jervisffb.ui.game.model
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerKeyword
 import com.jervisffb.engine.model.isOnHomeTeam
-import com.jervisffb.engine.rules.common.skills.IntSkillFactory
+import com.jervisffb.engine.rules.common.skills.IntAdjustmentSkillFactory
+import com.jervisffb.engine.rules.common.skills.IntTargetSkillFactory
 import com.jervisffb.engine.rules.common.skills.KeywordSkillFactory
 import com.jervisffb.engine.rules.common.skills.NoValueSkillFactory
 import com.jervisffb.engine.rules.common.skills.Skill
@@ -39,7 +40,8 @@ class UiPlayerCard(
     sealed interface UiSkillOptions {
         val options: List<Comparable<*>>
     }
-    data class IntOptions(override val options: List<Int>): UiSkillOptions
+    data class IntTargetOptions(override val options: List<Int>): UiSkillOptions
+    data class IntAdjustmentOptions(override val options: List<Int>): UiSkillOptions
     data class KeywordOptions(override val options: List<PlayerKeyword>): UiSkillOptions
 
     private fun getSkills(skillSettings: SkillSettings, category: SkillCategory): List<UiSkillData> {
@@ -49,7 +51,8 @@ class UiPlayerCard(
                 val rosterSkill = model.positionSkills.filter { it.type == factory.type }
                 val extraSkill = model.extraSkills.filter { it.type == factory.type }
                 val options = when (factory) {
-                    is IntSkillFactory -> IntOptions((1..6).toList())
+                    is IntAdjustmentSkillFactory -> IntAdjustmentOptions((1..6).toList())
+                    is IntTargetSkillFactory -> IntTargetOptions((1..6).toList())
                     is KeywordSkillFactory -> KeywordOptions(PlayerKeyword.entries.toList())
                     is NoValueSkillFactory -> null
                 }

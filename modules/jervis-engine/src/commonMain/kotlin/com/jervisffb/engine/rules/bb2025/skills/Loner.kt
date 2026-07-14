@@ -15,12 +15,12 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 class Loner(
     override val player: Player,
     override val category: SkillCategory = SkillCategory.TRAITS,
-    override val value: Int? = 4,
+    override val value: Int = 4,
     override val expiresAt: Duration,
 ) : BB2025IntSkill {
     override val type: SkillType = SkillType.LONER
-    override val skillId: SkillId = type.id(value)
-    override val name: String = "${type.description}(${value ?: "X"}+)"
+    override val skillId: SkillId = type.idTarget(value)
+    override val name: String = "${type.description}(${value}+)"
     override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.PERMANENT
     override var used: Boolean = false // This skill is always available

@@ -1,7 +1,7 @@
 package com.jervisffb.engine.model
 
-import com.jervisffb.engine.model.locations.OnPitchLocation
 import com.jervisffb.engine.model.locations.Dogout
+import com.jervisffb.engine.model.locations.OnPitchLocation
 
 /**
  * This interface describes the high-level state of players. It is split into

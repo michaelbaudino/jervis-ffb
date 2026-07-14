@@ -346,8 +346,8 @@ class BB2020SkillSettings: SkillSettings() {
                     // }
                 }
                 SkillType.MIGHTY_BLOW -> {
-                    addIntEntry("Mighty Blow", type, SkillCategory.STRENGTH, 1) { player, category, value, expiresAt ->
-                        MightyBlow(player, category, value, expiresAt)
+                    addIntAdjustmentEntry("Mighty Blow", type, SkillCategory.STRENGTH, 1) { player, category, value, expiresAt ->
+                        MightyBlow(player, category, value!!, expiresAt)
                     }
                 }
                 SkillType.MULTIPLE_BLOCK -> {
@@ -410,7 +410,7 @@ class BB2020SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.BLOOD_LUST -> {
-                    addIntEntry("Blood Lust(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
+                    addIntTargetEntry("Blood Lust(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
                         BloodLust(player, category, value, expiresAt)
                     }
                 }
@@ -445,8 +445,8 @@ class BB2020SkillSettings: SkillSettings() {
                     // }
                 }
                 SkillType.LONER -> {
-                    addIntEntry("Loner(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
-                        Loner(player, category, value, expiresAt)
+                    addIntTargetEntry("Loner(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
+                        Loner(player, category, value!!, expiresAt)
                     }
                 }
                 SkillType.NO_HANDS -> {

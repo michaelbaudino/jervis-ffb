@@ -70,7 +70,7 @@ object KnuckleDusters : Procedure() {
                                 player = player,
                                 skill = rules.createSkill(
                                     player = player,
-                                    skill = SkillType.MIGHTY_BLOW.id(1),
+                                    skill = SkillType.MIGHTY_BLOW.idAdjustment(1),
                                     expiresAt = Duration.END_OF_DRIVE
                                 ),
                             ),

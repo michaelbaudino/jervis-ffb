@@ -145,8 +145,8 @@ val OGRE =
         5, 5, 4, 5, 10,
         listOf(
             BONE_HEAD.id(),
-            LONER.id(4),
-            MIGHTY_BLOW.id(1),
+            LONER.idTarget(4),
+            MIGHTY_BLOW.idAdjustment(1),
             THICK_SKULL.id(),
             THROW_TEAMMATE.id()
         ),

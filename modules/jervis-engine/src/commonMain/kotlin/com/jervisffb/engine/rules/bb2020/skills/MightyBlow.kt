@@ -9,11 +9,11 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 class MightyBlow(
     override val player: Player,
     override val category: SkillCategory = SkillCategory.STRENGTH,
-    override val value: Int? = 1,
+    override val value: Int = 1,
     override val expiresAt: Duration,
 ) : BB2020IntSkill {
     override val type: SkillType = SkillType.MIGHTY_BLOW
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.idAdjustment(value)
     override val name: String = "${type.description}(+$value)"
     override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.PERMANENT

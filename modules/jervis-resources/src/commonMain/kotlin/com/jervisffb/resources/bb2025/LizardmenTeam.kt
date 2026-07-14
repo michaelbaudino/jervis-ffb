@@ -92,7 +92,7 @@ val KROXIGOR =
         6, 5, 5, 6, 10,
         listOf(
             BONE_HEAD.id(),
-            LONER.id(4),
+            LONER.idTarget(4),
             MIGHTY_BLOW.id(),
             PREHENSILE_TAIL.id(),
             THICK_SKULL.id(),

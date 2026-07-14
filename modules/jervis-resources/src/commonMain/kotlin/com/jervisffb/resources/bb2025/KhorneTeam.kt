@@ -85,8 +85,8 @@ val BLOODSPAWN =
         listOf(
             // Claws
             FRENZY.id(),
-            LONER.id(4),
-            SkillType.MIGHTY_BLOW.id(1),
+            LONER.idTarget(4),
+            SkillType.MIGHTY_BLOW.idAdjustment(1),
             UNCHANNELLED_FURY.id()
         ),
         listOf(SkillCategory.MUTATIONS, SkillCategory.STRENGTH),

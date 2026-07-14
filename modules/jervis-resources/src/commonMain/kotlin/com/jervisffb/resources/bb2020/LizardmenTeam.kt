@@ -87,8 +87,8 @@ val KROXIGOR =
         6, 5, 5, null, 10,
         listOf(
             BONE_HEAD.id(),
-            LONER.id(4),
-            MIGHTY_BLOW.id(1),
+            LONER.idTarget(4),
+            MIGHTY_BLOW.idAdjustment(1),
             THICK_SKULL.id(),
             PREHENSILE_TAIL.id()
         ),

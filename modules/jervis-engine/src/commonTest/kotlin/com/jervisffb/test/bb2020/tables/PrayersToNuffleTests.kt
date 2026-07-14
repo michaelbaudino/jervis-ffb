@@ -243,7 +243,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
             when (i) {
                 0 -> it.state = PlayerDogoutState.KNOCKED_OUT
                 1 -> it.addSkill(SkillType.STAB)
-                else -> it.addSkill(SkillType.LONER.id(2))
+                else -> it.addSkill(SkillType.LONER.idTarget(2))
             }
         }
         controller.rollForward(
@@ -309,7 +309,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
             when (i) {
                 // Should it not be available to players that already have AV11?
                 0 -> it.state = PlayerDogoutState.KNOCKED_OUT
-                else -> it.addSkill(SkillType.LONER.id(2))
+                else -> it.addSkill(SkillType.LONER.idTarget(2))
             }
         }
         controller.rollForward(
@@ -405,8 +405,8 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
             when (i) {
                 // Should it not be available to players that already have AV11?
                 0 -> it.state = PlayerDogoutState.KNOCKED_OUT
-                1 -> it.addSkill(SkillType.MIGHTY_BLOW.id(2))
-                else -> it.addSkill(SkillType.LONER.id(2))
+                1 -> it.addSkill(SkillType.MIGHTY_BLOW.idAdjustment(2))
+                else -> it.addSkill(SkillType.LONER.idTarget(2))
             }
         }
         controller.rollForward(
@@ -484,7 +484,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
         // Give everyone except 1 loner, so when you roll 3 on the prayer
         // Only 1 can be selected
         homeTeam.forEachIndexed { i, it ->
-            if (i > 0) it.addSkill(SkillType.LONER.id(4))
+            if (i > 0) it.addSkill(SkillType.LONER.idTarget(4))
         }
         controller.rollForward(
             *defaultPregame(
@@ -507,7 +507,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
         homeTeam.forEachIndexed { i, it ->
             when (i) {
                 0 -> it.state = PlayerDogoutState.KNOCKED_OUT
-                else -> it.addSkill(SkillType.LONER.id(4))
+                else -> it.addSkill(SkillType.LONER.idTarget(4))
             }
         }
         controller.rollForward(
@@ -636,7 +636,7 @@ class PrayersToNuffleTests: JervisGameBB2020Test() {
             when (i) {
                 0 -> player.state = PlayerDogoutState.KNOCKED_OUT
                 1 -> player.addSkill(SkillType.PRO)
-                else -> player.addSkill(SkillType.LONER.id(2))
+                else -> player.addSkill(SkillType.LONER.idTarget(2))
             }
         }
         controller.rollForward(

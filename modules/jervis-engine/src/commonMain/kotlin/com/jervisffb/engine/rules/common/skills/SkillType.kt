@@ -18,7 +18,8 @@ import kotlinx.serialization.Serializable
  *
  * Skills with values are still only identified by their name here.
  * The unique combination of a type and value is defined by [SkillId].
- * These can be created by calling [SkillType.id].
+ * These can be created by calling the helper functions like
+ * [SkillType.idAdjustment], [SkillType.idTarget] and [SkillType.id].
  *
  * @see SkillSettings
  */
@@ -171,7 +172,8 @@ enum class SkillType(val description: String) {
      * Design note: The naming of this method is intentionally kept short
      * to make skill lists in rosters more readable.
      */
-    fun id(value: Int): SkillId = SkillId(this, SkillValue.Int(value))
+    fun idTarget(value: Int): SkillId = SkillId(this, SkillValue.IntTarget(value))
+    fun idAdjustment(value: Int): SkillId = SkillId(this, SkillValue.IntAdjustment(value))
     fun id(value: PlayerKeyword): SkillId = SkillId(this, SkillValue.Keyword(value))
     fun id(value: Any? = null): SkillId = SkillId(this, SkillValue.None)
 }

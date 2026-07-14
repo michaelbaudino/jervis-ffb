@@ -108,7 +108,7 @@ object BadHabits : Procedure() {
                                     player = player,
                                     skill = rules.createSkill(
                                         player = player,
-                                        skill = SkillType.LONER.id(2),
+                                        skill = SkillType.LONER.idTarget(2),
                                         expiresAt = Duration.END_OF_DRIVE
                                     )
                                 )

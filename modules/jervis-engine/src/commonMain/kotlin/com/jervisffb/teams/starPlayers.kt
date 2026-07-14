@@ -18,7 +18,7 @@ val THE_BLACK_GOBBO = StarPlayerPosition(
         // Bombardier.Factory,
         // DisturbingPrecense.Factory,
         SkillType.DODGE.id(),
-        SkillType.LONER.id(3),
+        SkillType.LONER.idTarget(3),
         SkillType.SIDESTEP.id(),
         // SneakyGit.Factory,
         SkillType.STAB.id(),

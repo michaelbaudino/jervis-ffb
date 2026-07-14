@@ -149,7 +149,7 @@ val DEATHROLLER =
             BREAK_TACKLE.id(),
             DIRTY_PLAYER.id(),
             JUGGERNAUT.id(),
-            LONER.id(4),
+            LONER.idTarget(4),
             MIGHTY_BLOW.id(),
             NO_BALL.id(),
             SECRET_WEAPON.id(),

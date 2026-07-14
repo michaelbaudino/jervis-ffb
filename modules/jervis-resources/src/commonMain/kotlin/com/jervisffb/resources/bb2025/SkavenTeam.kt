@@ -108,8 +108,8 @@ val RAT_OGRE =
         listOf(
             ANIMAL_SAVAGERY.id(),
             FRENZY.id(),
-            LONER.id(4),
-            MIGHTY_BLOW.id(1),
+            LONER.idTarget(4),
+            MIGHTY_BLOW.idAdjustment(1),
             PREHENSILE_TAIL.id()
         ),
         listOf(SkillCategory.STRENGTH),

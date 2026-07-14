@@ -155,12 +155,23 @@ fun rememberSkillSelectorOverlay(): suspend (player: Player, title: String, skil
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     when (val values = currentOptions?.options) {
-                        is UiPlayerCard.IntOptions -> {
+                        is UiPlayerCard.IntTargetOptions -> {
                             values.options.forEach { value ->
                                 SkillValueButton(
                                     text = value.toString(),
                                     onClick = { resume?.invoke(
-                                        currentOptions!!.factory.createSkill(currentPlayer!!, SkillValue.Int(value), Duration.PERMANENT)
+                                        currentOptions!!.factory.createSkill(currentPlayer!!, SkillValue.IntTarget(value), Duration.PERMANENT)
+                                    ) },
+                                    color = color
+                                )
+                            }
+                        }
+                        is UiPlayerCard.IntAdjustmentOptions -> {
+                            values.options.forEach { value ->
+                                SkillValueButton(
+                                    text = value.toString(),
+                                    onClick = { resume?.invoke(
+                                        currentOptions!!.factory.createSkill(currentPlayer!!, SkillValue.IntAdjustment(value), Duration.PERMANENT)
                                     ) },
                                     color = color
                                 )

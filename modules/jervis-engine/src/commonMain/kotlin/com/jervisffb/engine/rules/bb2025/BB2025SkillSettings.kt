@@ -184,8 +184,8 @@ class BB2025SkillSettings: SkillSettings() {
                 // Devious Category
                 //
                 SkillType.DIRTY_PLAYER -> {
-                    addNoValueEntry("Dirty Player", type, SkillCategory.DEVIOUS) { player, category,expiresAt ->
-                        DirtyPlayer(player, category, expiresAt)
+                    addIntAdjustmentEntry("Dirty Player", type, SkillCategory.DEVIOUS, defaultValue = 1) { player, category, value, expiresAt ->
+                        DirtyPlayer(player, category, value!!, expiresAt)
                     }
                 }
                 SkillType.EYE_GOUGE -> {
@@ -475,7 +475,7 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.MIGHTY_BLOW -> {
-                    addIntEntry("Mighty Blow", type, SkillCategory.STRENGTH, 1) { player, category, value, expiresAt ->
+                    addIntAdjustmentEntry("Mighty Blow", type, SkillCategory.STRENGTH, 1) { player, category, value, expiresAt ->
                         MightyBlow(player, category, value!!, expiresAt)
                     }
                 }
@@ -535,7 +535,7 @@ class BB2025SkillSettings: SkillSettings() {
                     }
                 }
                 SkillType.BLOOD_LUST -> {
-                    addIntEntry("Blood Lust(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
+                    addIntTargetEntry("Blood Lust(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
                         BloodLust(player, category, value, expiresAt)
                     }
                 }
@@ -578,8 +578,8 @@ class BB2025SkillSettings: SkillSettings() {
                     // }
                 }
                 SkillType.LONER -> {
-                    addIntEntry("Loner(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
-                        Loner(player, category, value, expiresAt)
+                    addIntTargetEntry("Loner(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
+                        Loner(player, category, value!!, expiresAt)
                     }
                 }
                 SkillType.MY_BALL -> {

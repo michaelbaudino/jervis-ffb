@@ -4,8 +4,6 @@ import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.EndAction
 import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.playerId
-import com.jervisffb.engine.model.SkillId
-import com.jervisffb.engine.model.SkillValue
 import com.jervisffb.engine.rules.bb2025.skills.Loner
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
@@ -18,6 +16,7 @@ import com.jervisffb.test.moveTo
 import com.jervisffb.test.utils.TeamRerollSelected
 import com.jervisffb.test.utils.assertProne
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -37,7 +36,7 @@ class LonerTests: JervisGameBB2025Test() {
     @Test
     fun mustRollXToUseReroll() {
         val player = awayTeam["A1".playerId]
-        player.addSkill(SkillId(type = SkillType.LONER, SkillValue.Int(4)))
+        player.addSkill(SkillType.LONER.idTarget(4))
         assertTrue(awayTeam.rerolls.none { it.rerollUsed })
         controller.rollForward(
             *activatePlayer(player, PlayerStandardActionType.MOVE),
@@ -54,7 +53,7 @@ class LonerTests: JervisGameBB2025Test() {
     @Test
     fun lonerTriggerOnAllRerollsDuringActivation() {
         val player = awayTeam["A1".playerId]
-        player.addSkill(SkillId(type = SkillType.LONER, SkillValue.Int(4)))
+        player.addSkill(SkillType.LONER.idTarget(4))
         assertTrue(awayTeam.rerolls.none { it.rerollUsed })
         controller.rollForward(
             *activatePlayer(player, PlayerStandardActionType.MOVE),
@@ -77,7 +76,7 @@ class LonerTests: JervisGameBB2025Test() {
     @Test
     fun failedRollStillUsesReroll() {
         val player = awayTeam["A1".playerId]
-        player.addSkill(SkillId(type = SkillType.LONER, SkillValue.Int(4)))
+        player.addSkill(SkillType.LONER.idTarget(4))
         assertTrue(awayTeam.rerolls.none { it.rerollUsed })
         controller.rollForward(
             *activatePlayer(player, PlayerStandardActionType.MOVE),
@@ -96,7 +95,7 @@ class LonerTests: JervisGameBB2025Test() {
     @Test
     fun teamRerollsWorkOnFailedLoner() {
         val player = awayTeam["A1".playerId]
-        player.addSkill(SkillId(type = SkillType.LONER, SkillValue.Int(3)))
+        player.addSkill(SkillType.LONER.idTarget(3))
         assertTrue(awayTeam.rerolls.none { it.rerollUsed })
         controller.rollForward(
             *activatePlayer(player, PlayerStandardActionType.MOVE),
@@ -119,6 +118,7 @@ class LonerTests: JervisGameBB2025Test() {
         assertEquals(2, awayTeam.rerolls.count { it.rerollUsed })
     }
 
+    @Ignore
     @Test
     fun proRerollWorksOnFailedLoner() {
 

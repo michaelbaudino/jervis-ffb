@@ -24,7 +24,7 @@ val THE_BLACK_GOBBO_BB2020 =  StarPlayerPosition(
         // Bombardier.Factory,
         // DisturbingPrecense.Factory
         DODGE.id(),
-        LONER.id(3),
+        LONER.idTarget(3),
         SIDESTEP.id(),
         // SneakyGit.Factory,
         STAB.id(),

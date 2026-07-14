@@ -29,7 +29,7 @@ class NoValueSkillFactory(
     }
 }
 
-class IntSkillFactory(
+class IntTargetSkillFactory(
     override val name: String,
     override val type: SkillType,
     private val category: SkillCategory,
@@ -39,7 +39,7 @@ class IntSkillFactory(
     override val defaultSkillId: SkillId =
         when (defaultValue) {
             null -> SkillId(type, SkillValue.None)
-            else -> SkillId(type, SkillValue.Int(defaultValue))
+            else -> SkillId(type, SkillValue.IntTarget(defaultValue))
         }
     override fun createSkill(player: Player, value: SkillValue?, expiresAt: Duration): Skill<Int> {
         return if (defaultSkillId.value != SkillValue.None && value == SkillValue.None) {
@@ -47,8 +47,34 @@ class IntSkillFactory(
         } else {
             val value = when (value) {
                 null -> null
-                is SkillValue.Int -> value.value
-                else -> error("Unsupported value type: $value")
+                is SkillValue.IntTarget -> value.value
+                else -> error("Unsupported value type: $value for $type")
+            }
+            createFunc(player, category, value, expiresAt)
+        }
+    }
+}
+
+class IntAdjustmentSkillFactory(
+    override val name: String,
+    override val type: SkillType,
+    private val category: SkillCategory,
+    private val defaultValue: Int?,
+    private val createFunc: ((Player, SkillCategory, Int?, Duration) -> Skill<Int>),
+): SkillFactory<Int> {
+    override val defaultSkillId: SkillId =
+        when (defaultValue) {
+            null -> SkillId(type, SkillValue.None)
+            else -> SkillId(type, SkillValue.IntAdjustment(defaultValue))
+        }
+    override fun createSkill(player: Player, value: SkillValue?, expiresAt: Duration): Skill<Int> {
+        return if (defaultSkillId.value != SkillValue.None && value == SkillValue.None) {
+            createFunc(player, category, defaultValue, expiresAt)
+        } else {
+            val value = when (value) {
+                null -> null
+                is SkillValue.IntAdjustment -> value.value
+                else -> error("Unsupported value type: $value for $type")
             }
             createFunc(player, category, value, expiresAt)
         }

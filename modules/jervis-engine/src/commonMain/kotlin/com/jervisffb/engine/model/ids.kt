@@ -1,5 +1,6 @@
 package com.jervisffb.engine.model
 
+import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.engine.rules.common.rerolls.DiceRerollOption
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.skills.SkillType
@@ -71,11 +72,26 @@ value class RerollSourceId(val id: String)
 data class SkillId(val type: SkillType, val value: SkillValue = SkillValue.None) {
     fun serialize(): String {
         val valueDescription = when (value) {
-            is SkillValue.Int -> "(${value.value})"
+            is SkillValue.IntTarget -> "(${value.value}+)"
+            is SkillValue.IntAdjustment -> "+${value.value}"
             is SkillValue.Keyword -> "(${value.value.description})"
             SkillValue.None -> ""
         }
         return "${type.name}$valueDescription"
+    }
+    /** Returns a human-readable description of the skill */
+    fun toNiceString(gameVersion: GameVersion = GameVersion.BB2025): String {
+        return when (value) {
+            is SkillValue.IntTarget -> "${type.description}(${value.value}+)"
+            is SkillValue.IntAdjustment -> {
+                when (gameVersion == GameVersion.BB2025 && value.value == 1) {
+                    true -> "${type.description}"
+                    false -> "${type.description}(+${value.value})"
+                }
+            }
+            is SkillValue.Keyword -> "${type.description}(${value.value.description})"
+            SkillValue.None -> type.description
+        }
     }
 }
 
@@ -88,9 +104,16 @@ data class SkillId(val type: SkillType, val value: SkillValue = SkillValue.None)
  */
 @Serializable
 sealed interface SkillValue {
+
+    // Skills that look like `SkillName (+Value)`
     @Serializable
     @JvmInline
-    value class Int(val value: kotlin.Int) : SkillValue
+    value class IntAdjustment(val value: Int) : SkillValue
+
+    // Skills that look like `SkillName (Value+)`
+    @Serializable
+    @JvmInline
+    value class IntTarget(val value: Int) : SkillValue
 
     @Serializable
     @JvmInline

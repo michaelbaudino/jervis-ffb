@@ -15,12 +15,15 @@ import com.jervisffb.engine.rules.common.skills.SkillType
 class DirtyPlayer(
     override val player: Player,
     override val category: SkillCategory = SkillCategory.DEVIOUS,
+    override val value: Int = 1,
     override val expiresAt: Duration = Duration.PERMANENT,
-) : BB2025Skill {
+) : BB2025IntSkill {
     override val type: SkillType = SkillType.DIRTY_PLAYER
-    override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
-    override val name: String = type.description
+    override val skillId: SkillId = type.idAdjustment(value)
+    override val name: String = buildString {
+        append(type.description)
+        if (value > 1) append("(+$value)")
+    }
     override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.END_OF_ACTION
     override var used: Boolean = false
