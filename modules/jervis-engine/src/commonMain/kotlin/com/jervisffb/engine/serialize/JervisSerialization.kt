@@ -59,6 +59,7 @@ object JervisSerialization {
     private val jsonFormat =
         Json {
             useArrayPolymorphism = true
+            allowStructuredMapKeys = true // Required to serialize InducementSettings
             serializersModule = jervisEngineModule
             prettyPrint = true
         }

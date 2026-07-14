@@ -9,8 +9,7 @@ import com.jervisffb.engine.model.PositionId
 import com.jervisffb.engine.model.SkillId
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TeamId
-import com.jervisffb.engine.model.inducements.Apothecary
-import com.jervisffb.engine.model.inducements.ApothecaryType
+import com.jervisffb.engine.model.inducements.StandardApothecary
 import com.jervisffb.engine.model.modifiers.StatModifier
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.builder.GameType
@@ -130,13 +129,13 @@ class TeamBuilder(val rules: Rules, val roster: Roster) {
             this@TeamBuilder.players.forEach {
                 val data: PlayerData = it.value
                 add(data.type.createPlayer(
-                    rules,
-                    this@apply,
-                    data.id,
-                    data.name,
-                    data.number,
-                    PlayerType.STANDARD,
-                    data.icon,
+                    rules = rules,
+                    team = this@apply,
+                    id = data.id,
+                    name = data.name,
+                    number = data.number,
+                    type = PlayerType.STANDARD,
+                    icon = data.icon,
                 ).also { player ->
                     player.extraSkills.addAll(data.extraSkills.map { rules.createSkill(player, it, Duration.PERMANENT) })
                     player.extraSpecialRules.addAll(data.extraSpecialRules)
@@ -155,13 +154,14 @@ class TeamBuilder(val rules: Rules, val roster: Roster) {
             this.rerolls.addAll((0 ..<this@TeamBuilder.rerolls).map {
                 RegularTeamReroll(id, it)
             })
-            this.teamApothecaries.addAll((0 until this@TeamBuilder.apothecaries).map { Apothecary(false, ApothecaryType.STANDARD) })
+            this.teamApothecaries.addAll((0 until this@TeamBuilder.apothecaries).map { StandardApothecary(false) })
             this.teamCheerleaders = this@TeamBuilder.cheerleaders
             this.teamAssistantCoaches = this@TeamBuilder.assistentCoaches
             this.dedicatedFans = this@TeamBuilder.dedicatedFans
             this.specialRules.addAll(this@TeamBuilder.specialRules)
             this.teamValue = this@TeamBuilder.teamValue
             this.currentTeamValue = this@TeamBuilder.currentTeamValue
+            this.treasury = this@TeamBuilder.treasury
             this.teamLogo = this@TeamBuilder.teamLogo
         }
     }

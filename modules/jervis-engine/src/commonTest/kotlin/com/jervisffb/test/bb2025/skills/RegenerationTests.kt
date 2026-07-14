@@ -7,9 +7,8 @@ import com.jervisffb.engine.ext.d6
 import com.jervisffb.engine.ext.dblock
 import com.jervisffb.engine.ext.playerId
 import com.jervisffb.engine.model.Direction
-import com.jervisffb.engine.model.inducements.Apothecary
-import com.jervisffb.engine.model.inducements.ApothecaryType
 import com.jervisffb.engine.model.inducements.MortuaryAssistant
+import com.jervisffb.engine.model.inducements.PlagueDoctor
 import com.jervisffb.engine.rules.bb2025.skills.Regeneration
 import com.jervisffb.engine.rules.common.actions.PlayerStandardActionType
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
@@ -149,7 +148,7 @@ class RegenerationTests: JervisGameBB2025Test() {
     fun regenFailsAfterAllRerollOptionsDeclined() {
         val defender = homeTeam["H1".playerId].apply { addSkill(SkillType.REGENERATION) }
         homeTeam.mortuaryAssistants.add(MortuaryAssistant())
-        homeTeam.tempApothecaries.add(Apothecary(used = false, type = ApothecaryType.PLAGUE_DOCTOR))
+        homeTeam.plagueDoctors.add(PlagueDoctor(used = false))
         controller.rollForward(
             *activatePlayer("A1", PlayerStandardActionType.BLOCK),
             *standardBlock(defender, 6.dblock),
@@ -166,7 +165,7 @@ class RegenerationTests: JervisGameBB2025Test() {
         state.assertNoActivePlayer()
         defender.assertBadlyHurt()
         assertFalse(homeTeam.mortuaryAssistants.single().used)
-        assertFalse(homeTeam.tempApothecaries.single { it.type == ApothecaryType.PLAGUE_DOCTOR }.used)
+        assertFalse(homeTeam.plagueDoctors.single().used)
     }
 
     @Test

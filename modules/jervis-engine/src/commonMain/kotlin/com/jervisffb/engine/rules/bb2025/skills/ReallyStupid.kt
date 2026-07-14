@@ -19,7 +19,7 @@ class ReallyStupid(
 ) : BB2025Skill {
     override val type: SkillType = SkillType.REALLY_STUPID
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

@@ -1,29 +1,44 @@
 package com.jervisffb.engine.model.inducements
 
 /**
- * This file is just being used for prototyping how to model inducements
- * It probably needs a few iterations
+ * Interface describing all possible apothecary types available to a team.
  */
-enum class ApothecaryType(val description: String) {
-    STANDARD("Apothecary"), // See page 62 in the BB2020 rulebook
-    WANDERING("Wandering Apothecary"), // See page 91 in the BB2020 rulebook
-    // See page 91 in the BB2020 rulebook
-    // See page 145 in the BB2020 rulebook
-    PLAGUE_DOCTOR("Plague Doctor")
+sealed interface Apothecary {
+    val name: String
+    var used: Boolean
 }
 
 /**
- * Class representing all types of apothecaries.
+ * Class representing the standard apothecary that can be bought as part of a
+ * team roster.
+ *
+ * See page 62 in the BB2020 rulebook.
  */
-data class Apothecary(
-    var used: Boolean,
-    val type: ApothecaryType
-)
+data class StandardApothecary(
+    override var used: Boolean,
+): Apothecary {
+    override val name: String = "Apothecary"
+}
 
 /**
- * Class representing a Mortuary Assistant.
+ * Class representing a Wandering Apothecary Inducement.
  *
- * See page 91 in the BB2020 rulebook
- * See page 145 in the BB2025 rulebook
+ * See page 91 in the BB2020 rulebook.
+ * See page 145 in the BB2025 rulebook.
  */
-data class MortuaryAssistant(var used: Boolean = false)
+data class WanderingApothecary(
+    override var used: Boolean,
+): Apothecary {
+    override val name: String = "Wandering Apothecary"
+}
+
+/**
+ * Class representing a Plague Doctor Inducement.
+ *
+ * See page 91 in the BB2020 rulebook.
+ */
+data class PlagueDoctor(
+    override var used: Boolean = false,
+): Apothecary {
+    override val name: String = "Plague Doctor"
+}

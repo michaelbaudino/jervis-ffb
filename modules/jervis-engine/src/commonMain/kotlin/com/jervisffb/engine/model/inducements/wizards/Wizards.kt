@@ -1,5 +1,6 @@
 package com.jervisffb.engine.model.inducements.wizards
 
+import com.jervisffb.engine.model.WizardId
 import com.jervisffb.engine.model.inducements.Spell
 import com.jervisffb.engine.model.inducements.Timing
 import kotlinx.serialization.Serializable
@@ -10,6 +11,7 @@ import kotlinx.serialization.Serializable
  * and not how/when to purchase it.
  */
 interface Wizard {
+    val id: WizardId
     val type: WizardType
     val name: String
     val used: Boolean
@@ -27,8 +29,9 @@ interface Wizard {
 // See page 94 in the BB2020 rulebook
 @Serializable
 class HirelingSportsWizard: Wizard {
-    override val name: String get() = type.description
+    override val id: WizardId = WizardId("HirelingSportsWizard")
     override val type: WizardType = WizardType.HIRELING_SPORTS_WIZARD
+    override val name: String = type.description
     override val spells: List<Spell> = listOf(
         Fireball(/*this*/),
         Zap(/*this*/)
@@ -38,8 +41,9 @@ class HirelingSportsWizard: Wizard {
 // See page 149 in the BB2025 rulebook
 @Serializable
 class SportsWizard: Wizard {
-    override val name: String get() = type.description
+    override val id: WizardId = WizardId("SportsWizard")
     override val type: WizardType = WizardType.SPORTS_WIZARD
+    override val name: String = type.description
     override val spells: List<Spell> = listOf(
         Fireball(/*this*/),
         Zap(/*this*/),

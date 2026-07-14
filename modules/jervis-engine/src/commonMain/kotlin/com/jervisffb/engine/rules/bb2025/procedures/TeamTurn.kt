@@ -91,6 +91,7 @@ object TeamTurn : Procedure() {
         )
     }
 
+    // TODO Some special effects will trigger at the start of a team turn. This should happen here.
     object UseSpecialEffects: ParentNode() {
         override fun onEnterNode(state: Game, rules: Rules): Command {
             return AddContext(ActivateInducementContext(state.activeTeamOrThrow(), Timing.END_OF_TURN))

@@ -18,7 +18,7 @@ class Titchy(
 ) : BB2020Skill {
     override val type: SkillType = SkillType.TITCHY
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

@@ -19,7 +19,7 @@ class LethalFlight(
 ) : BB2025Skill {
     override val type: SkillType = SkillType.LETHAL_FLIGHT
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = false
     // Must reset after resolving each injury, as it can be used on each player it lands on

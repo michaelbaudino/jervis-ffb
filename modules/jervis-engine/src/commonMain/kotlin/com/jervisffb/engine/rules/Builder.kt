@@ -57,8 +57,8 @@ abstract class RulesParameterBuilder(parameters: RulesParameters) {
     var pitchType: PitchType = parameters.pitchType
     var matchEventsEnabled: Boolean = parameters.matchEventsEnabled
     var kickOffEventTable: KickOffTable = parameters.kickOffEventTable
-    var prayersToNufflePrice: Int = parameters.prayersToNufflePrice
-    var prayersToNuffleEnabled: Boolean = parameters.prayersToNuffleEnabled
+    var prayersToNufflePrice: Int = parameters.prayersToNufflePriceForUnderdog
+    var prayersToNuffleEnabled: Boolean = parameters.prayersToNuffleEnabledForUnderdogDuringPregame
     var prayersToNuffleTable: PrayersToNuffleTable = parameters.prayersToNuffleTable
     var weatherTable: WeatherTable = parameters.weatherTable
     var injuryTable: InjuryTable = parameters.injuryTable
@@ -113,8 +113,8 @@ abstract class RulesParameterBuilder(parameters: RulesParameters) {
             pitchType = pitchType,
             matchEventsEnabled = matchEventsEnabled,
             kickOffEventTable = kickOffEventTable,
-            prayersToNufflePrice = prayersToNufflePrice,
-            prayersToNuffleEnabled = prayersToNuffleEnabled,
+            prayersToNufflePriceForUnderdog = prayersToNufflePrice,
+            prayersToNuffleEnabledForUnderdogDuringPregame = prayersToNuffleEnabled,
             prayersToNuffleTable = prayersToNuffleTable,
             weatherTable = weatherTable,
             injuryTable = injuryTable,

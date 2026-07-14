@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +32,7 @@ import com.jervisffb.engine.actions.EndSetup
 import com.jervisffb.engine.actions.EndTurn
 import com.jervisffb.engine.actions.ForegoActivationSelected
 import com.jervisffb.engine.actions.GameAction
-import com.jervisffb.engine.actions.InducementSelected
+import com.jervisffb.engine.actions.InducementsSelected
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PassTypeSelected
@@ -94,7 +93,7 @@ fun ActionSelector(
                             Revert -> TODO()
                             is CompositeGameAction -> action.actionList.joinToString(prefix = "[", postfix = "]")
                             is SkillSelected -> action.skill.toString()
-                            is InducementSelected -> action.name
+                            is InducementsSelected -> "Inducement selected: ${action.inducements.map { it.type }.joinToString()}"
                             is BlockTypeSelected -> action.type.toString()
                             is CalculatedAction -> TODO("Should only be used in tests")
                             is DicePoolResultsSelected -> "Dice pool: $action"

@@ -13,7 +13,25 @@ import com.jervisffb.engine.model.Direction
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.PlayerId
+import com.jervisffb.engine.model.PositionId
 import com.jervisffb.engine.model.SkillId
+import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.model.WizardId
+import com.jervisffb.engine.model.inducements.BiasedRefereeType
+import com.jervisffb.engine.model.inducements.InfamousCoachingStaffType
+import com.jervisffb.engine.model.inducements.settings.BiasedRefereeInducement
+import com.jervisffb.engine.model.inducements.settings.BiasedRefereesInducementList
+import com.jervisffb.engine.model.inducements.settings.InducementType
+import com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffInducement
+import com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffsInducementList
+import com.jervisffb.engine.model.inducements.settings.MercenaryInducement
+import com.jervisffb.engine.model.inducements.settings.SimpleInducement
+import com.jervisffb.engine.model.inducements.settings.SingleInducement
+import com.jervisffb.engine.model.inducements.settings.StandardMercenaryInducement
+import com.jervisffb.engine.model.inducements.settings.StarPlayerInducement
+import com.jervisffb.engine.model.inducements.settings.StarPlayersInducementList
+import com.jervisffb.engine.model.inducements.settings.WizardInducement
+import com.jervisffb.engine.model.inducements.settings.WizardsInducementList
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.actions.ActionType
@@ -21,7 +39,9 @@ import com.jervisffb.engine.rules.common.actions.BlockType
 import com.jervisffb.engine.rules.common.actions.PassType
 import com.jervisffb.engine.rules.common.procedures.DieRoll
 import com.jervisffb.engine.rules.common.rerolls.DiceRerollOption
+import com.jervisffb.engine.rules.common.roster.Position
 import com.jervisffb.engine.rules.common.skills.RerollSource
+import com.jervisffb.engine.utils.INVALID_ACTION
 import kotlinx.serialization.Serializable
 import kotlin.math.ceil
 import kotlin.random.Random
@@ -447,8 +467,143 @@ data class MoveTypeSelected(val moveType: MoveType) : GameAction
 @Serializable
 data class SkillSelected(val skill: SkillId): GameAction
 
+/**
+ * Action carrying a team's full pre-game inducement purchase as one atomic
+ * submission. The reason for this is so we avoid having to introduce a lot of
+ * more granular actions needed to support the UI.
+ *
+ * The downside is that the UI is required to know a lot of the details about
+ * how inducements work. The game controller will still validate the inducements
+ * using the [InducementsSelected.isValid] method, but it will validate all of
+ * them in one go.
+ *
+ * Developer's Commentary:
+ * It still isn't clear if this approach is the best, but it seems the one that
+ * introduces the least amount of complexity, even though the UI gets more
+ * complex. We should revisit this design once more inducements have been
+ * added.
+ */
 @Serializable
-data class InducementSelected(val name: String): GameAction
+data class InducementsSelected(val inducements: List<InducementSelection<*>>) : GameAction {
+    // Check that the inducements are valid for a given team. Will throw if not as we expect the
+    // UI to only send valid inducements.
+    fun isValid(team: Team, maxLimit: Int) {
+        val rules = team.game.rules
+        val settings = rules.inducements
+        var usedGold = 0
+        val typeCount = mutableMapOf<InducementType, Int>()
+        for (inducement in inducements) {
+            val inducementSettings = settings[inducement.type]
+            if (inducementSettings?.enabled != true) {
+                INVALID_ACTION(this, "${inducement.type} is not enabled for this ruleset")
+            }
+            val updatedCount = (typeCount.getOrElse(inducement.type) { 0 } + inducement.count)
+            typeCount[inducement.type] = updatedCount
+            if (inducementSettings.max < updatedCount) {
+                INVALID_ACTION(this, "Broke ${inducement.type} limit: ${inducementSettings.max} vs. $updatedCount")
+            }
+            usedGold += inducement.getPrice(team)
+            if (!inducement.isAvailableToTeam(team)) {
+                INVALID_ACTION(this, "Inducement ${inducement.type} is not available to team ${team.name} as its requirements are not met: ${inducement.getSettings(rules).requirements.joinToString() }")
+            }
+            typeCount.entries.forEach { (type, count) ->
+                val maxValue = settings[type]?.max ?: 0
+                if (count > maxValue) {
+                    INVALID_ACTION(this, "Too many inducements of type $type was selected: $count vs $maxValue")
+                }
+            }
+        }
+        if (usedGold > maxLimit) INVALID_ACTION(this, "Bought too many inducements: $usedGold > $maxLimit")
+    }
+
+    // Calculate the total price of all selected inducements
+    fun totalPrice(team: Team): Int {
+        return inducements.sumOf {
+            it.getPrice(team)
+        }
+    }
+}
+
+/**
+ * This interface is used to capture information about each single bought inducement.
+ * It is up to the Rules Engine to map these into the concrete inducements in the
+ * model layer.
+ *
+ * This is done in [com.jervisffb.engine.rules.common.procedures.ApplyInducements].
+ */
+@Serializable
+sealed interface InducementSelection<T: SingleInducement<*>> {
+
+    val type: InducementType
+    val count: Int
+
+    fun getSettings(rules: Rules): T
+    // Returns the full price that must be paid for this inducement by the current team.
+    // This takes into account any discounts that may be available to the team.
+    fun getPrice(team: Team): Int = getSettings(team.game.rules).getPrice(team) * count
+    // Returns `false` if this inducement is not available to the given team.
+    // This method is a shortcut for looking up the same information in the Rules for the inducement.
+    fun isAvailableToTeam(team: Team): Boolean {
+        val settings = getSettings(team.game.rules).requirements
+        return settings.isEmpty() || team.specialRules.any { it in settings }
+    }
+
+    @Serializable
+    data class Simple(override val type: InducementType, override val count: Int) : InducementSelection<SimpleInducement> {
+        override fun getSettings(rules: Rules): SimpleInducement = rules.inducements[type] as SimpleInducement
+    }
+
+    @Serializable
+    data class Wizard(val id: WizardId) : InducementSelection<WizardInducement> {
+        override val count: Int = 1
+        override val type: InducementType = InducementType.WIZARD
+        override fun getSettings(rules: Rules): WizardInducement = (rules.inducements[type] as WizardsInducementList).items.first { it.wizard.id == id }
+
+    }
+
+
+    @Serializable
+    data class BiasedReferee(val referee: BiasedRefereeType) : InducementSelection<BiasedRefereeInducement> {
+        override val count: Int = 1
+        override val type: InducementType = InducementType.BIASED_REFEREE
+        override fun getSettings(rules: Rules): BiasedRefereeInducement = (rules.inducements[type] as BiasedRefereesInducementList).items.first { it.referee.type == referee }
+    }
+
+    @Serializable
+    data class InfamousCoach(val coachType: InfamousCoachingStaffType) : InducementSelection<InfamousCoachingStaffInducement> {
+        override val count: Int = 1
+        override val type: InducementType = InducementType.INFAMOUS_COACHING_STAFF
+        override fun getSettings(rules: Rules): InfamousCoachingStaffInducement = (rules.inducements[type] as InfamousCoachingStaffsInducementList).items.first { it.staff.type == coachType }
+
+    }
+
+
+    @Serializable
+    data class StarPlayer(val position: PositionId) : InducementSelection<StarPlayerInducement> {
+        override val count: Int = 1
+        override val type: InducementType = InducementType.STAR_PLAYERS
+        override fun getSettings(rules: Rules): StarPlayerInducement = (rules.inducements[type] as StarPlayersInducementList).items.first { it.starPlayer.id == position }
+
+    }
+
+    @Serializable
+    data class Mercenary(
+        val position: Position,
+        val extraSkills: List<SkillId> = emptyList(),
+    ) : InducementSelection<MercenaryInducement> {
+        override val count: Int = 1
+        override val type: InducementType = InducementType.STANDARD_MERCENARY_PLAYERS
+        override fun getSettings(rules: Rules): MercenaryInducement {
+            val groupSettings = (rules.inducements[type] as StandardMercenaryInducement)
+            return MercenaryInducement(
+                position,
+                extraSkills,
+                groupSettings.extraCost,
+                groupSettings.skillCost
+            )
+        }
+    }
+}
 
 @Serializable
 data class BlockTypeSelected(val type: BlockType): GameAction

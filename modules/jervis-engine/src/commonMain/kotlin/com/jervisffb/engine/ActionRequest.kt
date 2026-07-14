@@ -37,7 +37,7 @@ import com.jervisffb.engine.actions.ForegoActivationSelected
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
 import com.jervisffb.engine.actions.GameActionId
-import com.jervisffb.engine.actions.InducementSelected
+import com.jervisffb.engine.actions.InducementsSelected
 import com.jervisffb.engine.actions.MoveType
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.NoRerollSelected
@@ -57,6 +57,7 @@ import com.jervisffb.engine.actions.SelectDicePoolResult
 import com.jervisffb.engine.actions.SelectDirection
 import com.jervisffb.engine.actions.SelectDogout
 import com.jervisffb.engine.actions.SelectForgoActivation
+import com.jervisffb.engine.actions.SelectInducements
 import com.jervisffb.engine.actions.SelectMoveType
 import com.jervisffb.engine.actions.SelectNoReroll
 import com.jervisffb.engine.actions.SelectPassType
@@ -72,7 +73,9 @@ import com.jervisffb.engine.actions.TossCoin
 import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.model.Team
+import com.jervisffb.engine.rules.common.procedures.BuyInducements
 import com.jervisffb.engine.utils.singleInstanceOfOrNull
+import kotlin.math.min
 
 /**
  * This class represents a request from the [GameEngineController] to generate
@@ -183,7 +186,28 @@ data class ActionRequest(
             is ForegoActivationSelected -> {
                 actions.any { it is SelectForgoActivation && it.players.contains(action.player) }
             }
-            is InducementSelected -> TODO()
+            is InducementsSelected -> {
+                if (actions.none { it is SelectInducements }) {
+                    false
+                } else {
+                    // This action will throw INVALID_ACTION by itself. This is not what any of the other actions
+                    // are doing, so this should probably be refactored
+                    val state = team?.game ?: return false
+                    val currentNode = state.stack.currentNode()
+                    when (currentNode) {
+                        is BuyInducements.HigherCtvBuyPurchaseInducements -> {
+                            action.isValid(team, min(team.treasury, state.rules.inducements.topDogTopUpLimitFromTreasury))
+                            true
+                        }
+                        is BuyInducements.LowerCtvBuyPurchaseInducements -> {
+                            val maxGold = team.pettyCash + min(team.treasury, state.rules.inducements.underdogTopUpLimitFromTreasury)
+                            action.isValid(team, maxGold)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }
             is MoveTypeSelected -> {
                 actions.singleInstanceOfOrNull<SelectMoveType>()?.types.orEmpty().contains(action.moveType)
             }

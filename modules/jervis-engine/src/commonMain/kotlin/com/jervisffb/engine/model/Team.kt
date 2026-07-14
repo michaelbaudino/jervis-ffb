@@ -1,11 +1,14 @@
 package com.jervisffb.engine.model
 
 import com.jervisffb.engine.model.inducements.Apothecary
+import com.jervisffb.engine.model.inducements.BiasedReferee
 import com.jervisffb.engine.model.inducements.Bribe
 import com.jervisffb.engine.model.inducements.InfamousCoachingStaff
 import com.jervisffb.engine.model.inducements.MortuaryAssistant
+import com.jervisffb.engine.model.inducements.PlagueDoctor
 import com.jervisffb.engine.model.inducements.SpecialPlayCard
 import com.jervisffb.engine.model.inducements.TeamMascot
+import com.jervisffb.engine.model.inducements.WeatherMage
 import com.jervisffb.engine.model.inducements.wizards.Wizard
 import com.jervisffb.engine.model.modifiers.BrilliantCoachingModifiers
 import com.jervisffb.engine.model.modifiers.TeamFeature
@@ -48,23 +51,23 @@ class Team(
     // Team staff
     var coachBanned: Boolean = false
     val brilliantCoachingModifiers = mutableListOf<BrilliantCoachingModifiers>()
-    val apothecaries: Int // Limit
-        get() = teamApothecaries.count { it.used } + tempApothecaries.count { it.used }
+    val apothecaries: Int
+        get() = teamApothecaries.count { it.used } + wanderingApothecaries.count { it.used }
     val teamApothecaries = mutableListOf<Apothecary>()
-    val tempApothecaries = mutableListOf<Apothecary>()
-    fun getApothecaries(): List<Apothecary> = teamApothecaries + tempApothecaries
+    val wanderingApothecaries = mutableListOf<Apothecary>()
+    fun getApothecaries(): List<Apothecary> = teamApothecaries + wanderingApothecaries
 
     // Track cheerleaders
     val cheerleaders: Int
-        get() = teamCheerleaders + tempCheerleaders
+        get() = teamCheerleaders + tempAgencyCheerleaders
     var teamCheerleaders: Int = 0 // 0-12
-    var tempCheerleaders: Int = 0 // 0-4
+    var tempAgencyCheerleaders: Int = 0 // 0-4
 
     // Track assistant coaches
     val assistantCoaches: Int
-        get() = teamAssistantCoaches + tempAssistantCoaches
+        get() = teamAssistantCoaches + partTimeAssistantCoaches
     var teamAssistantCoaches: Int = 0
-    var tempAssistantCoaches: Int = 0
+    var partTimeAssistantCoaches: Int = 0
 
     // Treasury
     var treasury: Int = 0
@@ -97,13 +100,28 @@ class Team(
     // TODO We should probably also have a section for "permanent inducements"
     //  While not in the rules, a lot of custom rulesets like NAF-style tournaments
     //  have them.
-    var bloodweiserKegs: Int = 0
+    var blitzersBestKegs: Int = 0 // This covers both Bloodweiser Kegs and Blitzers Best Kegs
     val bribes = mutableListOf<Bribe>()
     val wizards = mutableListOf<Wizard>()
     val specialPlayCards = mutableListOf<SpecialPlayCard>()
     val infamousCoachingStaff = mutableListOf<InfamousCoachingStaff>()
+    val biasedReferees = mutableListOf<BiasedReferee>()
     val mascots = mutableListOf<TeamMascot>()
     val mortuaryAssistants = mutableListOf<MortuaryAssistant>()
+    var plagueDoctors = mutableSetOf<PlagueDoctor>()
+    var weatherMages = mutableListOf<WeatherMage>()
+    // Simple counter-based inducements without dedicated model classes yet
+    var halflingMasterChefs: Int = 0
+    //    var waaaghDrummers: Int = 0
+    //    var cavortingNurglings: Int = 0
+    //    var dwarfenRunesmiths: Int = 0
+    //    var halflingHotpots: Int = 0
+    //    var mastersOfBallistics: Int = 0
+    //    var giants: Int = 0
+    //    var desperateMeasures: Int = 0
+    //    var bretonnianPastries: Int = 0
+    //    var bretonnianDamsels: Int = 0
+    //    var canopicJars: Int = 0
 
     // Some effects are hard to put into other buckets, like Cheering Fans
     // Offensive Assists. In these cases, we might want to mark the team

@@ -53,7 +53,7 @@ fun defaultWeather() = DiceRollResults(3.d6, 4.d6)
 
 fun defaultJourneyMen() = emptyArray<GameAction>()
 
-fun defaultInducements() = emptyArray<GameAction>()
+fun defaultInducements() = emptyArray<GameAction>() // Assume that the two teams have equal CTV
 
 fun defaultPrayersToNuffle() = emptyArray<GameAction>()
 

@@ -26,7 +26,7 @@ import com.jervisffb.engine.model.Player
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.ProcedureContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.inducements.ApothecaryType
+import com.jervisffb.engine.model.inducements.PlagueDoctor
 import com.jervisffb.engine.reports.ReportApothecaryUsed
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.reports.ReportMortuaryAssistantUsed
@@ -136,9 +136,7 @@ object RegenerationRoll: D6WithRerollProcedure() {
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
             if (context.regenerationSuccess) return listOf(ContinueWhenReady)
-            val isAvailable = context.player.team.getApothecaries().any {
-                it.type == ApothecaryType.PLAGUE_DOCTOR && !it.used
-            }
+            val isAvailable = context.player.team.plagueDoctors.any { !it.used }
             return when (isAvailable) {
                 true -> listOf(ConfirmWhenReady, CancelWhenReady)
                 false -> listOf(ContinueWhenReady)
@@ -150,7 +148,7 @@ object RegenerationRoll: D6WithRerollProcedure() {
                     val context = state.getContext<RiskingInjuryContext>()
                     val team = context.player.team
                     val apothecary = team.getApothecaries().first {
-                        it.type == ApothecaryType.PLAGUE_DOCTOR && !it.used
+                        it is PlagueDoctor && !it.used
                     }
                     compositeCommandOf(
                         SetApothecaryUsed(team, apothecary, true),

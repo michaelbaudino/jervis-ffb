@@ -13,6 +13,7 @@ import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.skills.SkillCategory
 import com.jervisffb.engine.serialize.PlayerUiData
 import com.jervisffb.engine.serialize.SpriteSource
+import com.jervisffb.engine.utils.assert
 import kotlinx.serialization.Serializable
 
 /**
@@ -54,6 +55,11 @@ class StarPlayerPosition(
         type: PlayerType,
         icon: PlayerUiData?
     ): Player {
-        TODO("Not yet implemented")
+        assert(type == PlayerType.STAR_PLAYER)
+        return Player(rules, id, this, icon, type).apply {
+            this.team = team
+            this.name = name
+            this.number = number
+        }
     }
 }

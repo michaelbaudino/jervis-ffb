@@ -23,7 +23,6 @@ import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerNo
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.inducements.Bribe
-import com.jervisffb.engine.model.inducements.TeamMascot
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.builder.GameType
 import com.jervisffb.engine.rules.common.roster.PlayerSpecialRule
@@ -168,6 +167,7 @@ fun createDefaultBB2020HomeTeam(rules: Rules): Team {
         apothecaries = 1
         dedicatedFans = 1
         teamValue = 1_000_000
+        currentTeamValue = 1_000_000
     }
 }
 
@@ -190,14 +190,11 @@ fun createDefaultBB2025HomeTeam(rules: Rules): Team {
         rerolls = 4
         apothecaries = 1
         dedicatedFans = 1
-        teamValue = 1_000_000
+        teamValue = 1_300_000
+        currentTeamValue = 1_300_000
+        treasury = 1_000_000
         specialRules.add(TeamSpecialRule.TEAM_CAPTAIN)
     }
-
-    // Until we get proper inducement support, manually add a Mascot and Bribes
-    val mascot = TeamMascot(team.id)
-    team.mascots.add(mascot)
-    team.rerolls.add(mascot.reroll)
 
     return team
 }
@@ -220,6 +217,8 @@ fun createDefaultBB2020AwayTeam(rules: Rules): Team {
         rerolls = 4
         apothecaries = 1
         teamValue = 1_000_000
+        treasury = 500_000
+        currentTeamValue = 1_000_000
     }
 }
 
@@ -241,6 +240,8 @@ fun createDefaultBB2025AwayTeam(rules: Rules): Team {
         rerolls = 4
         apothecaries = 1
         teamValue = 1_000_000
+        currentTeamValue = 1_000_000
+        treasury = 100_000
     }
 
     // Until we get proper inducement support, manually add Bribes
@@ -265,6 +266,7 @@ fun createDefaultBB7HomeTeam(rules: Rules): Team {
         apothecaries = 1
         dedicatedFans = 0
         teamValue = 635_000
+        currentTeamValue = 635_000
     }
 }
 
@@ -283,6 +285,7 @@ fun createDefaultBB7AwayTeam(rules: Rules): Team {
         apothecaries = 0
         dedicatedFans = 0
         teamValue = 585_000
+        currentTeamValue = 585_000
     }
 }
 

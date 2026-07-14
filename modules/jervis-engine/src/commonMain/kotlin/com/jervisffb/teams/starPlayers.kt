@@ -15,12 +15,12 @@ val THE_BLACK_GOBBO = StarPlayerPosition(
     225_000,
     6, 2, 3, 3, 9,
     listOf(
-        // Bombardier.Factory,
-        // DisturbingPrecense.Factory,
+        SkillType.BOMBARDIER.id(),
+        SkillType.DISTURBING_PRESENCE.id(),
         SkillType.DODGE.id(),
         SkillType.LONER.idTarget(3),
         SkillType.SIDESTEP.id(),
-        // SneakyGit.Factory,
+        SkillType.SNEAKY_GIT.id(),
         SkillType.STAB.id(),
         SkillType.STUNTY.id()
     ),
@@ -28,8 +28,8 @@ val THE_BLACK_GOBBO = StarPlayerPosition(
     emptyList(),
     listOf(RegionalSpecialRule.BADLANDS_BRAWL, RegionalSpecialRule.UNDERWORLD_CHALLENGE),
     PlayerSize.STANDARD,
-    SpriteSheet.embedded("$iconRootPath/TheBlackGobbo.png",1),
-    SingleSprite.embedded("$portraitRootPath/TheBlackGobbo.png")
+    SpriteSheet.ini("$iconRootPath/TheBlackGobbo.png",1),
+    SingleSprite.ini("$portraitRootPath/TheBlackGobbo.png")
 )
 
 val STAR_PLAYERS = listOf(

@@ -175,5 +175,5 @@ enum class SkillType(val description: String) {
     fun idTarget(value: Int): SkillId = SkillId(this, SkillValue.IntTarget(value))
     fun idAdjustment(value: Int): SkillId = SkillId(this, SkillValue.IntAdjustment(value))
     fun id(value: PlayerKeyword): SkillId = SkillId(this, SkillValue.Keyword(value))
-    fun id(value: Any? = null): SkillId = SkillId(this, SkillValue.None)
+    fun id(): SkillId = SkillId(this, SkillValue.None)
 }

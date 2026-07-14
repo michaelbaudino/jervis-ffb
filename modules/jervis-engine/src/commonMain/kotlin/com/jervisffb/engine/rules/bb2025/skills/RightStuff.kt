@@ -20,7 +20,7 @@ class RightStuff(
     val maxStrength = Int.MAX_VALUE // In BB2025, there is no Strength limit unlike BB2020
     override val type: SkillType = SkillType.RIGHT_STUFF
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

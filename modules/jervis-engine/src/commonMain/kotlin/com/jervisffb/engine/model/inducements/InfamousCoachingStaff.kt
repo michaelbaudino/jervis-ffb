@@ -4,13 +4,13 @@ import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.rules.common.roster.PlayerSpecialRule
 import com.jervisffb.engine.rules.common.roster.RegionalSpecialRule
 import com.jervisffb.engine.rules.common.roster.TeamSpecialRule
+import kotlinx.serialization.Serializable
 
 enum class InfamousCoachingStaffType {
     JOSEF_BUGMAN,
     KARI_COLDSTEEL,
     PAPA_SKULLBONES
 }
-
 
 interface InfamousCoachingStaff {
     val type: InfamousCoachingStaffType
@@ -23,6 +23,7 @@ interface InfamousCoachingStaff {
     }
 }
 
+@Serializable
 class JosefBugman: InfamousCoachingStaff {
     override val type: InfamousCoachingStaffType = InfamousCoachingStaffType.JOSEF_BUGMAN
     override val name: String = "Josef Bugman"
@@ -35,6 +36,7 @@ class JosefBugman: InfamousCoachingStaff {
 }
 
 // See page 15 in the Deathzone rulebook
+@Serializable
 class KariColdsteel: InfamousCoachingStaff {
     override val type: InfamousCoachingStaffType = InfamousCoachingStaffType.KARI_COLDSTEEL
     override val name: String = "Kari Coldsteel"
@@ -56,6 +58,7 @@ class KariColdsteel: InfamousCoachingStaff {
 }
 
 // See page 16 in the Deathzone rulebook
+@Serializable
 class PapaSkullbones: InfamousCoachingStaff {
     override val type: InfamousCoachingStaffType = InfamousCoachingStaffType.PAPA_SKULLBONES
     override val name: String = "Papa Skullbones"

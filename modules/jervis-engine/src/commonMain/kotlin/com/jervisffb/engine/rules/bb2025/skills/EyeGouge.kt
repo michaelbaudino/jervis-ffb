@@ -19,7 +19,7 @@ class EyeGouge(
 ) : BB2025Skill {
     override val type: SkillType = SkillType.EYE_GOUGE
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.PERMANENT

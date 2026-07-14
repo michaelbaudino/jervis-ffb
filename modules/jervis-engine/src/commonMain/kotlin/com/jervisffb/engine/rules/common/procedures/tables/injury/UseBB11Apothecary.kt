@@ -26,7 +26,7 @@ import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.assertContext
 import com.jervisffb.engine.model.context.getContext
-import com.jervisffb.engine.model.inducements.ApothecaryType
+import com.jervisffb.engine.model.inducements.StandardApothecary
 import com.jervisffb.engine.reports.ReportApothecaryUsed
 import com.jervisffb.engine.reports.ReportDiceRoll
 import com.jervisffb.engine.rules.DiceRollType
@@ -57,7 +57,7 @@ object UseBB11Apothecary: Procedure() {
         override fun actionOwner(state: Game, rules: Rules): Team = state.getContext<RiskingInjuryContext>().player.team
         override fun getAvailableActions(state: Game, rules: Rules): List<GameActionDescriptor> {
             val context = state.getContext<RiskingInjuryContext>()
-            val hasApothecary = context.player.team.teamApothecaries.count { it.type == ApothecaryType.STANDARD && !it.used } > 0
+            val hasApothecary = context.player.team.teamApothecaries.count { it is StandardApothecary && !it.used } > 0
             return when (hasApothecary) {
                 true -> listOf(ConfirmWhenReady, CancelWhenReady)
                 false -> listOf(ContinueWhenReady)
@@ -71,7 +71,7 @@ object UseBB11Apothecary: Procedure() {
 
             return when (action) {
                 Confirm -> {
-                    val apothecary = team.teamApothecaries.first { it.type == ApothecaryType.STANDARD && !it.used }
+                    val apothecary = team.teamApothecaries.first { it is StandardApothecary && !it.used }
                     compositeCommandOf(
                         SetApothecaryUsed(team, apothecary, true),
                         ReportApothecaryUsed(team, apothecary),

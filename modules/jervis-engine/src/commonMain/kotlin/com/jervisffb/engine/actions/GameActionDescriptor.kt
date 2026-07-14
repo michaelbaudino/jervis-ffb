@@ -131,17 +131,26 @@ data class SelectSkill(
     override fun createAll(): List<GameAction> = skills.map { SkillSelected(it) }
 }
 
-// TODO Need to figure out how buying indicuments work. One step or multiple?
-data class SelectInducement(
-    val id: List<String>
-): GameActionDescriptor {
-    override val size: Int = id.size
+/**
+ * Descriptor used to represent buying inducements. This is a very complicated
+ * process, and we do not wish to capture all the nuances inside the descriptor,
+ * so here we just send the most basis information needed.
+ *
+ * It is then assumed that whoever handles buying inducements can look up the
+ * rules in [com.jervisffb.engine.InducementSettings].
+ *
+ * This also means that validation of inducements is done in a slightly
+ * different way, i.e., through [InducementsSelected.isValid].
+ */
+data class SelectInducements(
+    val treasury: Int,
+    val pettyCash: Int,
+) : GameActionDescriptor {
+    override val size: Int = 1
     override fun createRandom(random: Random): GameAction {
-        TODO("Not yet implemented")
+        return InducementsSelected(emptyList())
     }
-    override fun createAll(): List<GameAction> {
-        TODO("Not yet implemented")
-    }
+    override fun createAll(): List<GameAction> = emptyList()
 }
 
 data object TossCoin : GameActionDescriptor {

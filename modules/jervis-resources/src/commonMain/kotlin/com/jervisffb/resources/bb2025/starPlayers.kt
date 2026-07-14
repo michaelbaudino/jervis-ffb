@@ -4,6 +4,7 @@ import com.jervisffb.engine.model.PlayerSize
 import com.jervisffb.engine.model.PositionId
 import com.jervisffb.engine.rules.common.roster.RegionalSpecialRule
 import com.jervisffb.engine.rules.common.roster.StarPlayerPosition
+import com.jervisffb.engine.rules.common.skills.SkillType
 import com.jervisffb.engine.rules.common.skills.SkillType.DODGE
 import com.jervisffb.engine.rules.common.skills.SkillType.LONER
 import com.jervisffb.engine.rules.common.skills.SkillType.SIDESTEP
@@ -21,12 +22,12 @@ val THE_BLACK_GOBBO_BB2025 =  StarPlayerPosition(
     225_000,
     6, 2, 3, 3, 9,
     listOf(
-        // Bombardier.Factory,
-        // DisturbingPrecense.Factory
+        SkillType.BOMBARDIER.id(),
+        SkillType.DISTURBING_PRESENCE.id(),
         DODGE.id(),
         LONER.idTarget(3),
         SIDESTEP.id(),
-        // SneakyGit.Factory,
+        SkillType.SNEAKY_GIT.id(),
         STAB.id(),
         STUNTY.id()
     ),

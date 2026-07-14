@@ -20,6 +20,7 @@ val generatedJervisSerializerModule = SerializersModule {
     }
     polymorphic(com.jervisffb.engine.model.inducements.BiasedReferee::class) {
         subclass(com.jervisffb.engine.model.inducements.StandardBiasedReferee::class)
+        subclass(com.jervisffb.engine.model.inducements.DodgyLeagueRep::class)
     }
     polymorphic(com.jervisffb.engine.rules.common.tables.CasualtyTable::class) {
         subclass(com.jervisffb.engine.rules.bb2020.tables.BB2020CasualtyTable::class)
@@ -27,6 +28,7 @@ val generatedJervisSerializerModule = SerializersModule {
     }
     polymorphic(com.jervisffb.engine.rules.common.procedures.DieRoll::class) {
         subclass(com.jervisffb.engine.rules.common.procedures.BlockDieRoll::class)
+        subclass(com.jervisffb.engine.rules.common.procedures.D3DieRoll::class)
         subclass(com.jervisffb.engine.rules.common.procedures.D6DieRoll::class)
     }
     polymorphic(com.jervisffb.engine.actions.GameAction::class) {
@@ -56,12 +58,12 @@ val generatedJervisSerializerModule = SerializersModule {
         subclass(com.jervisffb.engine.actions.EndAction::class)
         subclass(com.jervisffb.engine.actions.EndSetup::class)
         subclass(com.jervisffb.engine.actions.EndTurn::class)
-        subclass(com.jervisffb.engine.actions.PitchSquareSelected::class)
         subclass(com.jervisffb.engine.actions.ForegoActivationSelected::class)
-        subclass(com.jervisffb.engine.actions.InducementSelected::class)
+        subclass(com.jervisffb.engine.actions.InducementsSelected::class)
         subclass(com.jervisffb.engine.actions.MoveTypeSelected::class)
         subclass(com.jervisffb.engine.actions.NoRerollSelected::class)
         subclass(com.jervisffb.engine.actions.PassTypeSelected::class)
+        subclass(com.jervisffb.engine.actions.PitchSquareSelected::class)
         subclass(com.jervisffb.engine.actions.PlayerActionSelected::class)
         subclass(com.jervisffb.engine.actions.PlayerDeselected::class)
         subclass(com.jervisffb.engine.actions.PlayerSelected::class)
@@ -81,8 +83,8 @@ val generatedJervisSerializerModule = SerializersModule {
             subclass(com.jervisffb.engine.actions.ChangePlayerBaseStat::class)
             subclass(com.jervisffb.engine.actions.RemovePlayerKeyword::class)
             subclass(com.jervisffb.engine.actions.RemovePlayerSkill::class)
-            subclass(com.jervisffb.engine.actions.SetPlayerState::class)
             subclass(com.jervisffb.engine.actions.SetBallState::class)
+            subclass(com.jervisffb.engine.actions.SetPlayerState::class)
         }
         polymorphic(com.jervisffb.engine.actions.DieResult::class) {
             subclass(com.jervisffb.engine.actions.D12Result::class)
@@ -95,6 +97,39 @@ val generatedJervisSerializerModule = SerializersModule {
             subclass(com.jervisffb.engine.actions.D8Result::class)
             subclass(com.jervisffb.engine.actions.DBlockResult::class)
         }
+    }
+    polymorphic(com.jervisffb.engine.model.inducements.settings.Inducement::class) {
+        subclass(com.jervisffb.engine.model.inducements.settings.BiasedRefereeInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.BiasedRefereesInducementList::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.ExpandedMercenaryInducements::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffsInducementList::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.SimpleInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.StandardMercenaryInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.StarPlayerInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.StarPlayersInducementList::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.WizardInducement::class)
+        subclass(com.jervisffb.engine.model.inducements.settings.WizardsInducementList::class)
+        polymorphic(com.jervisffb.engine.model.inducements.settings.InducementGroup::class) {
+            subclass(com.jervisffb.engine.model.inducements.settings.BiasedRefereesInducementList::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffsInducementList::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.StarPlayersInducementList::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.WizardsInducementList::class)
+        }
+        polymorphic(com.jervisffb.engine.model.inducements.settings.SingleInducement::class) {
+            subclass(com.jervisffb.engine.model.inducements.settings.BiasedRefereeInducement::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.ExpandedMercenaryInducements::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffInducement::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.SimpleInducement::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.StandardMercenaryInducement::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.StarPlayerInducement::class)
+            subclass(com.jervisffb.engine.model.inducements.settings.WizardInducement::class)
+        }
+    }
+    polymorphic(com.jervisffb.engine.model.inducements.InfamousCoachingStaff::class) {
+        subclass(com.jervisffb.engine.model.inducements.JosefBugman::class)
+        subclass(com.jervisffb.engine.model.inducements.KariColdsteel::class)
+        subclass(com.jervisffb.engine.model.inducements.PapaSkullbones::class)
     }
     polymorphic(com.jervisffb.engine.rules.common.tables.InjuryTable::class) {
         subclass(com.jervisffb.engine.rules.bb2020.tables.BB2020StandardInjuryTable::class)

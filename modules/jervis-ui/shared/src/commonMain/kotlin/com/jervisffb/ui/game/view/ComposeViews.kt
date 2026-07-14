@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -34,8 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -48,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.jervisffb.engine.model.Player
 import com.jervisffb.ui.dropShadow
 import com.jervisffb.ui.game.dialogs.AbstractActionWheelViewModel
+import com.jervisffb.ui.game.dialogs.BuyInducementsDialog
 import com.jervisffb.ui.game.dialogs.DicePoolUserInputDialog
 import com.jervisffb.ui.game.dialogs.MultipleChoiceUserInputDialog
 import com.jervisffb.ui.game.dialogs.SingleChoiceInputDialog
@@ -178,6 +176,10 @@ fun Dialogs(vm: DialogsViewModel) {
         is DicePoolUserInputDialog -> {
             val dialog = dialogData as DicePoolUserInputDialog
             DicePoolSelectorDialog(dialog, vm)
+        }
+        is BuyInducementsDialog -> {
+            val dialog = dialogData as BuyInducementsDialog
+            BuyInducementsDialog(dialog, vm)
         }
         is AbstractActionWheelViewModel,
         null -> { /* Do nothing */ }

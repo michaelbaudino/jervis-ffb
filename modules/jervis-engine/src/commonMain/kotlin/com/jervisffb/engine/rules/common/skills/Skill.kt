@@ -13,7 +13,7 @@ interface Skill<T> {
     // The player this skill is assigne to
     val player: Player
     // Unique identifier for the skill
-    // The same skill across multiple players have the same id,
+    // The same skill across multiple players has the same id,
     // so use `player.id + skillId` to uniquely identify a skill
     val skillId: SkillId
     // Skill type, effectively the same as checking the KClass, but enums
@@ -24,7 +24,7 @@ interface Skill<T> {
     val value: T?
     // Which category does this skill belong to?
     val category: SkillCategory
-    // Human readable name of this skill
+    // Human-readable name of this skill
     val name: String
     // Whether this skill is required to be used.
     // In the rulebook, this means skilled marked with *.

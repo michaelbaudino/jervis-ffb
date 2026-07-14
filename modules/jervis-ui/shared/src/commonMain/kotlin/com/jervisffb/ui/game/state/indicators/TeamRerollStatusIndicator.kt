@@ -5,6 +5,7 @@ import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.rules.common.rerolls.BrilliantCoachingReroll
+import com.jervisffb.engine.rules.common.rerolls.ExtraTeamTrainingReroll
 import com.jervisffb.engine.rules.common.rerolls.LeaderTeamReroll
 import com.jervisffb.engine.rules.common.rerolls.RegularTeamReroll
 import com.jervisffb.engine.rules.common.rerolls.TeamMascotReroll
@@ -63,6 +64,10 @@ object TeamRerollStatusIndicator: PitchStatusIndicator {
 
                 is TeamMascotReroll -> {
                     UiReroll("Mascot Reroll", UiRerollType.MASCOT, it.rerollUsed, it.enabled)
+                }
+
+                is ExtraTeamTrainingReroll -> {
+                    UiReroll("Team Reroll (Extra Team Training)", UiRerollType.TEAM, it.rerollUsed, it.enabled)
                 }
             }
         }

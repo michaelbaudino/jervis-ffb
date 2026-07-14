@@ -19,7 +19,7 @@ class RightStuff(
     val maxStrength = 3 // A Player with Right Stuff can only be thrown if they have a strength of 3 or less.
     override val type: SkillType = SkillType.RIGHT_STUFF
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

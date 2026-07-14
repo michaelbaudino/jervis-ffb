@@ -19,7 +19,7 @@ class BloodLust(
     override val expiresAt: Duration,
 ) : BB2025IntSkill {
     override val type: SkillType = SkillType.BLOOD_LUST
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = "${type.description}($value+)"
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

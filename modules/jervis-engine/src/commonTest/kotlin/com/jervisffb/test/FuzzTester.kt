@@ -188,6 +188,7 @@ class FuzzTester {
         return teamBuilder(rules, roster) {
             coach = Coach(CoachId("$prefix-coach"), "${prefix}Coach")
             name = "${prefix}Team"
+            currentTeamValue = 1_000_000 + random.nextInt(500_000)
             repeat(playerCount) { index ->
                 val playerNo = index + 1
                 val mv = random.nextInt(rules.moveRange)

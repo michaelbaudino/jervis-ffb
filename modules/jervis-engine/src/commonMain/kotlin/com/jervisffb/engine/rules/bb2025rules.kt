@@ -1,5 +1,6 @@
 package com.jervisffb.engine.rules
 
+import com.jervisffb.engine.InducementSettings
 import com.jervisffb.engine.model.BallState
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
@@ -13,6 +14,7 @@ import com.jervisffb.engine.model.locations.OnPitchLocation
 import com.jervisffb.engine.model.modifiers.PlayerStatusEffectType
 import com.jervisffb.engine.rules.bb2025.BB2025SkillSettings
 import com.jervisffb.engine.rules.bb2025.BB2025TeamActions
+import com.jervisffb.engine.rules.bb2025.DEFAULT_INDUCEMENTS_BB2025
 import com.jervisffb.engine.rules.bb2025.tables.BB2025ArgueTheCallTable
 import com.jervisffb.engine.rules.bb2025.tables.BB2025CasualtyTable
 import com.jervisffb.engine.rules.bb2025.tables.BB2025LastingInjuryTable
@@ -186,6 +188,11 @@ abstract class BB2025Rules(
             lastingInjuryTable = BB2025LastingInjuryTable,
             argueTheCallTable = BB2025ArgueTheCallTable,
             rangeRuler = BB2025RangeRuler,
+            inducements = InducementSettings(
+                topDogTopUpLimitFromTreasury = Int.MAX_VALUE,
+                underdogTopUpLimitFromTreasury = 50_000,
+                inducements = DEFAULT_INDUCEMENTS_BB2025
+            )
         )
     }
 }
@@ -199,6 +206,7 @@ class StandardBB2025Rules(
     companion object {
         val DEFAULTS = BB2025Rules.DEFAULTS.copy(
             name = "Blood Bowl 2025 Rules (Strict)",
+            prayersToNuffleEnabledForUnderdogDuringPregame = false
         )
     }
 

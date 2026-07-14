@@ -116,7 +116,7 @@ book.
     - [x] Blizzard
 - [ ] Take on Journeymen
 - [ ] Inducements (Select and Buy)
-    - [x] Team Mascot
+    - [ ] Team Mascot
       - [x] +1 When rolling for Cheering Fans
       - [x] +1 When rolling for Cheering Fans if re-roll is used
       - [x] If re-roll is used, it comes back next half
@@ -125,17 +125,19 @@ book.
       - [x] If saved by Team Captain roll, must rol 4+ next time.
       - [x] Team re-roll cannot be used to re-roll mascot roll
       - [x] Skill rerolls can be used (e.g. Hafling Luck)
+      - [ ] Buy Inducement
     - [ ] Temp Agency Cheerleaders
     - [ ] Part-time Assistant Coaches
     - [ ] Weather Mage
     - [ ] Bloodweiser Kegs
     - [ ] Special Plays (soooo many cards)
     - [ ] Extra Team Training
-    - [x] Bribes
+    - [ ] Bribes
       - [x] Decide after Argue the Call
       - [x] 2+ to ignore result. Coach is still banned
       - [x] 1 = Bribe lost, result stands
       - [x] No turnover on success
+      - [ ] Buy Inducement
     - [ ] Wandering Apothecaries
     - [ ] Mortuary Assistant
     - [ ] Plague Doctor
@@ -165,7 +167,6 @@ book.
            - [ ] Jump into square
            - [ ] ... (so many edge cases)
            - [ ] Roll before using Fumblerooski
-
     - [ ] Friends with the Ref
     - [ ] Stiletto
     - [ ] Iron Man

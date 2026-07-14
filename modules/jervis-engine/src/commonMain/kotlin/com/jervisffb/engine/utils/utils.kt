@@ -38,7 +38,8 @@ import com.jervisffb.engine.actions.EndTurnWhenReady
 import com.jervisffb.engine.actions.ForegoActivationSelected
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
-import com.jervisffb.engine.actions.InducementSelected
+import com.jervisffb.engine.actions.InducementSelection
+import com.jervisffb.engine.actions.InducementsSelected
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PassTypeSelected
@@ -57,7 +58,7 @@ import com.jervisffb.engine.actions.SelectDicePoolResult
 import com.jervisffb.engine.actions.SelectDirection
 import com.jervisffb.engine.actions.SelectDogout
 import com.jervisffb.engine.actions.SelectForgoActivation
-import com.jervisffb.engine.actions.SelectInducement
+import com.jervisffb.engine.actions.SelectInducements
 import com.jervisffb.engine.actions.SelectMoveType
 import com.jervisffb.engine.actions.SelectNoReroll
 import com.jervisffb.engine.actions.SelectPassType
@@ -73,12 +74,27 @@ import com.jervisffb.engine.actions.TossCoin
 import com.jervisffb.engine.actions.Undo
 import com.jervisffb.engine.model.Game
 import com.jervisffb.engine.model.Player
+import com.jervisffb.engine.model.SkillId
+import com.jervisffb.engine.model.SkillValue
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.context.DodgeRollContext
 import com.jervisffb.engine.model.context.JumpRollContext
 import com.jervisffb.engine.model.context.LeapRollContext
 import com.jervisffb.engine.model.context.MoveContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.model.inducements.settings.BiasedRefereeInducement
+import com.jervisffb.engine.model.inducements.settings.BiasedRefereesInducementList
+import com.jervisffb.engine.model.inducements.settings.ExpandedMercenaryInducements
+import com.jervisffb.engine.model.inducements.settings.InducementType
+import com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffInducement
+import com.jervisffb.engine.model.inducements.settings.InfamousCoachingStaffsInducementList
+import com.jervisffb.engine.model.inducements.settings.MercenaryInducement
+import com.jervisffb.engine.model.inducements.settings.SimpleInducement
+import com.jervisffb.engine.model.inducements.settings.StandardMercenaryInducement
+import com.jervisffb.engine.model.inducements.settings.StarPlayerInducement
+import com.jervisffb.engine.model.inducements.settings.StarPlayersInducementList
+import com.jervisffb.engine.model.inducements.settings.WizardInducement
+import com.jervisffb.engine.model.inducements.settings.WizardsInducementList
 import com.jervisffb.engine.model.isSkillAvailable
 import com.jervisffb.engine.model.modifiers.DiceModifier
 import com.jervisffb.engine.model.modifiers.DodgeRollModifier
@@ -124,7 +140,7 @@ fun List<GameActionDescriptor>.containsActionWithRandomBehavior(): Boolean {
             is SelectDirection -> false
             SelectDogout -> false
             is SelectPitchLocation -> false
-            is SelectInducement -> false
+            is SelectInducements -> false
             is SelectMoveType -> false
             is SelectNoReroll -> false
             is SelectPlayer -> false
@@ -175,7 +191,7 @@ fun GameAction.isRandomAction(): Boolean {
         EndSetup -> false
         EndTurn -> false
         is PitchSquareSelected -> false
-        is InducementSelected -> false
+        is InducementsSelected -> false
         is MoveTypeSelected -> false
         is NoRerollSelected -> false
         is PlayerActionSelected -> false
@@ -238,7 +254,50 @@ fun createRandomAction(
         actionDesc = filtered.random(random)
     }
 
-    return actionDesc.createRandom(random)
+    // Inducements are a bit special as we need access to the rules to create them, so do this manually for now
+    return if (actionDesc is SelectInducements) {
+        createRandomInducements(random, controller.getAvailableActions().team!!, actionDesc.treasury + actionDesc.pettyCash)
+    } else {
+        actionDesc.createRandom(random)
+    }
+}
+
+private fun createRandomInducements(random: Random, team: Team, availableGold: Int): GameAction {
+    val settings = team.game.rules.inducements
+    var done = false
+    var usedGold = 0
+    val selectedInducements = mutableListOf<InducementSelection<*>>()
+    val availableTypes = InducementType.entries.toMutableSet()
+    while (!done && availableTypes.isNotEmpty()) {
+        // val inducement = settings.entries.random(random)
+        val nextType = availableTypes.random(random)
+        availableTypes.remove(nextType)
+        val inducement = settings[nextType] ?: continue
+        when (inducement) {
+            is BiasedRefereesInducementList -> { /* Do nothing for now */ }
+            is InfamousCoachingStaffsInducementList -> { /* Do nothing for now */ }
+            is StarPlayersInducementList -> { /* Do nothing for now */ }
+            is WizardsInducementList -> { /* Do nothing for now */ }
+            is ExpandedMercenaryInducements -> { /* Do nothing for now */ }
+            is SimpleInducement -> {
+                val price = inducement.getPrice(team)
+                val count = random.nextInt(1, inducement.max + 1)
+                if (usedGold + (price * count) > availableGold) {
+                    done = true
+                } else {
+                    selectedInducements.add(InducementSelection.Simple(inducement.type, count))
+                }
+                usedGold += (price * count)
+            }
+            is StandardMercenaryInducement -> { /* Do nothing for now */ }
+            is BiasedRefereeInducement,
+            is InfamousCoachingStaffInducement,
+            is StarPlayerInducement,
+            is WizardInducement -> error("Should not appear as a top-level inducement: $inducement")
+            is MercenaryInducement -> { /* Do nothing for now */ }
+        }
+    }
+    return InducementsSelected(selectedInducements)
 }
 
 const val enableAsserts = true
@@ -528,4 +587,43 @@ fun doDivingTackleHaveAnAffect(state: Game): Boolean {
  */
 fun List<DieRoll<*>>.anyRerollUsed(): Boolean {
     return any { it.rerollSource != null }
+}
+
+/**
+ * Generally, it isn't allowed for a player to have the same skill multiple times, but in some cases
+ * it might happen. In this case, we need to deduplicate the skills to figure out which skill to keep.
+ *
+ * The rule is:
+ * 1. For skills with a target, we choose the lower value, i.e., Loner(3+) over Loner(4+)
+ * 2. For skills with a value ajustment, we choose the higher value, i.e., Might Blow(2+) over Mighty Blow(+1).
+ * 3. If the values are the same, we keep the original skill.
+ */
+data class DedupSkillResult(val positionalSkills: List<SkillId>, val extraSkills: List<SkillId>)
+fun dedupSkillsByType(positionalSkills: List<SkillId>, extraSkills: List<SkillId>): DedupSkillResult {
+    fun dedup(skills: List<SkillId>, filter: Map<SkillType, SkillId>): List<SkillId> {
+        val selectedSkills = mutableListOf<SkillId>()
+        skills.forEach { skill ->
+            if (filter.contains(skill.type)) {
+                val skillValue = skill.value
+                val otherValue = filter[skill.type]!!.value
+                when (skillValue) {
+                    is SkillValue.IntTarget if otherValue is SkillValue.IntTarget -> if (otherValue.value > skillValue.value) selectedSkills.add(skill)
+                    is SkillValue.IntAdjustment if otherValue is SkillValue.IntAdjustment -> if (otherValue.value < skillValue.value) selectedSkills.add(skill)
+                    else -> error("Skills do not have the same value [${skill.type}]: $skillValue vs. $otherValue")
+                }
+            } else {
+                selectedSkills.add(skill)
+            }
+        }
+        return selectedSkills
+    }
+    val extraSkillList: List<SkillId> = dedup(
+        skills = extraSkills,
+        filter = positionalSkills.associateBy { it.type }
+    )
+    val positionalSkillList: List<SkillId> = dedup(
+        skills = positionalSkills,
+        filter = extraSkillList.associateBy { it.type }
+    )
+    return DedupSkillResult(positionalSkills, extraSkillList)
 }

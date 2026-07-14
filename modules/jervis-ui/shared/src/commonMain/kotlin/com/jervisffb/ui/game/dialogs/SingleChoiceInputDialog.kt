@@ -22,7 +22,7 @@ import com.jervisffb.engine.actions.EndSetup
 import com.jervisffb.engine.actions.EndTurn
 import com.jervisffb.engine.actions.ForegoActivationSelected
 import com.jervisffb.engine.actions.GameAction
-import com.jervisffb.engine.actions.InducementSelected
+import com.jervisffb.engine.actions.InducementsSelected
 import com.jervisffb.engine.actions.MoveTypeSelected
 import com.jervisffb.engine.actions.NoRerollSelected
 import com.jervisffb.engine.actions.PassTypeSelected
@@ -84,7 +84,7 @@ data class SingleChoiceInputDialog(
                 is MoveTypeSelected -> action.moveType.toString()
                 is CompositeGameAction -> action.actionList.joinToString(prefix = "[", postfix = "]")
                 is SkillSelected -> action.skill.toString()
-                is InducementSelected -> action.name
+                is InducementsSelected -> "Select Inducements"
                 is CalculatedAction -> TODO("Should only be used in tests")
                 is BlockTypeSelected -> action.type.name
                 is DicePoolResultsSelected -> action.results.toString()

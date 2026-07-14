@@ -24,7 +24,7 @@ class HypnoticGaze(
 ) : BB2025Skill, SpecialActionProvider {
     override val type: SkillType = SkillType.HYPNOTIC_GAZE
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = false
     override val resetAt: Duration = Duration.PERMANENT

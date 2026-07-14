@@ -73,12 +73,13 @@ object PreGame : Procedure() {
         }
     }
 
+    // In BB2025, Prayers are inducements that needs to be bought. So skip this step there.
     object CheckForPrayersToNuffle: ComputationNode() {
         override fun apply(state: Game, rules: Rules): Command {
-            val prayersEnabled = rules.prayersToNuffleEnabled
+            val prayersEnabled = rules.prayersToNuffleEnabledForUnderdogDuringPregame
             val difference: Int = abs(state.homeTeam.teamValue - state.awayTeam.teamValue)
             val team = if (state.homeTeam.teamValue > state.awayTeam.teamValue) state.awayTeam else state.homeTeam
-            val rolls = difference / rules.prayersToNufflePrice // 1 roll for every 50.000 TV difference
+            val rolls = difference / rules.prayersToNufflePriceForUnderdog // 1 roll for every 50.000 TV difference
             return if (rolls > 0 && prayersEnabled) {
                 val context = PrayersToNuffleRollContext(team, rollsRemaining = rolls)
                 compositeCommandOf(

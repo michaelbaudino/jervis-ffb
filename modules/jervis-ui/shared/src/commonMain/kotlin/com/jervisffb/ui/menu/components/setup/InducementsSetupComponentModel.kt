@@ -5,8 +5,12 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import cafe.adriel.voyager.core.model.ScreenModel
 import com.jervisffb.engine.InducementSettings
+import com.jervisffb.engine.model.inducements.settings.ExpandedMercenaryInducements
 import com.jervisffb.engine.model.inducements.settings.InducementBuilder
+import com.jervisffb.engine.model.inducements.settings.InducementGroupBuilder
 import com.jervisffb.engine.model.inducements.settings.InducementType
+import com.jervisffb.engine.model.inducements.settings.SingleInducementBuilder
+import com.jervisffb.engine.model.inducements.settings.StandardMercenaryInducement
 import com.jervisffb.engine.rules.RulesParameterBuilder
 import com.jervisffb.engine.rules.builder.GameVersion
 import com.jervisffb.ui.game.viewmodel.MenuViewModel
@@ -183,11 +187,17 @@ class InducementsSetupComponentModel(initialRulesBuilder: RulesParameterBuilder,
 }
 
 private fun InducementBuilder.toDataObject(): InducementData {
+    val price = when (this) {
+        is SingleInducementBuilder -> this.price
+        is InducementGroupBuilder -> null
+        is ExpandedMercenaryInducements.Builder -> null
+        is StandardMercenaryInducement.Builder -> null
+    }
     return InducementData(
         type = this.type,
         name = this.name,
         enabled = this.enabled,
         max = this.max,
-        price = this.price,
+        price = price,
     )
 }

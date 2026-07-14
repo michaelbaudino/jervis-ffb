@@ -85,7 +85,7 @@ data class SkillId(val type: SkillType, val value: SkillValue = SkillValue.None)
             is SkillValue.IntTarget -> "${type.description}(${value.value}+)"
             is SkillValue.IntAdjustment -> {
                 when (gameVersion == GameVersion.BB2025 && value.value == 1) {
-                    true -> "${type.description}"
+                    true -> type.description
                     false -> "${type.description}(+${value.value})"
                 }
             }
@@ -142,3 +142,7 @@ value class TeamId(val value: String = "") {
 @Serializable
 @JvmInline
 value class SetupId(val value: String)
+
+@Serializable
+@JvmInline
+value class WizardId(val value: String)

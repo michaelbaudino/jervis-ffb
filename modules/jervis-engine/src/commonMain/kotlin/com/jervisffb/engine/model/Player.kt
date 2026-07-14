@@ -205,7 +205,7 @@ class Player(
     // Shortcut to avoid avoiding creating a SkillId.
     // Warning: This method should only be used for skills that do not have values
     fun addSkill(skill: SkillType) {
-        val skill = team.game.rules.createSkill(this, skill.id(null))
+        val skill = team.game.rules.createSkill(this, skill.id())
         extraSkills.add(skill)
     }
 

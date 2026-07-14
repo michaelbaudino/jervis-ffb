@@ -15,6 +15,7 @@ import com.jervisffb.engine.model.context.UseRerollContext
 import com.jervisffb.engine.model.context.getContextOrNull
 import com.jervisffb.engine.model.locations.PitchCoordinate
 import com.jervisffb.engine.reports.LogEntry
+import com.jervisffb.engine.reports.ReportStartingExtraTime.id
 import com.jervisffb.engine.rules.Rules
 import com.jervisffb.engine.rules.common.skills.RerollSource
 import com.jervisffb.engine.rules.common.tables.Weather
@@ -42,10 +43,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 class IdGenerator {
     private var diceId: Int = 0
     private var logId: Int = 0
+    private var playerId: Int = 0
 
     fun reset() {
         diceId = 0
         logId = 0
+        playerId = 0
     }
 
     fun nextDiceId(): DieId {
@@ -54,6 +57,15 @@ class IdGenerator {
 
     fun nextLogId(): String {
         return (++logId).toString()
+    }
+
+    /**
+     * Generates a unique [PlayerId] for players added after the game is started
+     * (Mercenaries, Star Players, Journeymen).
+     */
+    fun nextPlayerId(team: Team): PlayerId {
+        // Include team id for improve debuggability
+        return PlayerId("${team.id.value}-runtime-${++playerId}")
     }
 }
 

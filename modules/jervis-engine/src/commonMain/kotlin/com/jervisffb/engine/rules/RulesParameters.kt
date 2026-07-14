@@ -100,8 +100,8 @@ sealed interface RulesParameters {
     val kickOffEventTable: KickOffTable
     // This defines the BB2020 behavior where Prayers To Nuffle are rolled during the Pre-game Sequence.
     // BB2025 Prayers are defined under inducements.
-    val prayersToNufflePrice: Int
-    val prayersToNuffleEnabled: Boolean
+    val prayersToNufflePriceForUnderdog: Int
+    val prayersToNuffleEnabledForUnderdogDuringPregame: Boolean
     val prayersToNuffleTable: PrayersToNuffleTable
     val weatherTable: WeatherTable
     val injuryTable: InjuryTable

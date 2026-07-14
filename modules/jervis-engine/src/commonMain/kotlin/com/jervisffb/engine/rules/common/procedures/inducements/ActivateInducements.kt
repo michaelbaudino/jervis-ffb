@@ -4,7 +4,6 @@ import com.jervisffb.engine.actions.CancelWhenReady
 import com.jervisffb.engine.actions.ContinueWhenReady
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.GameActionDescriptor
-import com.jervisffb.engine.actions.SelectInducement
 import com.jervisffb.engine.commands.Command
 import com.jervisffb.engine.fsm.ActionNode
 import com.jervisffb.engine.fsm.Node
@@ -57,7 +56,7 @@ object ActivateInducements : Procedure() {
             return if (inducements.isEmpty()) {
                 listOf(ContinueWhenReady)
             } else {
-                listOf(SelectInducement(inducements), CancelWhenReady)
+                listOf(CancelWhenReady)
             }
         }
 

@@ -21,7 +21,7 @@ class Hatred(
     override val expiresAt: Duration = Duration.PERMANENT,
 ) : BB2025KeywordSkill {
     override val type: SkillType = SkillType.HATRED
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = "${type.description}(${value?.description ?: "None"})"
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.PERMANENT

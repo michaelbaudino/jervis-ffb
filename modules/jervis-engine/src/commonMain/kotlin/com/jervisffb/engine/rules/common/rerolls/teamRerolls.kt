@@ -108,3 +108,16 @@ class TeamMascotReroll(override val teamId: TeamId) : TeamReroll {
         val TARGET: Int = 4
     }
 }
+
+/**
+ * Class representing the reroll provided by the Extra Team Training inducement.
+ */
+class ExtraTeamTrainingReroll(override val teamId: TeamId, index: Int) : TeamReroll {
+    override val id: RerollSourceId = RerollSourceId("${teamId.value}-extra-team-training-$index")
+    override val carryOverIntoOvertime: Boolean = true
+    override val duration = Duration.END_OF_GAME
+    override val rerollResetAt: Duration = Duration.END_OF_HALF
+    override val rerollDescription: String = "Team Reroll (Extra Team Training)"
+    override var rerollUsed: Boolean = false
+    override var enabled: Boolean = true
+}

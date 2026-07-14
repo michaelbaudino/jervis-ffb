@@ -120,7 +120,7 @@ class BB2025SkillSettings: SkillSettings() {
                 // Agility Category
                 //
                 SkillType.CATCH -> {
-                    addNoValueEntry("Cath", type, SkillCategory.AGILITY) { player, category,expiresAt ->
+                    addNoValueEntry("Catch", type, SkillCategory.AGILITY) { player, category,expiresAt ->
                         CatchSkill(player, category, expiresAt)
                     }
                 }

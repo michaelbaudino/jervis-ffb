@@ -411,7 +411,7 @@ class BB2020SkillSettings: SkillSettings() {
                 }
                 SkillType.BLOOD_LUST -> {
                     addIntTargetEntry("Blood Lust(X+)", type, SkillCategory.TRAITS, 4) { player, category, value, expiresAt ->
-                        BloodLust(player, category, value, expiresAt)
+                        BloodLust(player, category, value!!, expiresAt)
                     }
                 }
                 SkillType.BREATHE_FIRE -> {

@@ -29,7 +29,7 @@ class Pro(
     val successTarget = 3 // What to roll to succeed
     override val type: SkillType = SkillType.PRO
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val id: RerollSourceId = RerollSourceId("${player.id.value}-${skillId.serialize()}-reroll")
     override val compulsory: Boolean = false

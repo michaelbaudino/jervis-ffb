@@ -398,7 +398,7 @@ object ArmourRoll: Procedure() {
                 val skill = context.causedBy.getSkill(SkillType.MIGHTY_BLOW)
                 when (skill) {
                     is com.jervisffb.engine.rules.bb2025.skills.MightyBlow -> skill.value
-                    is com.jervisffb.engine.rules.bb2020.skills.MightyBlow -> skill.value!!
+                    is com.jervisffb.engine.rules.bb2020.skills.MightyBlow -> skill.value
                     else -> 0
                 }
             } else {

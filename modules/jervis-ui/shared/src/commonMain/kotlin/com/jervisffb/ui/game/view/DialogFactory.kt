@@ -10,9 +10,11 @@ import com.jervisffb.engine.actions.D6Result
 import com.jervisffb.engine.actions.DiceRollResults
 import com.jervisffb.engine.actions.GameAction
 import com.jervisffb.engine.actions.RollDice
+import com.jervisffb.engine.actions.SelectInducements
 import com.jervisffb.engine.model.context.FoulContext
 import com.jervisffb.engine.model.context.ScoringATouchDownContext
 import com.jervisffb.engine.model.context.getContext
+import com.jervisffb.engine.rules.common.procedures.BuyInducements
 import com.jervisffb.engine.rules.common.procedures.CoinTossContext
 import com.jervisffb.engine.rules.common.procedures.DetermineKickingTeamStep
 import com.jervisffb.engine.rules.common.procedures.FanFactorRolls
@@ -39,6 +41,7 @@ import com.jervisffb.engine.rules.common.procedures.tables.kickoff.OfficiousRefC
 import com.jervisffb.engine.rules.common.procedures.tables.prayers.BadHabits
 import com.jervisffb.engine.rules.common.procedures.tables.weather.SwelteringHeat
 import com.jervisffb.ui.game.UiSnapshotAccumulator
+import com.jervisffb.ui.game.dialogs.BuyInducementsDialog
 import com.jervisffb.ui.game.dialogs.MultipleChoiceUserInputDialog
 import com.jervisffb.ui.game.dialogs.SingleChoiceInputDialog
 import com.jervisffb.ui.game.dialogs.UserInputDialog
@@ -128,6 +131,16 @@ object DialogFactory {
 
                 is BeingSentOff.DecideToArgueTheCall -> {
                     SingleChoiceInputDialog.createArgueTheCallDialog(controller.state.getContext<FoulContext>())
+                }
+
+                BuyInducements.HigherCtvBuyPurchaseInducements,
+                BuyInducements.LowerCtvBuyPurchaseInducements -> {
+                    val descriptor = request.get<SelectInducements>()
+                    BuyInducementsDialog(
+                        team = request.team!!,
+                        treasury = descriptor.treasury,
+                        pettyCash = descriptor.pettyCash,
+                    )
                 }
 
                 is InjuryRoll.RollDice -> {

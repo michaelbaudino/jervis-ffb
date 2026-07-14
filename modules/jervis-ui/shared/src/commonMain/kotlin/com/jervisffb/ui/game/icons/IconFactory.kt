@@ -31,6 +31,7 @@ import com.jervisffb.engine.model.PlayerId
 import com.jervisffb.engine.model.PlayerSize
 import com.jervisffb.engine.model.Team
 import com.jervisffb.engine.model.TeamId
+import com.jervisffb.engine.model.inducements.settings.InducementType
 import com.jervisffb.engine.model.isOnHomeTeam
 import com.jervisffb.engine.serialize.RosterLogo
 import com.jervisffb.engine.serialize.SingleSprite
@@ -672,6 +673,42 @@ object IconFactory {
         val sizePx = with(LocalDensity.current) { size.toPx() }
         val res = painterResource(Res.drawable.jervis_inducement_apothercary)
         return res.toImageBitmap(Size(sizePx, sizePx), LocalDensity.current)
+    }
+
+    fun getInducementIcon(type: InducementType): DrawableResource? {
+        return when (type) {
+            InducementType.BLITZERS_BEST_KEGS,
+            InducementType.BLOODWEISER_KEG -> Res.drawable.jervis_inducement_keg
+            InducementType.WANDERING_APOTHECARY -> Res.drawable.jervis_inducement_apothercary
+            else -> null
+        }
+    }
+
+    /**
+     * Load an arbitrary `SpriteSource` (embedded, URL, or FUMBBL ini) as a single
+     * `ImageBitmap`. Returns `null` if the source cannot be resolved. Intended for
+     * one-off UI needs such as the Buy Inducements dialog rendering star player
+     * icons.
+     */
+    suspend fun loadSpriteImage(sprite: SpriteSource): ImageBitmap? {
+        return when (sprite.type) {
+            SpriteLocation.EMBEDDED -> runCatching { loadImageFromResources(sprite.resource) }.getOrNull()
+            SpriteLocation.URL -> runCatching { loadImageFromNetwork(Url(sprite.resource), useProxy = false) }.getOrNull()
+            SpriteLocation.FUMBBL_INI -> runCatching { loadImageFromFumbblIni(sprite.resource) }.getOrNull()
+            SpriteLocation.GENERATED -> null // No size context here; caller should fall back.
+        }
+    }
+
+    /**
+     * Load a player icon sprite, extracting the default frame for the given team side
+     * when the sprite is a `SpriteSheet`. Returns `null` if the sprite cannot be loaded.
+     */
+    suspend fun loadPlayerIcon(sprite: SpriteSource, isHomeTeam: Boolean): ImageBitmap? {
+        val raw = loadSpriteImage(sprite) ?: return null
+        return when (sprite) {
+            is SpriteSheet -> extractSprites(raw, sprite.variants, sprite.selectedIndex ?: 0, isHomeTeam).default
+            else -> raw
+        }
     }
 
     fun hasLogo(id: TeamId, size: LogoSize): Boolean {

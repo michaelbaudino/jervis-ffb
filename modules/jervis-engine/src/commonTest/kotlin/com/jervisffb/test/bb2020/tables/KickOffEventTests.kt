@@ -284,8 +284,8 @@ class KickOffEventTests: JervisGameBB2020Test() {
 
     @Test
     fun cheeringFans_equalRoll() {
-        homeTeam.tempCheerleaders = 0
-        awayTeam.tempCheerleaders = 1
+        homeTeam.tempAgencyCheerleaders = 0
+        awayTeam.tempAgencyCheerleaders = 1
         controller.rollForward(
             *defaultPregame(),
             *defaultSetup(),
@@ -340,8 +340,8 @@ class KickOffEventTests: JervisGameBB2020Test() {
 
     @Test
     fun brilliantCoaching_awayTeamWins() {
-        homeTeam.tempAssistantCoaches = 0
-        awayTeam.tempAssistantCoaches = 1
+        homeTeam.teamAssistantCoaches = 0
+        awayTeam.teamAssistantCoaches = 1
         controller.rollForward(
             *defaultPregame(),
             *defaultSetup(),

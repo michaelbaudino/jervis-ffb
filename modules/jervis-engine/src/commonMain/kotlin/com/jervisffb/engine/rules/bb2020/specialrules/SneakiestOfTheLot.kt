@@ -18,7 +18,7 @@ class SneakiestOfTheLot(
 ) : BB2020SpecialRule {
     override val type: SkillType = SkillType.SNEAKIEST_OF_THE_LOT
     override val value: Unit? = null
-    override val skillId: SkillId = type.id(value)
+    override val skillId: SkillId = type.id()
     override val name: String = type.description
     override val compulsory: Boolean = true
     override val resetAt: Duration = Duration.END_OF_TURN

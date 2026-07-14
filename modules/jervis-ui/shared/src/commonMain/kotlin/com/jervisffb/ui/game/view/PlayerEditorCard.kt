@@ -1,14 +1,12 @@
 package com.jervisffb.ui.game.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -43,12 +40,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -74,8 +68,8 @@ import com.jervisffb.shared.generated.resources.jervis_icon_menu_plus
 import com.jervisffb.ui.game.model.UiKeywordData
 import com.jervisffb.ui.game.model.UiPlayerCard
 import com.jervisffb.ui.game.model.UiSkillData
-import com.jervisffb.ui.game.view.JervisTheme.rulebookBlue
 import com.jervisffb.ui.game.view.utils.JervisButton
+import com.jervisffb.ui.game.view.utils.NumberChangeButton
 import com.jervisffb.ui.game.view.utils.TitleBorder
 import com.jervisffb.ui.game.view.utils.paperBackground
 import com.jervisffb.ui.menu.GameScreenModel
@@ -85,8 +79,6 @@ import com.jervisffb.ui.utils.jsp
 import com.jervisffb.ui.utils.onClickWithSmallDragControl
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -404,7 +396,7 @@ private fun StatsSelectorTab(
         ) {
             Text(rowLabel)
             Spacer(modifier = Modifier.weight(1f))
-            StatChangeButton(
+            NumberChangeButton(
                 icon = Res.drawable.jervis_icon_menu_minus,
                 description = "-1 $fieldLabel",
                 onClick = onDecreaseValue,
@@ -426,7 +418,7 @@ private fun StatsSelectorTab(
                     shadow = Shadow(JervisTheme.black, Offset(2.jdp.value, 2.jdp.value), 2.jdp.value),
                 ),
             )
-            StatChangeButton(
+            NumberChangeButton(
                 icon = Res.drawable.jervis_icon_menu_plus,
                 description = "+1 $fieldLabel",
                 onClick = onIncreaseValue,
@@ -790,33 +782,3 @@ fun SkillValueButton(
     }
 }
 
-@Composable
-private fun StatChangeButton(
-    icon: DrawableResource,
-    description: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    buttonColor: Color = rulebookBlue,
-    shape: Shape = RoundedCornerShape(4.dp),
-) {
-    Button(
-        modifier = modifier
-            .size(48.dp)
-            .onClickWithSmallDragControl(onClick = onClick)
-        ,
-        colors = ButtonDefaults.buttonColors(containerColor = buttonColor, disabledContainerColor = JervisTheme.rulebookPaperMediumDark),
-        contentPadding = PaddingValues(0.dp),
-        shape = shape,
-        onClick = { /* Do nothing */ },
-        enabled = enabled,
-    ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(icon),
-            contentDescription = description,
-            contentScale = ContentScale.FillBounds,
-            colorFilter = ColorFilter.tint(JervisTheme.white),
-        )
-    }
-}

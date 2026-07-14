@@ -705,21 +705,23 @@ This means that right now Jervis goes:
 When gaining new skills through advancements, it is illegal to get the same
 skill twice.
 
-However, it isn't specified if this can happen in other cases.
+However, it isn't specified if this can happen in other cases, which leaves it
+up for interpretation.
 
 In BB2020, there were a few cases where this could happen using Special
 Play Cards, but the interaction wasn't specified and mostly involved skills with
-modifiers like "Loner (4+)" or "Mighty Blow(+2)". In those cases, it was assumed
-that for negative effects, the lower number was chosen (e.g., Loner (3+) over 
-Loner (4+)) and for positive effects, the higher number was chosen (e.g., 
-Mighty Blow(+2) over Mighty Blow(+1)). However, you were not allowed to use the 
-skill twice.
+modifiers like "Loner (4+)" or "Mighty Blow(+2)". 
 
-Right now, this is a hypothetical scenario in BB2025, as Special Play Cards are
-not available, and Prayers to Nuffle has wording that prevents this scenario.
+In BB20205, this can, currently, only happen when hiring Mercenary Players, 
+which might already have "Loner" as part of their positional skills.
 
-So for now, Jervis will throw an error if Players end up having the same skill
-twice.
+Since the behavior is undefined, Jervis has taken the "most plausible" approach,
+which means it only allows one skill but chooses which to use this way: 
+
+1. For skills with a target, the lower number will be chosen, e.g., 
+   Loner (3+) over Loner (4+).
+2. For skills that adjust a roll, the higher number will be used, e.g., 
+   Mighty Blow(+2) over Mighty Blow(+1).
 
 ## Page 144 - Bribe
 The rules around Bribes are slightly unclear when it comes to handling the 

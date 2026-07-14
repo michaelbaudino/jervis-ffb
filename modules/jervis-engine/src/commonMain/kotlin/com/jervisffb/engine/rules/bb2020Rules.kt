@@ -151,7 +151,11 @@ abstract class BB2020Rules(
             baseVersion = GameVersion.BB2020,
             gameType = GameType.STANDARD,
             foulActionBehavior = FoulActionBehavior.BB2020,
-            inducements = InducementSettings(DEFAULT_INDUCEMENTS_BB2020),
+            inducements = InducementSettings(
+                topDogTopUpLimitFromTreasury = Int.MAX_VALUE,
+                underdogTopUpLimitFromTreasury = Int.MAX_VALUE,
+                inducements = DEFAULT_INDUCEMENTS_BB2020
+            ),
             canUseMultipleRerollsOnDicePools = true,
         )
     }
@@ -248,78 +252,60 @@ class BB72020Rules(
             stuntyInjuryTable = BB7StuntyInjuryTable,
             prayersToNuffleTable = BB7PrayersToNuffleTable,
             useApothecaryBehavior = UseApothecaryBehavior.BB7,
-            inducements = InducementSettings(DEFAULT_INDUCEMENTS_BB2020).toBuilder().run {
+            inducements = InducementSettings(
+                topDogTopUpLimitFromTreasury = Int.MAX_VALUE,
+                underdogTopUpLimitFromTreasury = Int.MAX_VALUE,
+                inducements = DEFAULT_INDUCEMENTS_BB2020
+            ).toBuilder().run {
                 InducementType.entries.forEach { type ->
                     when (type) {
                         InducementType.TEMP_AGENCY_CHEERLEADER -> {
-                            get(type)!!.let {
+                            getSingle(type).let {
                                 it.price = 30_000
                                 it.max = 2
                             }
                         }
-
                         InducementType.PART_TIME_ASSISTANT_COACH -> {
-                            get(type)!!.let {
+                            getSingle(type).let {
                                 it.price = 30_000
                                 it.max = 1
                             }
                         }
-
-                        InducementType.WEATHER_MAGE -> get(type)!!.enabled = false
-                        InducementType.BLOODWEISER_KEG -> { /* Do nothing */
-                        }
-
-                        InducementType.SPECIAL_PLAY -> { /* Do nothing */
-                        }
-
-                        InducementType.EXTRA_TEAM_TRAINING -> get(type)!!.price = 150_000
-                        InducementType.BRIBE -> { /* Do nothing */
-                        }
-
-                        InducementType.WANDERING_APOTHECARY -> { /* Do nothing */
-                        }
-
-                        InducementType.MORTUARY_ASSISTANT -> { /* Do nothing */
-                        }
-
-                        InducementType.PLAGUE_DOCTOR -> { /* Do nothing */
-                        }
-
-                        InducementType.RIOTOUS_ROOKIE -> get(type)!!.enabled = false
-                        InducementType.HALFLING_MASTER_CHEF -> { /* Do nothing */
-                        }
-
-                        InducementType.STANDARD_MERCENARY_PLAYERS -> { /* Do nothing */
-                        }
-
-                        InducementType.STAR_PLAYERS -> get(type)!!.enabled = false
-                        InducementType.INFAMOUS_COACHING_STAFF -> get(type)!!.enabled = false
-                        InducementType.WIZARD -> get(type)!!.enabled = false
-                        InducementType.BIASED_REFEREE -> get(type)!!.enabled = false
-                        InducementType.WAAAGH_DRUMMER -> get(type)!!.enabled = false
-                        InducementType.CAVORTING_NURGLINGS -> get(type)!!.enabled = false
-                        InducementType.DWARFEN_RUNESMITH -> get(type)!!.enabled = false
-                        InducementType.HALFLING_HOTPOT -> get(type)!!.enabled = false
-                        InducementType.MASTER_OF_BALLISTICS -> get(type)!!.enabled = false
-                        InducementType.EXPANDED_MERCENARY_PLAYERS -> { /* Do nothing */
-                        }
-
-                        InducementType.GIANT -> get(type)!!.enabled = false
+                        InducementType.WEATHER_MAGE -> getSingle(type).enabled = false
+                        InducementType.BLOODWEISER_KEG -> { /* Do nothing */ }
+                        InducementType.SPECIAL_PLAY -> { /* Do nothing */ }
+                        InducementType.EXTRA_TEAM_TRAINING -> getSingle(type).price = 150_000
+                        InducementType.BRIBE -> { /* Do nothing */ }
+                        InducementType.WANDERING_APOTHECARY -> { /* Do nothing */ }
+                        InducementType.MORTUARY_ASSISTANT -> { /* Do nothing */ }
+                        InducementType.PLAGUE_DOCTOR -> { /* Do nothing */ }
+                        InducementType.RIOTOUS_ROOKIE -> getSingle(type).enabled = false
+                        InducementType.HALFLING_MASTER_CHEF -> { /* Do nothing */ }
+                        InducementType.STANDARD_MERCENARY_PLAYERS -> { /* Do nothing */ }
+                        InducementType.STAR_PLAYERS -> getInducement(type).enabled = false
+                        InducementType.INFAMOUS_COACHING_STAFF -> getInducement(type).enabled = false
+                        InducementType.WIZARD -> getInducement(type).enabled = false
+                        InducementType.BIASED_REFEREE -> getInducement(type).enabled = false
+                        InducementType.WAAAGH_DRUMMER -> getInducement(type).enabled = false
+                        InducementType.CAVORTING_NURGLINGS -> getInducement(type).enabled = false
+                        InducementType.DWARFEN_RUNESMITH -> getInducement(type).enabled = false
+                        InducementType.HALFLING_HOTPOT -> getInducement(type).enabled = false
+                        InducementType.MASTER_OF_BALLISTICS -> getInducement(type).enabled = false
+                        InducementType.EXPANDED_MERCENARY_PLAYERS -> { /* Do nothing */ }
+                        InducementType.GIANT -> getSingle(type).enabled = false
                         InducementType.DESPERATE_MEASURES -> {
-                            get(type)!!.let {
+                            getSingle(type).let {
                                 it.enabled = true
                                 it.price = 50_000
                                 it.max = 5
                             }
                         }
-
                         InducementType.PRAYERS_TO_NUFFLE,
                         InducementType.TEAM_MASCOT,
                         InducementType.BLITZERS_BEST_KEGS,
                         InducementType.BRETONNIAN_PASTRIES,
                         InducementType.BRETONNIAN_DAMSEL,
-                        InducementType.CANOPIC_JAR -> { /* Ignore */
-                        }
+                        InducementType.CANOPIC_JAR -> { /* Ignore */ }
                     }
                 }
                 build()

@@ -54,7 +54,7 @@ data class RulesParametersHolder(
     override val baseVersion: GameVersion = GameVersion.BB2020,
     override val gameType: GameType = GameType.STANDARD,
     override val timers: TimerSettings = TimerSettings.Companion.BB_CLOCK,
-    override val inducements: InducementSettings = InducementSettings(DEFAULT_INDUCEMENTS_BB2025),
+    override val inducements: InducementSettings = InducementSettings(Int.MAX_VALUE, 50_000, DEFAULT_INDUCEMENTS_BB2025),
     @Serializable(IntRangeSerializer::class)
     override val moveRange: IntRange = 1..9,
     @Serializable(IntRangeSerializer::class)
@@ -84,8 +84,8 @@ data class RulesParametersHolder(
     override val pitchType: PitchType = PitchType.STANDARD,
     override val matchEventsEnabled: Boolean = false,
     override val kickOffEventTable: KickOffTable = BB2020StandardKickOffEventTable,
-    override val prayersToNufflePrice: Int = 50_000,
-    override val prayersToNuffleEnabled: Boolean = true,
+    override val prayersToNufflePriceForUnderdog: Int = 50_000,
+    override val prayersToNuffleEnabledForUnderdogDuringPregame: Boolean = true,
     override val prayersToNuffleTable: PrayersToNuffleTable = BB2020StandardPrayersToNuffleTable,
     override val weatherTable: WeatherTable = BB2020StandardWeatherTable,
     override val injuryTable: InjuryTable = BB2020StandardInjuryTable,
