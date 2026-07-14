@@ -4,38 +4,29 @@ Instructions for coding agents working in the Jervis Fantasy Football
 repository. Read this before making changes.
 
 ## Project overview
-
 Jervis is a Kotlin Multiplatform implementation of the Blood Bowl board game,
 consisting of a UI-agnostic rules engine, a Compose Multiplatform client
 (Desktop/Web/iPad), a lightweight game server, and adapters for the FUMBBL
 platform. Requires **Java 21** and the Gradle wrapper (`./gradlew`).
 
-More background lives in `README.md` and `docs/`:
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for instructions on how to build
+and test the project.
+
+More background lives in [`README.md`](README.md) and `docs/`:
 
 - `docs/architecture-overview-faq.md` — high-level design goals.
 - `docs/architecture-rules-engine.md` — engine architecture (start here for
   engine work).
-- `docs/architecture-network.md`, `docs/architecture-ui.md` — network and UI
-  layers.
+- `docs/architecture-network.md` — describe network architecture and the 
+  network protocol.
+- `docs/architecture-ui.md` — describes the high-level concepts of the UI layer.
 
-## Module layout (`modules/`)
+## Project Structure
+See [`README.md`](README.md#repository-structure) for an overview of how the
+project is structured.
 
-- `jervis-engine` — the Blood Bowl rules engine and game model. Pure Kotlin,
-  no UI. Where most engine work happens.
-- `jervis-ui` — Compose Multiplatform client (`shared`, `desktopApp`,
-  `webApp`, `iosApp`). All code should go to `shared` unless it is 
-   platform-specific.
-- `jervis-net` — network code for the lightweight game server.
-- `jervis-test-utils` — shared test helpers (works around
-  [KT-35073](https://youtrack.jetbrains.com/issue/KT-35073)).
-- `jervis-resources` — shared resource module containing team and roster setups.
-- `platform-utils` — platform-specific helpers (filesystem, networking, 
-   reflection).
-- `fumbbl-net` — helper classes for communicating with the Fumbbl API.
-- `tourplay-net` — helper classes for communicating with the TourPlay API.
-- `fumbbl-cli` - small CLI tool for interacting with the Fumbbl API from the 
-   commandline
-- `replay-analyzer` — adapter for analyzing Fumbbl replays. Highly experimental.
+See [`README.md`](README.md#modules-structure) for an overview of how the 
+code modules are structured under `modules/`.
 
 ## Engine architecture (essentials)
 
@@ -98,51 +89,20 @@ Engine test helpers of note:
   (`4.d6`, `DiceRollResults(4.d6, 5.d6)`).
 
 ### Fuzz testing
-
-`modules/jervis-engine/src/commonTest/kotlin/com/jervisffb/test/FuzzTester.kt`
-runs random games against the engine to catch crashes. It is `@Ignore`d by
-default — comment out the annotation to run. When using it:
-
-- Set `com.jervisffb.utils.DEFAULT_LOG_LEVEL` to `Severity.Assert` first;
-  logging dominates runtime otherwise. `runRandomBB2025Games` will error out
-  if you forget.
-- Failures print the game index and RNG seed
-  (`fail("Game $gameNo (seed: $seed) ...")`) — reuse the seed to reproduce.
-- Average game runs ~4–5 ms on an M3; tests are parallel across 8 threads but
-  memory-hungry, so pay attention when raising `games` / `batchSize`.
-- Run it after non-trivial rules-engine changes; it exercises paths unit
-  tests will not.
+Run the Fuzz Tester when adding new non-trivial rules. 
+See [`CONTRIBUTING.md`](CONTRIBUTING.md#fuzz-tester) for instructions on how to
+run it.
 
 ## Formatting and linting
-
-The project uses [ktlint](https://github.com/pinterest/ktlint) via the Gradle
-plugin:
-
-```shell
-./gradlew ktlintCheck     # verify style
-./gradlew ktlintFormat    # auto-fix
-```
-
-`ktlintCheck` runs as part of `./gradlew check`. Run `ktlintFormat` (or the
-per-module variant, e.g. `:modules:jervis-engine:ktlintFormat`) before
-opening a PR.
+Run the formatter and linter before declaring any work done.
+See [CONTRIBUTING.md](CONTRIBUTING.md#formatting-code) for instructions on how
+to run them.
 
 ## Before submitting a PR
-
-1. `./gradlew ktlintFormat`
-2. `./gradlew jvmTest` (matches CI)
-3. If touching the rules engine substantially, un-ignore `FuzzTester` and run
-   `FuzzTester.runRandomBB2025Games()` to catch crashes on random paths.
-4. If touching both `bb2020/` and `bb2025/`, verify the change is applied
-   consistently across both packages.
-5. Update or add tests under `modules/jervis-engine/src/commonTest/` — the
-   existing tests use `rollForward(...)` + assertions on `state`, mirror that
-   style.
-6. Do not commit generated files under `build/` or resource copies pulled in
-   by the `updateFFBResources` task unless that is the intent of the change.
+Before submitting a PR to GitHub, make sure to run through the checklist found
+in [`CONTRIBUTING.md`](CONTRIBUTING.md#pr-checklist).
 
 ## Running the app locally
-
 Only needed for UI changes; not required for engine-only PRs.
 
 - Desktop: `./gradlew :modules:jervis-ui:desktopApp:run`
@@ -154,7 +114,6 @@ Some settings code is generated at build time; unresolved references on a
 fresh clone usually resolve after the first successful build.
 
 ## Conventions
-
 - Avoid platform-specific code unless absolutely necessary. If needed, all 
   platform-specific code must be in `platform-utils` behind an expect/actual 
   interface. 
@@ -165,6 +124,6 @@ fresh clone usually resolve after the first successful build.
 - Prefer editing existing files over creating new ones; do not add documentation 
   files unless asked.
 - Reference the Blood Bowl rulebook page when adding non-obvious rule logic,
-  but keep quoted text short (avoid copyright). Do not try to guess a page 
+  but keep the quoted text short (avoid copyright). Do not try to guess a page 
   number, just use XXX as a placeholder.
 - An online rulebook can be found here: https://bloodbowlbase.ru/bb2025/

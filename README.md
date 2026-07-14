@@ -40,14 +40,12 @@ described here.**
 
 
 ## Disclaimer
-
 Blood Bowl is a trademark of Games Workshop Limited, used without permission, 
 used without intent to infringe, or in opposition to their copyright. This 
 project is in no way official and is not endorsed by Games Workshop Limited.
 
 
 ## Developer Releases
-
 Test builds are created on every successful push to the `main` branch.
 
 * The HTML version can be found here: https://jervis.ilios.dk. It is built
@@ -68,57 +66,11 @@ Test builds are created on every successful push to the `main` branch.
 
 No stability guarantees are given for developer releases.
 
-
-## How To Build
-
-Development requirements are:
-- Java 21
-- Git on the commandline
-- Xcode 16.2 (if building for iPad)
-
-Note, this has only been tested on Mac and Windows, so things on Linux might be 
-broken.
-
-Some code for handling game settings is generated as part of the build process, 
-so unresolved references might be present when opening this project for the 
-first time. This should be fixed after the first build.
-
-### Building Game Clients
-A local desktop game client can be started using:
-
-```shell
-./gradlew :modules:jervis-ui:desktopApp:run
-```
-
-A local WASM client can be started using:
-
-```shell
-./gradlew :modules:jervis-ui:webApp:wasmJsBrowserDevelopmentRun
-```
-
-The iPad version can be built and installed using Xcode. Use the project file
-found here [`modules/iosApp/iosApp.xcodeproj`](modules/iosApp/iosApp.xcodeproj). 
-You will need to supply your own signature under "Signing & Capabilities".
-
-With the `Koltlin Multiplatform` plugin installed in IntelliJ, it can also be
-started from there using the `iosApp` run configuration.
-
-### Building Documentation Website
-The documentation website is built by installing Zensical:
-
-```shell
-pip install zensical
-```
-
-And then running the following command from the root of the repository:
-```shell
-# Website is visible on localhost:8080
-zensical serve
-```
-
+## Building the project
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for details on how to build, test and
+run this project.
 
 ## Repository Structure
-
 This repository is structured in the following way:
 
 - `modules/`: The main entry point for all code. See the section below.
@@ -129,19 +81,18 @@ This repository is structured in the following way:
 - `mavenRepo/`: contains some packages that are not available on Maven Central.
   Artifacts here are used to build parts of the project.
 - `logo/`: Contains project logos used by various platforms.
-- `Debug-FantasyFootballClient/`: It is empty as a default, but when using
+- `Debug-FantasyFootballClient/`: It is empty by default, but when using
   [`fumbble-cli`](./fumbbl-cli) it can contain a modified version of the FUMBBL
   Client that can be used to inspect the FUMMBL network traffic. See
-  [the documentation](modules/fumbbl-cli/README.md) for more details. Note, this
-  has not been tested for a while, and since the FFB Client is now open source,
-  it is also less relevant, as you can just run the real client instead. See
+  [the documentation](modules/fumbbl-cli/README.md) for more details. Note, this has not been tested for 
+  a while, and since the FFB Client is now open source, it is also less 
+  relevant, as you can just run the real client instead. See
   [How to run FFB locally](./docs/working-with-ffb.md).
 - `website`: Contains the source code for the public non-coder website. It is 
   built using [Zensical](https://zensical.org/).
 
 
 ### Modules Structure
-
 The `modules/` subfolder is the main entry point for the project and consists 
 of the following modules:
 
@@ -182,7 +133,6 @@ of the following modules:
 
   
 ### UI Resources
-
 The Jervis Client is heavily inspired by [FUMBBL](https://github.com/christerk/ffb)
 and borrows many of its assets from there. They are used with permission. All 
 rights and credits go to [their respective authors](https://fumbbl.com/p/attribution), and 
@@ -194,12 +144,10 @@ will be removed immediately.
 
 
 ## Why Jervis?
-
 As homage to the original creator of Blood Bowl: [Jervis Johnson](https://en.wikipedia.org/wiki/Jervis_Johnson). 
 
 
 ## Other resources
-
 List of other Blood Bowl resources that inspired this project.
 
 - [Fantasy Football (FUMBBL)](https://github.com/christerk/ffb)
