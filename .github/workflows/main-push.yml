@@ -28,8 +28,14 @@ jobs:
     permissions:
       contents: read
 
+  fuzzer:
+    needs: [ setup ]
+    uses: ./.github/workflows/fuzzer.yml
+    permissions:
+      contents: read
+
   publication:
-    needs: [ setup, test ]
+    needs: [ setup, test, fuzzer ]
     uses: ./.github/workflows/publication.yml
     with:
       commit_count: ${{ needs.setup.outputs.commit_count }}

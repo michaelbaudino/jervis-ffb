@@ -1,0 +1,38 @@
+# We use a number of threads equal to the expected threads on the GitHub Actions
+# runner: https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories.
+name: Fuzz Tester
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    if: always() && !cancelled()
+    env:
+      JERVIS_COMMIT_COUNT: ${{ inputs.commit_count }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Gradle and task/dependency caching
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false
+
+      - name: Build Fuzzer CLI
+        run: ./gradlew buildTools
+
+      - name: Run BB2025 Fuzz Tester
+        run: ./fuzzer-cli --games 10000 --batch-size 2000 --threads 4 bb2025

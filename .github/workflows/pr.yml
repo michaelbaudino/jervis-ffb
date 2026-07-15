@@ -24,3 +24,11 @@ jobs:
       commit_count: ${{ needs.setup.outputs.commit_count }}
     permissions:
       contents: read
+
+  fuzzer:
+    needs: [ setup ]
+    uses: ./.github/workflows/fuzzer.yml
+    with:
+      commit_count: ${{ needs.setup.outputs.commit_count }}
+    permissions:
+      contents: read
