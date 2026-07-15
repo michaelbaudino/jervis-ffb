@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  run-tests:
+  run-fuzzer:
     runs-on: ubuntu-latest
     if: always() && !cancelled()
     env:
