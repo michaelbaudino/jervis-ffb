@@ -127,6 +127,7 @@ object UseTeamReroll : Procedure() {
                 UpdateContext(rerollContext.copy(
                     rerollAllowed = mascotContext.isRerollAllowed
                 )),
+                RemoveContext(mascotContext),
                 // Only handle Loner and Team Captain if the Mascot Roll succeeded
                 // If Mascot failed, these will be handled recursively inside `TeamMascotStep`
                 // when the alternative reroll is selected
