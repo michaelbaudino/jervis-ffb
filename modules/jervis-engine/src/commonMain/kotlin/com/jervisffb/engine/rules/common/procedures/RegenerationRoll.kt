@@ -147,9 +147,7 @@ object RegenerationRoll: D6WithRerollProcedure() {
                 Confirm -> {
                     val context = state.getContext<RiskingInjuryContext>()
                     val team = context.player.team
-                    val apothecary = team.getApothecaries().first {
-                        it is PlagueDoctor && !it.used
-                    }
+                    val apothecary = team.plagueDoctors.first { !it.used }
                     compositeCommandOf(
                         SetApothecaryUsed(team, apothecary, true),
                         ReportApothecaryUsed(team, apothecary),
