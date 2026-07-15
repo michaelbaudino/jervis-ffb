@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 include(":Debug-FantasyFootballClient")
 include(":modules:fumbbl-cli")
 include(":modules:fumbbl-net")
+include(":modules:fuzzer-cli")
 include(":modules:jervis-engine")
 include(":modules:jervis-net")
 include(":modules:jervis-resources")

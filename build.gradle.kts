@@ -166,10 +166,18 @@ tasks.register<Copy>("copyClientDownloaderJar") {
     rename { "fumbblcli.jar" }
 }
 
+tasks.register<Copy>("copyFuzzerCliJar") {
+    dependsOn(":modules:fuzzer-cli:shadowJar")
+    from("${projectDir.absolutePath}/modules/fuzzer-cli/build/libs/fuzzer-cli-all.jar")
+    into("${projectDir.absolutePath}/tools")
+    rename { "fuzzercli.jar" }
+}
+
 tasks.register("buildTools") {
     group = "Publishing"
     description = "Build and copy all tools (Jars) into the tools/ folder."
     dependsOn("copyClientDownloaderJar")
+    dependsOn("copyFuzzerCliJar")
 }
 
 // Internal task for cloning or updating the FFB repo

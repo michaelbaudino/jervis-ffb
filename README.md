@@ -105,12 +105,11 @@ of the following modules:
    server as well as adapters for converting a FUMBBL game into a Jervis
    equivalent.
 
+- `fuzzer-cli`: Commandline tool for fuzz-testing the rules engine by running
+   a large number of randomized games against different rulesets.
+
 - `tourplay-net`: Wrapper for the TourPlay REST API that can download TourPlay
    teams and make them available to Jervis.
-
- - `iosApp`: The XCode project needed to build the Jervis iPad
-   app. This needs to be opened and run from XCode. It will automatically
-   build all required dependencies from the project.
 
 - `jervis-engine`: The full Blood Bowl game and rules model as well as logic
   for running the game.
@@ -122,7 +121,8 @@ of the following modules:
   This is a work-around for https://youtrack.jetbrains.com/issue/KT-35073.
 
 - `jervis-ui`: An UI for driving a game of Blood Bowl. It has in large parts
-   been inspired by the FUMBBL Client UI.
+   been inspired by the FUMBBL Client UI. This contains submodules for each
+   platform supported: `desktopApp`, `iosApp`, and `webApp`.
 
 - `platform-utils`: All helper methods that require platform-specific
   APIs are placed here. This includes things like filesystem access, setting up 

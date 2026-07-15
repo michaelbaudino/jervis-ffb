@@ -13,6 +13,7 @@ build/
 
 # The tools folder should be built for each platform, so do not commit build artifacts
 tools/fumbblcli.jar
+tools/fuzzercli.jar
 
 # Conveyor generated config (build artifact from writeConveyorConfig task)
 generated.conveyor.conf

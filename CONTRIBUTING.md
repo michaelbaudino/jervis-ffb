@@ -40,12 +40,14 @@ A local WASM client can be started using:
 ./gradlew :modules:jervis-ui:webApp:wasmJsBrowserDevelopmentRun
 ```
 
-The iPad version can be built and installed using Xcode. Use the project file
-found here [`modules/iosApp/iosApp.xcodeproj`](modules/iosApp/iosApp.xcodeproj).
-You will need to supply your own signature under "Signing & Capabilities".
+A local iPad client can be started from IntelliJ using the `iosApp` run 
+configuration. This requires a new version of IntelliJ and the `Kotlin 
+Multiplatform` and `Compose Multiplatform` plugins.
 
-With the `Koltlin Multiplatform` plugin installed in IntelliJ, it can also be
-started from there using the `iosApp` run configuration.
+If this run configuration is not available, the iPad version can also be built 
+and installed using Xcode. Use the project file found here
+[`modules/jervis-ui/iosApp/iosApp.xcodeproj`](modules/jervis-ui/iosApp/iosApp.xcodeproj).
+You might need to supply your own signature under "Signing & Capabilities".
 
 ### Building Documentation Website
 The documentation website is built by installing Zensical:
@@ -85,22 +87,33 @@ Useful variants when iterating:
   
 ### Fuzz Tester
 For non-trivial changes to the rule engine, also consider running the fuzz
-tester. It is disabled by default and needs to be enabled first.
+tester. It lives in the `:modules:fuzzer-cli` module and runs random games
+against the engine to force crashes or inconsistent state. See
+[`modules/fuzzer-cli/README.md`](modules/fuzzer-cli/README.md) for the full
+usage reference.
 
-`modules/jervis-engine/src/commonTest/kotlin/com/jervisffb/test/FuzzTester.kt`
-runs random games against the engine to force crashes or inconsistent state
-It is run using the junit test frame and is`@Ignore`d by default - comment 
-out the annotation to run. When using it:
+The preferred workflow is to build the packaged jar once and invoke it via
+the helper script at the project root:
 
-- Set `com.jervisffb.utils.DEFAULT_LOG_LEVEL` to `Severity.Assert` first;
-  logging dominates runtime otherwise. `runRandomBB2025Games()` will throw if
-  you forget.
-- The Fuzz Tester will generate random seeds for all runs that will be used
-  to generate all random actions. If a crash occurs, the seed is printed, making
-  it possible to reproduce the crash.
-- An average game runs in ~4–5 ms on an Apple M3, tests are parallel across 8 
-  threads but memory-hungry, so beware of OOM errors when raising `games` / 
-  `batchSize`.
+```shell
+# Build the Fuzzer CLI
+./gradlew buildTools
+# See all options
+./fuzzer-cli --help
+# Run the fuzzer against the standard BB2025 ruleset
+./fuzzer-cli bb2025
+# Configure the fuzzer
+./fuzzer-cli --games 100000 --batch-size 5000 --threads 8 bb2025
+# Run a single game using a pre-defined seed
+./fuzzer-cli --games 1 --seed "12345" bb2025
+```
+
+For quick iteration during development, you can also invoke it through Gradle. 
+This skips the packaging step but takes longer per invocation:
+
+```shell
+./gradlew :modules:fuzzer-cli:run --args="<fuzzerConfigurationName>"
+```
 
 ## Formatting code
 The project uses [ktlint](https://github.com/pinterest/ktlint) via the Gradle
