@@ -4,6 +4,10 @@ name: Fuzz Tester
 
 on:
   workflow_call:
+    inputs:
+      commit_count:
+        required: true
+        type: string
 
 permissions:
   contents: read
