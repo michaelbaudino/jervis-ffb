@@ -132,6 +132,14 @@ To only verify without modifying files:
 ./gradlew ktlintCheck
 ```
 
+## Updating Gradle Wrapper
+The project uses Gradle to manage dependencies and the build processes. To
+update the Gradle Wrapper to the latest version, run the following command:
+
+```shell
+./gradlew wrapper --gradle-version latest --distribution-type all
+```
+
 ## Updating UI resources
 The Jervis client borrows a large portion of its icons and sounds from the
 [FUMBBL client](https://github.com/christerk/ffb) (used with permission — see
